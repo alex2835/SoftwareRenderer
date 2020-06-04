@@ -3,20 +3,18 @@
 #include "guiAlexandrov.h"
 #include "geometry/geometry.h"
 
-#include "tests/geometry_test.h"
+//#include "tests/geometry_test.h"
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 {
-	//gui::Window* window = new gui::Window(L"Widnow", 800, 600);
+	gui::Window* window = new gui::Window(L"Widnow", 800, 600);
 
 
-	//gui::Window::wait_msg_proc();
+	gui::Window::wait_msg_proc();
 	return 0;
 }
 
  
-
-
 
 
 

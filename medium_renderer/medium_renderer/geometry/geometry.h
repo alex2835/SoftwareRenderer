@@ -89,6 +89,8 @@ namespace gm
 	typedef Vec2<float> vec2;
 	typedef Vec2<int> vec2i;
 
+	extern template struct Vec2<float>;
+	extern template struct Vec2<int>;
 
 
 	// ========================= 3d Vector =============================
@@ -199,7 +201,7 @@ namespace gm
 			*this *= (1.0f / norm());
 		}
 
-		Vec3<T>& get_normalized() const
+		Vec3<T> get_normalized() const
 		{
 			return (*this) * (1.0f / norm());;
 		}
@@ -221,6 +223,10 @@ namespace gm
 
 	typedef Vec3<float> vec3;
 	typedef Vec3<int> vec3i;
+
+
+	extern template struct Vec3<float>;
+	extern template struct Vec3<int>;
 
 
 
@@ -247,7 +253,7 @@ namespace gm
 			return *this;
 		}
 
-		Vec4<T>& operator -= (const Vec4<T>* other)
+		Vec4<T>& operator -= (const Vec4<T>& other)
 		{
 			x -= other.x;
 			y -= other.y;
@@ -255,7 +261,7 @@ namespace gm
 			return *this;
 		}
 
-		Vec3<T>& operator *= (float scalar)
+		Vec4<T>& operator *= (float scalar)
 		{
 			x *= scalar;
 			y *= scalar;
@@ -330,7 +336,7 @@ namespace gm
 			*this *= (1.0f / norm());
 		}
 
-		Vec4<T>& get_normalized() const
+		Vec4<T> get_normalized() const
 		{
 			return (*this) * (1.0f / norm());
 		}
@@ -341,7 +347,7 @@ namespace gm
 			return x == other.x &&
 				y == other.y &&
 				z == other.z &&
-				w == other.raw;
+				w == other.w;
 		}
 
 		bool operator != (const Vec4<T>& other) const
@@ -353,6 +359,10 @@ namespace gm
 
 	typedef Vec4<float> vec4;
 	typedef Vec4<int> vec4i;
+
+
+	extern template struct Vec4<float>;
+	extern template struct Vec4<int>;
 
 
 
@@ -542,6 +552,10 @@ namespace gm
 
 	typedef Matrix3<float> mat3;
 	typedef Matrix3<int> mat3i;
+
+
+	extern template struct Matrix3<int>;
+	extern template struct Matrix3<float>;
 
 
 
@@ -747,7 +761,7 @@ namespace gm
 			memset(this, 0, sizeof(Matrix4));
 		}
 
-		Vec3<T> toVec4()
+		Vec4<T> toVec4()
 		{
 			return  Vec4<T>(x[0][0], x[1][0], x[2][0], x[3][0]);
 		}
@@ -760,5 +774,8 @@ namespace gm
 
 	typedef Matrix4<float> mat4;
 	typedef Matrix4<int> mat4i;
+
+	extern template struct Matrix4<int>;
+	extern template struct Matrix4<float>;
 
 }

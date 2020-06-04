@@ -30,7 +30,7 @@ namespace rasterizer
 
 
 	
-	void triangle(Canvas surface, gm::vec3* pts, gm::vec2i* uv, float* zbuffer, Model& model, float intensity)
+	void triangle(gui::Image_base<uint8_t>& surface, gm::vec3* pts, gm::vec2i* uv, float* zbuffer, Model& model, float intensity)
 	{
 		if (pts[0].y == pts[1].y && pts[0].y == pts[2].y) return; // degenerate triangles
 
@@ -85,7 +85,7 @@ namespace rasterizer
 						uvP.x = uv[0].x * bar[0] + uv[1].x * bar[1] + uv[2].x * bar[2];
 						uvP.y = uv[0].y * bar[0] + uv[1].y * bar[1] + uv[2].y * bar[2];
 
-						Color color = model.diffuse(uvP);
+						gui::Color color = model.diffuse(uvP);
 						zbuffer[int(P.x + P.y * surface.width)] = z;
 						for (int i = 0; i < 4; i++)
 							color.raw[i] *= intensity;
