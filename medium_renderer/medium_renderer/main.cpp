@@ -1,9 +1,10 @@
 
 
-#include "guiAlexandrov.h"
+#include "window/window.h"
 #include "geometry/geometry.h"
 
 //#include "tests/geometry_test.h"
+
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 {
