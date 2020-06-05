@@ -8,7 +8,8 @@ namespace renderer
 	namespace rasterizer
 	{
 
-		bool barycentric(gm::vec3 A, gm::vec3 B, gm::vec3 C, gm::vec3i P, gm::vec3* out)
+		bool barycentric(const gm::vec3& A, const gm::vec3& B, const gm::vec3& C,
+						 const gm::vec3i& P, gm::vec3* out)
 		{
 			gm::vec3 s[2];
 			for (int i = 0; i < 2; i++)
@@ -18,7 +19,9 @@ namespace renderer
 				s[i][2] = A[i] - P[i];
 			}
 
+			// compute cross poduct
 			gm::vec3 u = s[0] ^ s[1];
+
 			if (std::abs(u[2]) > 1e-2)
 			{
 				out->x = 1.0f - (u.x + u.y) / u.z;
@@ -35,8 +38,9 @@ namespace renderer
 
 		void triangle(gui::Image_base<uint8_t>& surface, gm::vec3* pts, gm::vec2i* uv, float* zbuffer, Model& model, float intensity)
 		{
-			if (pts[0].y == pts[1].y && pts[0].y == pts[2].y) return; // degenerate triangles
+			if (pts[0].y == pts[1].y && pts[0].y == pts[2].y) return; // degenerate triangle
 
+			// sort vertices
 			if (pts[0].y > pts[1].y)
 			{
 				std::swap(pts[0], pts[1]);
@@ -71,9 +75,9 @@ namespace renderer
 			}
 
 			gm::vec3i P;
-			for (P.x = bot_left.x; P.x < top_right.x; P.x += 1.0f)
+			for (P.x = bot_left.x; P.x < top_right.x; P.x++)
 			{
-				for (P.y = bot_left.y; P.y < top_right.y; P.y += 1.0f)
+				for (P.y = bot_left.y; P.y < top_right.y; P.y++)
 				{
 					gm::vec3 bar;
 					if (barycentric(pts[0], pts[1], pts[2], P, &bar))
@@ -90,8 +94,10 @@ namespace renderer
 
 							gui::Color color = model.get_diffuse(uvP);
 							zbuffer[int(P.x + P.y * surface.width)] = z;
+
 							for (int i = 0; i < 4; i++)
 								color.raw[i] *= intensity;
+
 							surface[P.y * surface.width + P.x] = color;
 						}
 					}
