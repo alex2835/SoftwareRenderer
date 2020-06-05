@@ -63,6 +63,12 @@ namespace renderer
 	}
 
 
+	bool Model::valid()
+	{
+		return faces.size();
+	}
+
+
 	int Model::verts_size()
 	{
 		return verts.size();
@@ -97,7 +103,7 @@ namespace renderer
 	}
 
 
-	gm::vec2i Model::git_uv(int iface, int nvert)
+	gm::vec2i Model::get_uv(int iface, int nvert)
 	{
 		int idx = faces[iface][nvert][1];
 		return gm::vec2i(uv[idx].x * diffusemap.width, uv[idx].y * diffusemap.height);

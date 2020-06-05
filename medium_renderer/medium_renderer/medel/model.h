@@ -20,12 +20,14 @@ namespace renderer
 		std::vector<gm::vec3> norms;
 		std::vector<gm::vec2> uv;
 
+
 		// maps
 		gui::Image diffusemap;
 
 
 		Model(const std::string& filename);
 
+		bool valid();
 
 		int verts_size();
 
@@ -37,7 +39,8 @@ namespace renderer
 
 		gui::Color& get_diffuse(gm::vec2i& uv);
 
-		gm::vec2i git_uv(int iface, int nvert);
+		gm::vec2i get_uv(int iface, int nvert);
+
 	};
 
 }

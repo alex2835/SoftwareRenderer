@@ -1,17 +1,90 @@
 
 
 #include "window/window.h"
+#include "io/log.h"
+
 #include "geometry/geometry.h"
 
+
+#include "rasterizer/rasterizer.h"
+#include "medel/model.h"
 //#include "tests/geometry_test.h"
 
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 {
 	gui::Window* window = new gui::Window(L"Widnow", 800, 600);
+	window->canvas.set_max_buffer_size();
+
+	// zbuffer
+	int zbuffer_size = window->canvas.capacity;
+	float* zbuffer = new float[zbuffer_size];
+
+	// model
+	renderer::Model model("models/african_head_jpg/african_head");
+
+	if (!model.valid())
+	{
+		gui::console::printf("Error: Can not load model\n");
+		return 1;
+	}
 
 
-	gui::Window::wait_msg_proc();
+	// light dir
+	gm::vec3 light_dir(0, 0, -1);
+
+
+	gui::Timer timer(60);
+	while (gui::Window::is_running(window))
+	{
+
+		// reallocate zbuffer if neccessery
+		if (zbuffer_size < window->width() * window->height())
+		{
+			delete[] zbuffer;
+			int zbuffer_size = window->width() * window->height();
+			float* zbuffer = new float[zbuffer_size];
+		}
+
+
+		// draw model
+		for (int i = 0; i < model.faces_size(); i++)
+		{
+			std::vector<int> face = model.face(i);
+			gm::vec3 screen_coords[3];
+			gm::vec3 world_coords[3];
+			for (int j = 0; j < 3; j++)
+			{
+				gm::vec3 v = model.get_vert(face[j]);
+				//screen_coords[j] = (ViewPort * Projection * ModelView * Matrix44f(v)).toVec3();
+				screen_coords[j] = gm::vec3(v.x * window->width() / 2 + window->width() / 2,
+											v.y * window->height() / 2 + window->height() / 2,
+											v.z);
+				world_coords[j] = v;
+			}
+
+			gm::vec3 n = (world_coords[2] - world_coords[0]) ^ (world_coords[1] - world_coords[0]);
+
+			n.normalize();
+			float intensity = n * light_dir;
+
+			intensity = intensity < 0 ? 0.1 : intensity;
+
+			gm::vec2i uv[3];
+			for (int k = 0; k < 3; k++)
+				uv[k] = model.get_uv(i, k);
+
+			renderer::rasterizer::triangle(window->canvas, screen_coords, uv, zbuffer, model, intensity);
+		}
+
+
+		gui::console::printf("fps: %d\n", timer.FPS);
+
+		timer.update();
+		window->render_canvas();
+		gui::Window::default_msg_proc();
+	}
+
 	return 0;
 }
 
