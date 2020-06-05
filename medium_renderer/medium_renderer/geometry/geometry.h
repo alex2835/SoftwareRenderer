@@ -780,4 +780,15 @@ namespace gm
 	extern template struct Matrix4<int>;
 	extern template struct Matrix4<float>;
 
+
+
+
+
+	// ======================= Matrix generation ===============================
+
+	gm::mat4 lookat(const vec3& eye, const vec3& center, const vec3& up = vec3(0, 1, 0));
+
+	gm::mat4 viewport(int x, int y, int w, int h, int depth = 255);
+
+
 }

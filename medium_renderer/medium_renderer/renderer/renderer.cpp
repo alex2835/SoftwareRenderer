@@ -61,10 +61,10 @@ namespace renderer
 	// render model
 	void render_model(Model& model, Shader& shader)
 	{
-		gm::mat4 ModelView = lookat(eye, center);
+		gm::mat4 ModelView = gm::lookat(eye, center);
 		gm::mat4 Projection;
 
-		gm::mat4 ViewPort = viewport(context->width / 8,
+		gm::mat4 ViewPort = gm::viewport(context->width / 8,
 									 context->height / 8,
 									 context->width * 3 / 4,
 									 context->height * 3 / 4);
@@ -103,39 +103,6 @@ namespace renderer
 
 			renderer::rasterizer::triangle(*context, screen_coords, uv, zbuffer, model);
 		}
-	}
-
-
-	// matrix generation
-
-	gm::mat4 lookat(const gm::vec3& eye, const gm::vec3& center, const gm::vec3& up)
-	{
-		gm::vec3 z = (eye - center).get_normalized();
-		gm::vec3 x = (up ^ z).get_normalized();
-		gm::vec3 y = (z ^ x).get_normalized();
-
-		gm::mat4 res;
-		for (int i = 0; i < 3; i++) {
-			res[0][i] = x[i];
-			res[1][i] = y[i];
-			res[2][i] = z[i];
-			res[i][3] = -center[i];
-		}
-		return res;
-	}
-
-
-	gm::mat4 viewport(int x, int y, int w, int h, int depth)
-	{
-		gm::mat4 m;
-		m[0][3] = x + w / 2.f;
-		m[1][3] = y + h / 2.f;
-		m[2][3] = depth / 2.f;
-
-		m[0][0] = w / 2.f;
-		m[1][1] = h / 2.f;
-		m[2][2] = depth / 2.f;
-		return m;
 	}
 
 }

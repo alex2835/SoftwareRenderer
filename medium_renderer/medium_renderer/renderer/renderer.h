@@ -31,14 +31,4 @@ namespace renderer
 
 	void render_model(Model& model, Shader& shader);
 
-
-	// matrix generation
-
-	gm::mat4 lookat(const gm::vec3& eye, 
-					const gm::vec3& center,
-					const gm::vec3& up = gm::vec3(0, 1, 0));
-
-
-	gm::mat4 viewport(int x, int y, int w, int h, int depth = 255);
-
 }

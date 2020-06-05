@@ -97,7 +97,7 @@ namespace renderer
 
 							gui::Color color = model.get_diffuse(uvP);
 
-							//	color *= intensity;
+							//color *= intensity;
 
 							surface[P.y * surface.width + P.x] = color;
 						}
