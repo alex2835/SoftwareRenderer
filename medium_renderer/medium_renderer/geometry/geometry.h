@@ -196,9 +196,10 @@ namespace gm
 			return sqrtf(a + b + c);
 		}
 
-		void normalize()
+		Vec3<T>& normalize()
 		{
 			*this *= (1.0f / norm());
+			return *this;
 		}
 
 		Vec3<T> get_normalized() const
@@ -331,9 +332,10 @@ namespace gm
 			return sqrtf(a + b + c + d);
 		}
 
-		void normalize()
+		Vec4<T>& normalize()
 		{
 			*this *= (1.0f / norm());
+			return *this;
 		}
 
 		Vec4<T> get_normalized() const

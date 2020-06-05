@@ -47,5 +47,8 @@
     <ClInclude Include="renderer\renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="shader\shader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

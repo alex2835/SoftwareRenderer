@@ -34,8 +34,7 @@ namespace gui
 
 		~thread_pool();
 
-		// ad
-
+		
 		// task have return value
 		template <typename T>
 		auto add_task(T task)->std::future<decltype(task())>

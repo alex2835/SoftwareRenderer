@@ -36,7 +36,7 @@ namespace renderer
 
 
 
-		void triangle(gui::Image_base<uint8_t>& surface, gm::vec3* pts, gm::vec2i* uv, float* zbuffer, Model& model, float intensity)
+		void triangle(gui::Image_base<uint8_t>& surface, gm::vec3* pts, gm::vec2i* uv, float* zbuffer, Model& model)
 		{
 			if (pts[0].y == pts[1].y && pts[0].y == pts[2].y) return; // degenerate triangle
 
@@ -75,9 +75,9 @@ namespace renderer
 			}
 
 			gm::vec3i P;
-			for (P.x = bot_left.x; P.x < top_right.x; P.x++)
+			for (P.y = bot_left.y; P.y < top_right.y; P.y++)
 			{
-				for (P.y = bot_left.y; P.y < top_right.y; P.y++)
+				for (P.x = bot_left.x; P.x < top_right.x; P.x++)
 				{
 					gm::vec3 bar;
 					if (barycentric(pts[0], pts[1], pts[2], P, &bar))
@@ -88,23 +88,25 @@ namespace renderer
 
 						if (zbuffer[int(P.x + P.y * surface.width)] < z)
 						{
+							zbuffer[int(P.x + P.y * surface.width)] = z;
+
+
 							gm::vec2i uvP;
 							uvP.x = uv[0].x * bar[0] + uv[1].x * bar[1] + uv[2].x * bar[2];
 							uvP.y = uv[0].y * bar[0] + uv[1].y * bar[1] + uv[2].y * bar[2];
 
 							gui::Color color = model.get_diffuse(uvP);
 
-							zbuffer[int(P.x + P.y * surface.width)] = z;
-
-							for (int i = 0; i < 4; i++)
-								color.raw[i] *= intensity;
+							//	color *= intensity;
 
 							surface[P.y * surface.width + P.x] = color;
 						}
 					}
 				}
 			}
+
 		}
+
 
 	}
 }
