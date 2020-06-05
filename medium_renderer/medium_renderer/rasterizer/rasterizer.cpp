@@ -92,8 +92,7 @@ namespace renderer
 							uvP.x = uv[0].x * bar[0] + uv[1].x * bar[1] + uv[2].x * bar[2];
 							uvP.y = uv[0].y * bar[0] + uv[1].y * bar[1] + uv[2].y * bar[2];
 
-							//gui::Color color = model.get_diffuse(uvP);
-							gui::Color color = gui::Color(255);
+							gui::Color color = model.get_diffuse(uvP);
 
 							zbuffer[int(P.x + P.y * surface.width)] = z;
 

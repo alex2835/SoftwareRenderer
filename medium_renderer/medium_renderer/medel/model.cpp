@@ -59,13 +59,13 @@ namespace renderer
 			}
 		}
 
-		diffusemap.open((filename + "_diffuse.tga").c_str());
+		diffusemap.open((filename + "_diffuse.jpg").c_str());
 	}
 
 
 	bool Model::valid()
 	{
-		return faces.size();
+		return faces.size() && diffusemap.valid();
 	}
 
 
