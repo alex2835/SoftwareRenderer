@@ -69,40 +69,42 @@ namespace renderer
 									 context->width * 3 / 4,
 									 context->height * 3 / 4);
 
-		Projection[3][2] = -1.f / (eye - center).norm();
+		Projection[3][2] = -1.0f / (eye - center).norm();
 
 
-		for (int i = 0; i < model.faces_size(); i++)
-		{
-
-			std::vector<int> face = model.face(i);
-			gm::vec3 screen_coords[3];
-			gm::vec3 world_coords[3];
-			for (int j = 0; j < 3; j++)
+		ASYNC_FOR(0, model.faces_size())
+			[from, to, &model, &ViewPort, &Projection, &ModelView]() 
 			{
-				gm::vec3 v = model.get_vert(face[j]);
-				
-				screen_coords[j] = (ViewPort * Projection * ModelView * gm::mat4(v)).toVec3();
-				//screen_coords[j] = gm::vec3(v.x * context->width / 2 +  context->width / 2,
-				//							v.y * context->height / 2 + context->height / 2,
-				//							v.z);
-				world_coords[j] = v;
+				for (int i = from; i < to; i++)
+				{
+					Face& face = model.get_face(i);
+
+					// TODO: call here the vertex shader (instead this)
+
+					gm::vec3 screen_coords[3];
+					gm::vec3 world_coords[3];
+					gm::vec2i uv[3];
+
+					for (int j = 0; j < 3; j++)
+					{
+						// get uv
+						uv[j] = gm::vec2i (model.diffusemap.width * face[j].uv.x, 
+										   model.diffusemap.height * face[j].uv.y);
+
+						// get
+						gm::vec3& v = face[j].vert;
+
+						// matrix transformations
+						screen_coords[j] = (ViewPort * Projection * ModelView * gm::mat4(v)).toVec3();
+
+						world_coords[j] = v;
+					}
+
+					
+					renderer::rasterizer::triangle(*context, screen_coords, uv, zbuffer, model);
+				}
 			}
-
-			gm::vec3 n = (world_coords[2] - world_coords[0]) ^ (world_coords[1] - world_coords[0]);
-
-			
-			n.normalize();
-			float intensity = n * light_dir;
-			intensity = intensity < 0 ? 0.1 : intensity;
-
-			gm::vec2i uv[3];
-			for (int k = 0; k < 3; k++)
-				uv[k] = model.get_uv(i, k);
-
-
-			renderer::rasterizer::triangle(*context, screen_coords, uv, zbuffer, model);
-		}
+		END_FOR
 	}
 
 }

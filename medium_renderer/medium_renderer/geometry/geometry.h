@@ -22,6 +22,20 @@ namespace gm
 		Vec2() : x(0), y(0) {}
 		Vec2(T x, T y) : x(x), y(y) {}
 
+		Vec2(const Vec2<T>& other)
+		{
+			x = other.x;
+			y = other.y;
+		}
+
+		Vec2<T>& operator = (const Vec2<T>& other)
+		{
+			x = other.x;
+			y = other.y;
+			return *this;
+		}
+
+
 		Vec2<T>& operator += (const Vec2<T>& other)
 		{
 			x += other.x;
@@ -76,7 +90,7 @@ namespace gm
 		bool operator == (const Vec2<T>& other) const
 		{
 			return x == other.x &&
-				y == other.y;
+				   y == other.y;
 		}
 
 		bool operator != (const Vec2<T>& other) const

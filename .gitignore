@@ -5,6 +5,7 @@
 .vs/
 */venv/*
 *.lib
+
 # Created by http://www.gitignore.io
 
 ### VisualStudio ###

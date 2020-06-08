@@ -16,13 +16,9 @@ namespace gui
 #define MAX_THREADS 8
 #endif
 
-#ifndef MIN
-#define MIN(a, b) (a < b ? a : b)
-#endif
 
 	struct thread_pool
 	{
-		size_t size;
 		std::vector<std::thread> pool;
 		std::queue<std::function<void()>> tasks;
 		std::condition_variable event;
@@ -30,11 +26,12 @@ namespace gui
 		bool stopping;
 
 
-		thread_pool(size_t threads = 8);
+		thread_pool(size_t threads = MAX_THREADS);
 
 		~thread_pool();
 
-		
+		// add task
+
 		// task have return value
 		template <typename T>
 		auto add_task(T task)->std::future<decltype(task())>
@@ -51,10 +48,13 @@ namespace gui
 		// task return void
 		std::future<void> add_task_void(std::function<void()> task);
 
+		void resize(int size);
+
+		int size();
 
 	private:
 
-		void start();
+		void start(int size);
 
 		void stop() noexcept;
 	};
@@ -64,17 +64,16 @@ namespace gui
 	extern thread_pool workers;
 
 
-
 	// lamda with necessary params [from, to](){ for (int i = from; i < to; i++}
-#define ASYNC_FOR(from_param, to_param)											\
-			{																	\
-				std::future<void> res[MAX_THREADS];								\
-				int af_width = to_param - from_param;							\
-				for (int i = 0; i < workers.size; i++)							\
-				{																\
-					int from = i * af_width / workers.size + from_param;		\
-					int to = (i + 1) * af_width / workers.size + from_param;	\
-					res[i] = workers.add_task_void(
+#define ASYNC_FOR(from_param, to_param)											 \
+			{																	 \
+				std::future<void> res[MAX_THREADS];								 \
+				int af_width = to_param - from_param;							 \
+				for (int i = 0; i < gui::workers.size(); i++)						 \
+				{																 \
+					int from = i * af_width / gui::workers.size() + from_param;	 \
+					int to = (i + 1) * af_width / gui::workers.size() + from_param;\
+					res[i] = gui::workers.add_task_void(
 
 
 
@@ -82,7 +81,7 @@ namespace gui
 					);															\
 				}																\
 																				\
-				for (int i = 0; i < workers.size; i++)							\
+				for (int i = 0; i < gui::workers.size(); i++)						\
 					res[i].get();												\
 			}
 

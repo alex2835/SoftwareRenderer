@@ -5,6 +5,7 @@
 #include <fstream>
 #include <sstream>
 
+#include "face.h"
 #include "../geometry/geometry.h"
 #include "image/image.h"
 
@@ -14,12 +15,12 @@ namespace renderer
 
 	struct Model
 	{
+		int verts_size   = 0;
+		int uvs_size     = 0;
+		int normals_size = 0;
 
-		std::vector<gm::vec3> verts;
-		std::vector<std::vector<gm::vec3i>> faces; // this means vertex/uv/normal
-		std::vector<gm::vec3> norms;
-		std::vector<gm::vec2> uv;
-
+		// faces
+		std::vector<Face> faces;
 
 		// maps
 		gui::Image diffusemap;
@@ -29,17 +30,11 @@ namespace renderer
 
 		bool valid();
 
-		int verts_size();
-
 		int faces_size();
 
-		std::vector<int> face(int idx);
+		Face& get_face(int i);
 
-		gm::vec3& get_vert(int i);
-
-		gui::Color& get_diffuse(gm::vec2i& uv);
-
-		gm::vec2i get_uv(int iface, int nvert);
+		gui::Color& get_diffuse(const gm::vec2i& uv);
 
 	};
 

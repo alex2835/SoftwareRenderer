@@ -7,19 +7,28 @@ namespace renderer
 	Model::Model(const std::string& filename)
 	{
 		std::ifstream in;
+
+		// file input stream
 		in.open(filename + ".obj", std::ifstream::in);
 		if (in.fail()) return;
 
 
+		// temp stuff
+		std::vector<gm::vec3> verts;
+		std::vector<std::vector<gm::vec3i>> faces; // vec3i means vertex/uv/normal
+		std::vector<gm::vec3> norms;
+		std::vector<gm::vec2> uv;
+
 
 		std::string line;
 
-		while (!in.eof()) {
-
+		while (!in.eof())
+		{
 			std::getline(in, line);
 			std::istringstream iss(line.c_str());
 			char trash;
 			
+			// verts
 			if (!line.compare(0, 2, "v "))
 			{
 				iss >> trash;
@@ -28,6 +37,7 @@ namespace renderer
 				for (int i = 0; i < 3; i++) iss >> v[i];
 					verts.push_back(v);
 			}
+			// normals
 			else if (!line.compare(0, 3, "vn "))
 			{
 				iss >> trash >> trash;
@@ -36,6 +46,7 @@ namespace renderer
 				for (int i = 0; i < 3; i++) iss >> n[i];
 					norms.push_back(n);
 			}
+			// uv
 			else if (!line.compare(0, 3, "vt "))
 			{
 				iss >> trash >> trash;
@@ -44,6 +55,7 @@ namespace renderer
 				for (int i = 0; i < 2; i++) iss >> temp_uv[i];
 					uv.push_back(temp_uv);
 			}
+			// face
 			else if (!line.compare(0, 2, "f "))
 			{
 				std::vector<gm::vec3i> f;
@@ -52,13 +64,34 @@ namespace renderer
 
 				while (iss >> tmp[0] >> trash >> tmp[1] >> trash >> tmp[2])
 				{
-					for (int i = 0; i < 3; i++) tmp[i]--; // in wavefront obj all indices start at 1, not zero
-						f.push_back(tmp);
+					for (int i = 0; i < 3; i++) 
+						tmp[i]--;				// in wavefront obj all indices start at 1, not zero
+					
+					f.push_back(tmp);
 				}
 				faces.push_back(f);
 			}
+
 		}
 
+		verts_size = verts.size();
+		uvs_size = uv.size();
+		normals_size = norms.size();
+
+		// convert to cache friendly struct
+		Face res;
+		for (int i = 0; i < faces.size(); i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				res[j].vert = verts[faces[i][j][0]];
+				res[j].uv   = uv[faces[i][j][1]];
+				res[j].norm = norms[faces[i][j][2]];
+			}
+			this->faces.push_back(res);
+		}
+
+		// load maps
 		diffusemap.open((filename + "_diffuse.jpg").c_str());
 	}
 
@@ -69,44 +102,21 @@ namespace renderer
 	}
 
 
-	int Model::verts_size()
-	{
-		return verts.size();
-	}
-
-
 	int Model::faces_size()
 	{
 		return faces.size();
 	}
 
 
-	std::vector<int> Model::face(int idx)
+	Face& Model::get_face(int i)
 	{
-		std::vector<int> face;
-		for (int i = 0; i < faces[idx].size(); i++)
-			face.push_back(faces[idx][i][0]);
-
-		return face;
+		return faces[i];
 	}
 
 
-	gm::vec3& Model::get_vert(int i)
-	{
-		return verts[i];
-	}
-
-
-	gui::Color& Model::get_diffuse(gm::vec2i& uv)
+	gui::Color& Model::get_diffuse(const gm::vec2i& uv)
 	{
 		return diffusemap[uv.y * diffusemap.width + uv.x];
-	}
-
-
-	gm::vec2i Model::get_uv(int iface, int nvert)
-	{
-		int idx = faces[iface][nvert][1];
-		return gm::vec2i(uv[idx].x * diffusemap.width, uv[idx].y * diffusemap.height);
 	}
 
 }
