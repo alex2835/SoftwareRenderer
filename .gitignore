@@ -5,6 +5,11 @@
 .vs/
 */venv/*
 *.lib
+*/GPUCache/*
+*.xml
+*/VTune Profiler Results/medium_renderer/*
+*/r0*/*
+$GIT_DIR/medium_renderer/medium_renderer/VTune Profiler Results/**
 
 # Created by http://www.gitignore.io
 

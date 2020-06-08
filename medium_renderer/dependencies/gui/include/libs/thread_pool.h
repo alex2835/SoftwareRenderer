@@ -13,7 +13,7 @@ namespace gui
 {
 
 #ifndef MAX_THREADS
-#define MAX_THREADS 8
+#define MAX_THREADS 16
 #endif
 
 

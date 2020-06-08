@@ -28,7 +28,7 @@ struct MyShader : renderer::Shader
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 {
-	gui::init(hInstance);
+	gui::init(hInstance, 16);
 	gui::console::create_console();
 
 	// create window
