@@ -38,8 +38,6 @@ namespace renderer
 
 		void triangle(gui::Image_base<uint8_t>& surface, gm::vec3* pts, gm::vec2i* uv, float* zbuffer, Model& model)
 		{
-			if (pts[0].y == pts[1].y && pts[0].y == pts[2].y) return; // degenerate triangle
-
 			// sort vertices
 			if (pts[0].y > pts[1].y)
 			{
@@ -90,14 +88,14 @@ namespace renderer
 						{
 							zbuffer[int(P.x + P.y * surface.width)] = z;
 
-
 							gm::vec2i uvP;
 							uvP.x = uv[0].x * bar[0] + uv[1].x * bar[1] + uv[2].x * bar[2];
 							uvP.y = uv[0].y * bar[0] + uv[1].y * bar[1] + uv[2].y * bar[2];
 
-							gui::Color color = model.get_diffuse(uvP);
+							
+							// TODO: Call the fragment shader here
 
-							//color *= intensity;
+							gui::Color color = model.get_diffuse(uvP);
 
 							surface[P.y * surface.width + P.x] = color;
 						}

@@ -7,8 +7,9 @@
 
 
 #include "renderer/renderer.h"
-
 #include "shader/shader.h"
+
+// Tests
 //#include "tests/geometry_test.h"
 
 

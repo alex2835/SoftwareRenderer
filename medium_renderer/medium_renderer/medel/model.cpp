@@ -1,3 +1,4 @@
+
 #include "model.h"
 
 
@@ -15,7 +16,7 @@ namespace renderer
 
 		// temp stuff
 		std::vector<gm::vec3> verts;
-		std::vector<std::vector<gm::vec3i>> faces; // vec3i means vertex/uv/normal
+		std::vector<std::array<gm::vec3i, 3>> faces; // vec3i means vertex/uv/normal
 		std::vector<gm::vec3> norms;
 		std::vector<gm::vec2> uv;
 
@@ -58,16 +59,17 @@ namespace renderer
 			// face
 			else if (!line.compare(0, 2, "f "))
 			{
-				std::vector<gm::vec3i> f;
+				std::array<gm::vec3i, 3> f;
 				gm::vec3i tmp;
 				iss >> trash;
 
+				int j = 0;
 				while (iss >> tmp[0] >> trash >> tmp[1] >> trash >> tmp[2])
 				{
 					for (int i = 0; i < 3; i++) 
 						tmp[i]--;				// in wavefront obj all indices start at 1, not zero
 					
-					f.push_back(tmp);
+					f[j++] = tmp;
 				}
 				faces.push_back(f);
 			}
