@@ -57,7 +57,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 
 
 
-	gui::Timer timer;
+	gui::Timer timer(2);
 	while (gui::Window::is_running(window))
 	{
 

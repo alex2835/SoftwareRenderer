@@ -62,18 +62,24 @@ namespace renderer
 	void render_model(Model& model, Shader& shader)
 	{
 		gm::mat4 ModelView = gm::lookat(eye, center);
-		gm::mat4 Projection;
+
+		gm::mat4 Projection = gm::projection(90.0f, 0.1f, 120.0f);
+
+		// camera located on z axis
+		//Projection[3][2] = -1.0f / (eye - center).norm();
+
 
 		gm::mat4 ViewPort = gm::viewport(context->width / 8,
-									 context->height / 8,
-									 context->width * 3 / 4,
-									 context->height * 3 / 4);
+										 context->height / 8,
+										 context->width * 3 / 4,
+										 context->height * 3 / 4);
 
-		Projection[3][2] = -1.0f / (eye - center).norm();
+		
 
+		gm::mat4 transorms = ViewPort * Projection * ModelView;
 
 		ASYNC_FOR(0, model.faces_size())
-			[from, to, &model, &ViewPort, &Projection, &ModelView]() 
+			[from, to, &model, &transorms]()//&ViewPort, &Projection, &ModelView]()
 			{
 				for (int i = from; i < to; i++)
 				{
@@ -95,7 +101,8 @@ namespace renderer
 						gm::vec3& v = face[j].vert;
 
 						// matrix transformations
-						screen_coords[j] = (ViewPort * Projection * ModelView * gm::mat4(v)).toVec3();
+						//screen_coords[j] = (ViewPort * Projection * ModelView * gm::mat4(v)).toVec3();
+						screen_coords[j] = (transorms* gm::mat4(v)).toVec3();
 
 						world_coords[j] = v;
 					}

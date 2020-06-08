@@ -42,6 +42,9 @@
     <ClCompile Include="medel\face.h">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="rasterizer\rasterizer1.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="tests\geometry_test.h">

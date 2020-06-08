@@ -800,9 +800,10 @@ namespace gm
 
 	// ======================= Matrix generation ===============================
 
-	gm::mat4 lookat(const vec3& eye, const vec3& center, const vec3& up = vec3(0, 1, 0));
+	mat4 lookat(const vec3& eye, const vec3& center, const vec3& up = vec3(0, 1, 0));
 
-	gm::mat4 viewport(int x, int y, int w, int h, int depth = 255);
+	mat4 viewport(int x, int y, int w, int h, int depth = 255);
 
+	mat4 projection(float angleOfView, float near, float far);
 
 }
