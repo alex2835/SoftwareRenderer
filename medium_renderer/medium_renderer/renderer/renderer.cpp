@@ -52,6 +52,8 @@ namespace renderer
 
 
 
+
+
 	// temp
 	gm::vec3 light_dir = gm::vec3(1, -1, 1).get_normalized();
 	gm::vec3 eye(1, 1, 3);
@@ -61,7 +63,26 @@ namespace renderer
 	// render model
 	void render_model(Model& model, Shader& shader)
 	{
-		gm::mat4 ModelView = gm::lookat(eye, center);
+		
+		static renderer::Camera camera;
+
+		camera.MouseSensitivity = 100;
+
+		static float mouse_x = 0.5f;
+		static float mouse_y = 0.5f;
+
+		float shift_x = gui::Mouse::pos_x - mouse_x;
+		float shift_y = gui::Mouse::pos_y - mouse_y;
+
+		mouse_x = gui::Mouse::pos_x;
+		mouse_y = gui::Mouse::pos_y;
+
+		camera.ProcessMouseMovement(shift_x, shift_y);
+
+
+		gm::mat4 ModelView = camera.get_lookat();
+
+		//gm::mat4 ModelView = gm::lookat(eye, center);
 
 		gm::mat4 Projection = gm::projection(90.0f, 0.1f, 120.0f);
 

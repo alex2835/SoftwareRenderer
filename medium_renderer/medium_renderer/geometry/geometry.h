@@ -796,8 +796,6 @@ namespace gm
 
 
 
-
-
 	// ======================= Matrix generation ===============================
 
 	mat4 lookat(const vec3& eye, const vec3& center, const vec3& up = vec3(0, 1, 0));
@@ -805,5 +803,19 @@ namespace gm
 	mat4 viewport(int x, int y, int w, int h, int depth = 255);
 
 	mat4 projection(float angleOfView, float near, float far);
+
+
+
+	// Radians and angles
+
+	inline float radians(float degrees)
+	{
+		return degrees * 0.01745329251f;
+	}
+
+	inline float degrees(float radians)
+	{
+		return radians * 57.2957795131f;
+	}
 
 }

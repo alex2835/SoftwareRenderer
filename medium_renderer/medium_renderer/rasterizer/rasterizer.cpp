@@ -9,7 +9,7 @@ namespace renderer
 	{
 
 		bool barycentric(const gm::vec3& A, const gm::vec3& B, const gm::vec3& C,
-						 const gm::vec3i& P, gm::vec3* out)
+			const gm::vec3i& P, gm::vec3* out)
 		{
 			gm::vec3 s[2];
 			for (int i = 0; i < 2; i++)
@@ -92,7 +92,7 @@ namespace renderer
 							uvP.x = uv[0].x * bar[0] + uv[1].x * bar[1] + uv[2].x * bar[2];
 							uvP.y = uv[0].y * bar[0] + uv[1].y * bar[1] + uv[2].y * bar[2];
 
-							
+
 							// TODO: Call the fragment shader here
 
 							gui::Color color = model.get_diffuse(uvP);

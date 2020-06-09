@@ -24,9 +24,6 @@
     <ClCompile Include="rasterizer\rasterizer.h">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="rasterizer\rasterizer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="geometry\geometry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -42,7 +39,10 @@
     <ClCompile Include="medel\face.h">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="rasterizer\rasterizer1.cpp">
+    <ClCompile Include="rasterizer\rasterizer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="camera\camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -57,6 +57,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="shader\shader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="camera\camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

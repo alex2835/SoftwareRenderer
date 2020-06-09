@@ -51,13 +51,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 	}
 
 
-
 	// light dir
 	gm::vec3 light_dir(0, 0, -1);
 
 
-
-	gui::Timer timer(2);
+	gui::Timer timer(30);
 	while (gui::Window::is_running(window))
 	{
 

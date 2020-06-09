@@ -8,6 +8,10 @@
 #include "../rasterizer/rasterizer.h"
 #include "../medel/model.h"
 #include "../shader/shader.h"
+#include "../camera/camera.h"
+
+#include "libs/time.h"
+#include "io/input.h"
 
 namespace renderer
 {

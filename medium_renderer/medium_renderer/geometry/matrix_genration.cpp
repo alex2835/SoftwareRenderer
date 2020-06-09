@@ -10,9 +10,9 @@ namespace gm
 
 	// matrix generation
 
-	mat4 lookat(const vec3& eye, const vec3& center, const vec3& up)
+	mat4 lookat(const vec3& from, const vec3& to, const vec3& up)
 	{
-		vec3 z = (eye - center).get_normalized();
+		vec3 z = (from - to).get_normalized();
 		vec3 x = (up ^ z).get_normalized();
 		vec3 y = (z ^ x).get_normalized();
 
@@ -21,7 +21,7 @@ namespace gm
 			res[0][i] = x[i];
 			res[1][i] = y[i];
 			res[2][i] = z[i];
-			res[i][3] = -center[i];
+			res[i][3] = -from[i];
 		}
 		return res;
 	}
@@ -50,7 +50,7 @@ namespace gm
 		M[1][1] = scale; // scale the y coordinates of the projected point 
 		M[2][2] = far / (far - near); // used to remap z to [0,1] 
 		M[3][2] = -far * near / (far - near); // used to remap z [0,1] 
-		M[2][3] = -1; // set w = -z 
+		M[2][3] = 1; // set w = -z 
 		M[3][3] = 1;
 
 		return M;
