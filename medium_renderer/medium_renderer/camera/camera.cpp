@@ -76,9 +76,9 @@ namespace renderer
         {
             float velocity = MovementSpeed * deltaTime;
             if (direction == FORWARD)
-                Position += Front * velocity;
-            if (direction == BACKWARD)
                 Position -= Front * velocity;
+            if (direction == BACKWARD)
+                Position += Front * velocity;
             if (direction == LEFT)
                 Position -= Right * velocity;
             if (direction == RIGHT)
@@ -92,8 +92,8 @@ namespace renderer
             xoffset *= MouseSensitivity;
             yoffset *= MouseSensitivity;
 
-            Yaw += xoffset;
-            Pitch += yoffset;
+            Yaw -= xoffset;
+            Pitch -= yoffset;
 
             // Make sure that when pitch is out of bounds, screen doesn't get flipped
             if (constrainPitch)

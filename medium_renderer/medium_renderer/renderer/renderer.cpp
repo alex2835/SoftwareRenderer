@@ -97,22 +97,22 @@ namespace renderer
 		static float mouse_x = 0.5f;
 		static float mouse_y = 0.5f;
 
-		float shift_x = mouse_x - gui::Mouse::pos_x;
-		float shift_y = mouse_y - gui::Mouse::pos_y;
+		float shift_x = gui::Mouse::pos_x - mouse_x;
+		float shift_y = gui::Mouse::pos_y - mouse_y;
 
 
 		if (gui::Input::pressed(VK_LEFT))
-			shift_x += 0.01f;
+			shift_x -= 0.01f;
 
 		if (gui::Input::pressed(VK_RIGHT))
-			shift_x -= 0.01f;
+			shift_x += 0.01f;
 
 
 		if (gui::Input::pressed(VK_UP))
-			shift_y -= 0.01f;
+			shift_y += 0.01f;
 
 		if (gui::Input::pressed(VK_DOWN))
-			shift_y += 0.01f;
+			shift_y -= 0.01f;
 
 
 
@@ -129,10 +129,10 @@ namespace renderer
 		static float z = 0;
 
 
-		if (gui::Input::pressed(VK_S))
+		if (gui::Input::pressed(VK_W))
 			camera.ProcessKeyboard(FORWARD, 0.01f);
 
-		if (gui::Input::pressed(VK_W))
+		if (gui::Input::pressed(VK_S))
 			camera.ProcessKeyboard(BACKWARD, 0.01f);
 
 		if (gui::Input::pressed(VK_A))
@@ -170,7 +170,7 @@ namespace renderer
 		
 
 		//gm::mat4 transorms = ViewPort * Projection * View * Model;
-		gm::mat4 transorms = Projection * View * Model;
+		gm::mat4 transorms = ViewPort * Projection * View * Model;
 
 		//ASYNC_FOR(0, model.faces_size())
 		//	[from, to, &model, &transorms]()//&ViewPort, &Projection, &ModelView]()
@@ -199,8 +199,8 @@ namespace renderer
 						//screen_coords[j] = (ViewPort * Projection * ModelView * gm::mat4(v)).toVec3();
 						screen_coords[j] = (transorms * gm::mat4(v)).toVec3();
 
-						screen_coords[j].x = (screen_coords[j].x + 1.0f) * context->width / 2;
-						screen_coords[j].y = (screen_coords[j].y + 1.0f) * context->height / 2;
+						//screen_coords[j].x = (screen_coords[j].x + 1.0f) * context->width / 2;
+						//screen_coords[j].y = (screen_coords[j].y + 1.0f) * context->height / 2;
 
 						world_coords[j] = v;
 					}
