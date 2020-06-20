@@ -91,13 +91,30 @@ namespace renderer
 		
 		static renderer::Camera camera(eye);
 
-		camera.MouseSensitivity = 500;
+		camera.MouseSensitivity = 100;
+		camera.MovementSpeed = 10;
 
 		static float mouse_x = 0.5f;
 		static float mouse_y = 0.5f;
 
-		float shift_x = gui::Mouse::pos_x - mouse_x;
-		float shift_y = gui::Mouse::pos_y - mouse_y;
+		float shift_x = mouse_x - gui::Mouse::pos_x;
+		float shift_y = mouse_y - gui::Mouse::pos_y;
+
+
+		if (gui::Input::pressed(VK_LEFT))
+			shift_x += 0.01f;
+
+		if (gui::Input::pressed(VK_RIGHT))
+			shift_x -= 0.01f;
+
+
+		if (gui::Input::pressed(VK_UP))
+			shift_y -= 0.01f;
+
+		if (gui::Input::pressed(VK_DOWN))
+			shift_y += 0.01f;
+
+
 
 		mouse_x = gui::Mouse::pos_x;
 		mouse_y = gui::Mouse::pos_y;
@@ -111,17 +128,11 @@ namespace renderer
 		static float y = 0;
 		static float z = 0;
 
-		if (gui::Input::pressed(VK_UP))
-			x += 0.01f;
-
-		if (gui::Input::pressed(VK_DOWN))
-			x -= 0.01f;
-
-
-		if (gui::Input::pressed(VK_W))
-			camera.ProcessKeyboard(FORWARD, 0.01f);
 
 		if (gui::Input::pressed(VK_S))
+			camera.ProcessKeyboard(FORWARD, 0.01f);
+
+		if (gui::Input::pressed(VK_W))
 			camera.ProcessKeyboard(BACKWARD, 0.01f);
 
 		if (gui::Input::pressed(VK_A))
@@ -143,10 +154,10 @@ namespace renderer
 		gm::mat4 View = camera.get_lookat();
 		//gm::mat4 View = gm::lookat(eye, center);
 
-		//gm::mat4 Projection = gm::projection(90.0f, 0.1f, 120.0f);
+		gm::mat4 Projection = gm::projection(90.0f, 0.1f, 120.0f);
 
-		gm::mat4 Projection;
-		Projection[3][2] = -1.0f / (eye - center).norm();
+		//gm::mat4 Projection;
+		//Projection[3][2] = -1.0f / (eye - center).norm();
 
 		//print_mat(View);
 		//print_mat(Projection);

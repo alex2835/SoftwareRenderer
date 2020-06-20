@@ -53,6 +53,7 @@ namespace gm
 			Tr[i][3] = -to[i];
 		}
 		return Minv * Tr;
+
 		//vec3 forward = (from - to).get_normalized();
 		//vec3 right = temp.get_normalized() ^ forward;
 		//vec3 up = forward ^ right;
@@ -99,9 +100,9 @@ namespace gm
 		float scale = 1.0f / tanf(angleOfView * 0.5f * PI / 180.0f);
 		M[0][0] = scale; // scale the x coordinates of the projected point 
 		M[1][1] = scale; // scale the y coordinates of the projected point 
-		M[2][2] = -far / (far - near); // used to remap z to [0,1] 
-		M[3][2] = -far * near / (far - near); // used to remap z [0,1] 
-		M[2][3] = -1; // set w = -z 
+		M[2][2] = far / (far - near); // used to remap z to [0,1] 
+		M[3][2] = far * near / (far - near); // used to remap z [0,1] 
+		M[2][3] = 1; // set w = -z 
 		M[3][3] = 0;
 
 		return M;
