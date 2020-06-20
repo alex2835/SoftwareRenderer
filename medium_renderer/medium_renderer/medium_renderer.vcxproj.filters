@@ -39,10 +39,10 @@
     <ClCompile Include="medel\face.h">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="rasterizer\rasterizer.cpp">
+    <ClCompile Include="camera\camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="camera\camera.cpp">
+    <ClCompile Include="rasterizer\raserizer1.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

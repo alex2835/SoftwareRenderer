@@ -17,7 +17,7 @@ namespace gui
 #endif
 
 
-	struct thread_pool
+	struct ThreadPool
 	{
 		std::vector<std::thread> pool;
 		std::queue<std::function<void()>> tasks;
@@ -26,10 +26,11 @@ namespace gui
 		bool stopping;
 
 
-		thread_pool(size_t threads = MAX_THREADS);
+		ThreadPool(size_t threads = MAX_THREADS);
 
-		~thread_pool();
+		~ThreadPool();
 
+		
 		// add task
 
 		// task have return value
@@ -45,8 +46,9 @@ namespace gui
 			return wrapper->get_future();
 		}
 
-		// task return void
+		// task return void (common use case)
 		std::future<void> add_task_void(std::function<void()> task);
+
 
 		void resize(int size);
 
@@ -61,28 +63,43 @@ namespace gui
 
 
 	// declaration global thread pool
-	extern thread_pool workers;
-
-
-	// lamda with necessary params [from, to](){ for (int i = from; i < to; i++}
-#define ASYNC_FOR(from_param, to_param)											 \
-			{																	 \
-				std::future<void> res[MAX_THREADS];								 \
-				int af_width = to_param - from_param;							 \
-				for (int i = 0; i < gui::workers.size(); i++)						 \
-				{																 \
-					int from = i * af_width / gui::workers.size() + from_param;	 \
-					int to = (i + 1) * af_width / gui::workers.size() + from_param;\
-					res[i] = gui::workers.add_task_void(
+	extern ThreadPool thread_pool;
 
 
 
-#define END_FOR																	\
-					);															\
-				}																\
-																				\
-				for (int i = 0; i < gui::workers.size(); i++)						\
-					res[i].get();												\
+
+
+
+	// =========== Async for function ===========
+
+	//void paralel_for(int from, int to, std::function<void(int from, int to)> func);
+
+
+
+
+
+	//  ============ Async macro =============
+
+		// lamda with necessary params [from, to](){ for (int i = from; i < to; i++}
+#define ASYNC_FOR(from_param, to_param)											     \
+			{																	     \
+				std::future<void> res[MAX_THREADS];								     \
+				int width = to_param - from_param;							         \
+				int threads = __min(width, gui::thread_pool.size());                 \
+				for (int i = 0; i < threads; i++)								     \
+				{																     \
+					int from = i * width / gui::thread_pool.size() + from_param;	 \
+					int to = (i + 1) * width / gui::thread_pool.size() + from_param; \
+					res[i] = gui::thread_pool.add_task_void(
+
+
+
+#define END_FOR																	     \
+					);															     \
+				}																     \
+																				     \
+				for (int i = 0; i < threads; i++)						             \
+					res[i].get();												     \
 			}
 
 }

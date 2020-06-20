@@ -13,6 +13,8 @@
 #include "libs/time.h"
 #include "io/input.h"
 
+#include "io/log.h"
+
 namespace renderer
 {
 	// rendering context

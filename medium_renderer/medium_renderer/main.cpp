@@ -29,7 +29,7 @@ struct MyShader : renderer::Shader
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 {
-	gui::init(hInstance, 16);
+	gui::init(hInstance);
 	gui::console::create_console();
 
 	// create window
@@ -42,7 +42,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 	
 
 	// model
-	renderer::Model model("models/african_head_jpg/african_head");
+	renderer::Model model("models/african_head/african_head");
+	//renderer::Model model("models/cube/cube");
 
 	if (!model.valid())
 	{
@@ -59,16 +60,18 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 	while (gui::Window::is_running(window))
 	{
 
+		if (gui::Input::was_pressed(VK_ESCAPE))
+			break;
+
 		renderer::flush_screan();
 		
 		MyShader shader;
 		renderer::render_model(model, shader);
 
 
-
-
+		
 		static float output_delay = 1.0f;
-		if ((output_delay -= timer.elapsed) < 0)
+		if (output_delay -= timer.elapsed; output_delay < 0)
 		{
 			gui::console::printf("frame time: %f\n fps: %d\n", timer.elapsed, timer.FPS);
 			output_delay = 1.0f;
