@@ -177,6 +177,7 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="shaders\guro_shader.cpp" />
     <ClCompile Include="SoftwareRenderer\camera\camera.cpp" />
     <ClCompile Include="SoftwareRenderer\geometry\geometry.cpp" />
     <ClCompile Include="SoftwareRenderer\geometry\geometry.h">
@@ -210,6 +211,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
+    <ClInclude Include="shaders\guro_shader.h" />
     <ClInclude Include="SoftwareRenderer\camera\camera.h" />
     <ClInclude Include="SoftwareRenderer\include.h" />
     <ClInclude Include="SoftwareRenderer\medel\model.h" />

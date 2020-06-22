@@ -51,79 +51,16 @@ namespace renderer
 	}
 
 
-#define VK_UP 0x26
-#define VK_DOWN 0x28
-
-#define VK_W 0x57
-#define VK_S 0x53
-#define VK_A 0x41
-#define VK_D 0x44
-
-
 
 	// render model
 	void render_model(Model& model, Shader& shader, float elapsed)
 	{
-		
-		static renderer::Camera camera(gm::vec3(1, 1, 1));
-
-		static float mouse_x = 0.5f;
-		static float mouse_y = 0.5f;
-
-		float shift_x = gui::Mouse::pos_x - mouse_x;
-		float shift_y = gui::Mouse::pos_y - mouse_y;
-
-		if (gui::Input::pressed(VK_LEFT))
-			shift_x -= elapsed;
-
-		if (gui::Input::pressed(VK_RIGHT))
-			shift_x += elapsed;
-
-
-		if (gui::Input::pressed(VK_UP))
-			shift_y += elapsed;
-
-		if (gui::Input::pressed(VK_DOWN))
-			shift_y -= elapsed;
-
-
-		mouse_x = gui::Mouse::pos_x;
-		mouse_y = gui::Mouse::pos_y;
-
-		camera.ProcessMouseMovementShift(shift_x, shift_y);
-
-
-		if (gui::Input::pressed(VK_W))
-			camera.ProcessKeyboard(FORWARD, elapsed);
-
-		if (gui::Input::pressed(VK_S))
-			camera.ProcessKeyboard(BACKWARD, elapsed);
-
-		if (gui::Input::pressed(VK_A))
-			camera.ProcessKeyboard(LEFT, elapsed);
-
-		if (gui::Input::pressed(VK_D))
-			camera.ProcessKeyboard(RIGHT, elapsed);
-
-
-		gm::mat4 Model;
-
-		gm::mat4 View = camera.get_lookat();
-		gm::mat4 Projection = camera.get_projection();
-
-		gm::mat4 ViewPort = gm::viewport(context->width / 8,
-										 context->height / 8,
-										 context->width * 3 / 4,
-										 context->height * 3 / 4);
-		
-
-		gm::mat4 transorms = Projection * View * Model;
+		gm::mat4 ViewPort = gm::get_viewport(context->width, context->height);
 
 		gui::thread_pool.parallel_for_void(0, model.faces_size(),
 			[&](int from, int to)
 			{
 				for (int i = from; i < to; i++)
-				//for (int i = 0; i < model.faces_size(); i++)
 				{
 					bool fit = false;
 					Face& face = model.get_face(i);
@@ -137,31 +74,30 @@ namespace renderer
 						uv[j] = gm::vec2i(model.diffusemap.width * face[j].uv.x,
 										  model.diffusemap.height * face[j].uv.y);
 						
-						// get
-						gm::vec3& v = face[j].vert;
-
+						// Vertex shader
+						auto[vertex, normal] = shader.vertex(face[j].vert, face[j].norm);
 						
-						// TODO: call here the vertex shader (instead this)
-
-						// matrix transformations
-						screen_coords[j] = (transorms * gm::mat4(v)).toVec3();
-
+						// add vertex to triangle
+						screen_coords[j] = vertex;
 						
 						// clip
 						if (screen_coords[j].z > 5.0f && screen_coords[j].z < 10.0f)
 							fit = true;
 
+						// backface culling
+						// ...
+
 						// view port
 						screen_coords[j] = (ViewPort * gm::mat4(screen_coords[j])).toVec3();
 					}
 
-					if (fit) 
-					renderer::rasterizer::triangle(*context, screen_coords, uv, zbuffer, model);
+					// Rasterize triangle
+					if (fit)
+						rasterizer::triangle(*context, screen_coords, uv, zbuffer, shader);
 				}
 			}
 		);
 		gui::thread_pool.wait();
-
 	}
 
 }

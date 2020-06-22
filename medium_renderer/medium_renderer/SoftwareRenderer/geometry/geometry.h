@@ -805,21 +805,10 @@ namespace gm
 	mat4 lookat(const vec3& eye, const vec3& center, const vec3& up = vec3(0, 1, 0));
 
 	mat4 viewport(int x, int y, int w, int h, int depth = 255);
+	mat4 get_viewport(int width, int height);
 
 	mat4 projection(float aspect, float angleOfView, float near, float far);
 
-	//void gluPerspective(
-	//	const float& angleOfView,
-	//	const float& imageAspectRatio,
-	//	const float& n, const float& f,
-	//	float& b, float& t, float& l, float& r);
-	//
-	//void glFrustum(
-	//	const float& b, const float& t, const float& l, const float& r,
-	//	const float& n, const float& f,
-	//	gm::mat4& M);
-
-	// Radians and angles
 
 	inline float radians(float degrees)
 	{

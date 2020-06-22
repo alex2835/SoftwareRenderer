@@ -37,6 +37,11 @@ namespace gm
 		return m;
 	}
 
+	mat4 get_viewport(int width, int height)
+	{
+		return gm::viewport(width / 8, height / 8, width * 3 / 4, height * 3 / 4);
+	}
+
 
 	// compute screen coordinates first
 	static void gluPerspective(

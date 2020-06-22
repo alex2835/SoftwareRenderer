@@ -6,3 +6,5 @@
 #include "image/draw.h"
 
 #include "SoftwareRenderer/include.h"
+
+#include "shaders/guro_shader.h"
