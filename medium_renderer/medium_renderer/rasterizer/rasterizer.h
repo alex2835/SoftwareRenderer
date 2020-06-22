@@ -10,6 +10,8 @@
 #include "../medel/model.h"
 #include "../shader/shader.h"
 
+#include "io/log.h"
+
 namespace renderer
 {
 

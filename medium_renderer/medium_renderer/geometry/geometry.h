@@ -8,6 +8,8 @@
 namespace gm
 {
 
+	const float PI = 3.14159265359f;
+
 	// ========================== 2d Vector ==================================
 
 	template <typename T>
@@ -410,6 +412,7 @@ namespace gm
 
 		Matrix3(Vec3<T> v)
 		{
+			clear();
 			x[0][0] = v.x;
 			x[1][0] = v.y;
 			x[2][0] = v.z;
@@ -611,6 +614,7 @@ namespace gm
 
 		Matrix4(Vec3<T> v)
 		{
+			clear();
 			x[0][0] = v.x;
 			x[1][0] = v.y;
 			x[2][0] = v.z;

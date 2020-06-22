@@ -16,6 +16,45 @@ void print_mat(const gm::mat4& mat)
 
 
 
+// compute screen coordinates first
+void gluPerspective(
+	const float& angleOfView,
+	const float& imageAspectRatio,
+	const float& n, const float& f,
+	float& b, float& t, float& l, float& r)
+{
+	float scale = tanf(angleOfView * 0.5f * gm::PI / 180.0f) * n;
+	r = imageAspectRatio * scale, l = -r;
+	t = scale, b = -t;
+}
+
+// set the OpenGL perspective projection matrix
+void glFrustum(
+	const float& b, const float& t, const float& l, const float& r,
+	const float& n, const float& f,
+	gm::mat4& M)
+{
+	// set OpenGL perspective projection matrix
+	M[0][0] = 2 * n / (r - l);
+	M[0][1] = 0;
+	M[0][2] = 0;
+	M[0][3] = 0;
+
+	M[1][0] = 0;
+	M[1][1] = 2 * n / (t - b);
+	M[1][2] = 0;
+	M[1][3] = 0;
+
+	M[2][0] = (r + l) / (r - l);
+	M[2][1] = (t + b) / (t - b);
+	M[2][2] = (f + n) / (f - n);
+	M[2][3] = 1;
+
+	M[3][0] = 0;
+	M[3][1] = 0;
+	M[3][2] = 2 * f * n / (f - n);
+	M[3][3] = 0;
+}
 
 
 namespace renderer
@@ -43,6 +82,8 @@ namespace renderer
 	void flush_zbuffer()
 	{
 		memset(zbuffer, 0, zbuffer_size * sizeof(float));
+		//for (int i = 0; i < zbuffer_size; i++)
+		//	zbuffer[i] = 1000.0f;
 	}
 
 
@@ -86,7 +127,7 @@ namespace renderer
 
 
 	// render model
-	void render_model(Model& model, Shader& shader)
+	void render_model(Model& model, Shader& shader, float elapsed)
 	{
 		
 		static renderer::Camera camera(eye);
@@ -102,17 +143,17 @@ namespace renderer
 
 
 		if (gui::Input::pressed(VK_LEFT))
-			shift_x -= 0.01f;
+			shift_x -= elapsed;
 
 		if (gui::Input::pressed(VK_RIGHT))
-			shift_x += 0.01f;
+			shift_x += elapsed;
 
 
 		if (gui::Input::pressed(VK_UP))
-			shift_y += 0.01f;
+			shift_y += elapsed;
 
 		if (gui::Input::pressed(VK_DOWN))
-			shift_y -= 0.01f;
+			shift_y -= elapsed;
 
 
 
@@ -130,37 +171,39 @@ namespace renderer
 
 
 		if (gui::Input::pressed(VK_W))
-			camera.ProcessKeyboard(FORWARD, 0.01f);
+			camera.ProcessKeyboard(FORWARD, elapsed);
 
 		if (gui::Input::pressed(VK_S))
-			camera.ProcessKeyboard(BACKWARD, 0.01f);
+			camera.ProcessKeyboard(BACKWARD, elapsed);
 
 		if (gui::Input::pressed(VK_A))
-			camera.ProcessKeyboard(LEFT, 0.01f);
+			camera.ProcessKeyboard(LEFT, elapsed);
 
 		if (gui::Input::pressed(VK_D))
-			camera.ProcessKeyboard(RIGHT, 0.01f);
+			camera.ProcessKeyboard(RIGHT, elapsed);
 
 
 		
 		gm::mat4 Model;
-		//Model[0][0] = 0.1f;
-		//Model[1][1] = 0.1f;
-		//Model[2][2] = 0.1f;
+		//eModel[0][0] = 0.1f;
+		//eModel[1][1] = 0.1f;
+		//eModel[2][2] = 0.1f;
 		Model[0][3] = x;
 		Model[1][3] = y;
 		Model[2][3] = z;
 
 		gm::mat4 View = camera.get_lookat();
-		//gm::mat4 View = gm::lookat(eye, center);
 
-		gm::mat4 Projection = gm::projection(90.0f, 0.1f, 120.0f);
+		//gm::mat4 Projection = gm::projection(90.0f, 0.1f, 120.0f);
 
-		//gm::mat4 Projection;
-		//Projection[3][2] = -1.0f / (eye - center).norm();
-
-		//print_mat(View);
-		//print_mat(Projection);
+		gm::mat4 Projection;
+		float angleOfView = 90.0f;
+		float Near = 0.1f;
+		float Far = 100.0f;
+		float imageAspectRatio = context->width / (float)context->height;
+		float b, t, l, r;
+		gluPerspective(angleOfView, imageAspectRatio, Near, Far, b, t, l, r);
+		glFrustum(b, t, l, r, Near, Far, Projection);
 
 
 		gm::mat4 ViewPort = gm::viewport(context->width / 8,
@@ -169,47 +212,48 @@ namespace renderer
 										 context->height * 3 / 4);
 		
 
-		//gm::mat4 transorms = ViewPort * Projection * View * Model;
-		gm::mat4 transorms = ViewPort * Projection * View * Model;
+		gm::mat4 transorms = Projection * View * Model;
 
-		//ASYNC_FOR(0, model.faces_size())
-		//	[from, to, &model, &transorms]()//&ViewPort, &Projection, &ModelView]()
+
+		//gui::thread_pool.parallel_for_void(0, model.faces_size(),
+		//	[&model, &transorms](int from, int to)
 		//	{
 		//		for (int i = from; i < to; i++)
 				for (int i = 0; i < model.faces_size(); i++)
 				{
+					bool skip = true;
 					Face& face = model.get_face(i);
 
 					// TODO: call here the vertex shader (instead this)
 
 					gm::vec3 screen_coords[3];
-					gm::vec3 world_coords[3];
 					gm::vec2i uv[3];
 
 					for (int j = 0; j < 3; j++)
 					{
 						// get uv
-						uv[j] = gm::vec2i (model.diffusemap.width * face[j].uv.x, 
-										   model.diffusemap.height * face[j].uv.y);
+						uv[j] = gm::vec2i(model.diffusemap.width * face[j].uv.x,
+							model.diffusemap.height * face[j].uv.y);
 
 						// get
 						gm::vec3& v = face[j].vert;
 
 						// matrix transformations
-						//screen_coords[j] = (ViewPort * Projection * ModelView * gm::mat4(v)).toVec3();
 						screen_coords[j] = (transorms * gm::mat4(v)).toVec3();
 
-						//screen_coords[j].x = (screen_coords[j].x + 1.0f) * context->width / 2;
-						//screen_coords[j].y = (screen_coords[j].y + 1.0f) * context->height / 2;
+						if (screen_coords[j].z > 5.0f && screen_coords[j].z < 10.0f)
+							skip = false;
 
-						world_coords[j] = v;
+						screen_coords[j] = (ViewPort * gm::mat4(screen_coords[j])).toVec3();
 					}
 
-					
+					if (!skip)
 					renderer::rasterizer::triangle(*context, screen_coords, uv, zbuffer, model);
 				}
 		//	}
-		//END_FOR
+		//);
+		//gui::thread_pool.wait();
+
 	}
 
 }

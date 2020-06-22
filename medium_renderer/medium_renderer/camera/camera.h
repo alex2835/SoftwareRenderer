@@ -20,7 +20,7 @@ namespace renderer
     const static float YAW = 0.0f;
     const static float PITCH = 0.0f;
     const static float SPEED = 3.0f;
-    const static float SENSITIVTY = 0.25f;
+    const static float SENSITIVTY = 2.0f;
     const static float ZOOM = 45.0f;
 
 

@@ -32,6 +32,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 	gui::init(hInstance);
 	gui::console::create_console();
 
+	gui::thread_pool.resize(16);
+
 	// create window
 	gui::Window* window = new gui::Window(L"Widnow", 800, 600);
 	window->canvas.set_max_buffer_size();
@@ -52,11 +54,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 	}
 
 
+	//SetCapture(window->hwnd);
+
 	// light dir
 	gm::vec3 light_dir(0, 0, -1);
 
 
-	gui::Timer timer(30);
+	Timer timer;
 	while (gui::Window::is_running(window))
 	{
 
@@ -66,15 +70,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 		renderer::flush_screan();
 		
 		MyShader shader;
-		renderer::render_model(model, shader);
-
+		renderer::render_model(model, shader, timer.elapsed);
 
 		
-		static float output_delay = 1.0f;
+		static float output_delay = 10.0f;
 		if (output_delay -= timer.elapsed; output_delay < 0)
 		{
 			gui::console::printf("frame time: %f\n fps: %d\n", timer.elapsed, timer.FPS);
-			output_delay = 1.0f;
+			output_delay = 10.0f;
 		}
 
 

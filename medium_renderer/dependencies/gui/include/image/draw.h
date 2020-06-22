@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../libs/thread_pool.h"
+#include "../window/gui_init.h"
 #include "color.h"
 
 #ifndef MAX
@@ -162,23 +162,16 @@ namespace gui
 			int width = surface.width * fwidth;
 			int height = surface.height * fheight;
 
-			std::future<void> res[MAX_THREADS];
-
-			for (int i = 0; i < thread_pool.size(); i++)
-			{
-				int from_y = i * height / thread_pool.size();
-				int to_y = (i + 1) * height / thread_pool.size();
-
-				res[i] = thread_pool.add_task_void([from_y, to_y, height, width, &surface, &color]()
-					{
+			
+			thread_pool.parallel_for_void(0, height,
+				[height, width, &surface, &color](int from_y, int to_y)
+				{
 						for (int y = from_y; y < to_y; y++)
 							for (int x = 0; x < width; x++)
 								drawPixel(surface, x, y, color);
-					});
-			}
-
-			for (int i = 0; i < thread_pool.size(); i++)
-				res[i].get();
+				}
+			);
+			thread_pool.wait();
 		}
 
 
@@ -219,27 +212,21 @@ namespace gui
 
 			int width = surface.width * fwidth;
 			int height = surface.height * fheight;
-
-			std::future<void> res[MAX_THREADS];
-
-			for (int i = 0; i < thread_pool.size(); i++)
-			{
-				int from_y = i * height / thread_pool.size();
-				int to_y = (i + 1) * height / thread_pool.size();
-
-				res[i] = thread_pool.add_task_void([from_y, to_y, pos_y, pos_x, height, width, &surface, &image]()
+			
+			thread_pool.parallel_for_void(0, height,
+				[pos_y, pos_x, height, width, &surface, &image](int from_y, int to_y)
+				{
+					for (int y = from_y; y < to_y; y++)
 					{
-						for (int y = from_y; y < to_y; y++)
-							for (int x = 0; x < width; x++)
-							{
-								const Color_base<T>& color = image.get_pixel_scaled(x, y, width, height);
-								drawPixel(surface, x + pos_x, y + pos_y, color);
-							}
-					});
-			}
-
-			for (int i = 0; i < thread_pool.size(); i++)
-				res[i].get();
+						for (int x = 0; x < width; x++)
+						{
+							const Color_base<T>& color = image.get_pixel_scaled(x, y, width, height);
+							drawPixel(surface, x + pos_x, y + pos_y, color);
+						}
+					}
+				}
+			);
+			thread_pool.wait();
 		}
 
 		// no bound cheking here, if image outside the canvas it wouldn'd 
@@ -255,27 +242,21 @@ namespace gui
 			int width = surface.width * fwidth;
 			int height = surface.height * fheight;
 
-			std::future<void> res[MAX_THREADS];
-
-			for (int i = 0; i < thread_pool.size(); i++)
-			{
-				int from_y = i * height / thread_pool.size();
-				int to_y = (i + 1) * height / thread_pool.size();
-
-				res[i] = thread_pool.add_task_void([from_y, to_y, pos_y, pos_x, height, width, &surface, &image]()
+			thread_pool.parallel_for_void(0, height,
+				[pos_y, pos_x, height, width, &surface, &image](int from_y, int to_y)
+				{
+					for (int y = from_y; y < to_y; y++)
 					{
-						for (int y = from_y; y < to_y; y++)
-							for (int x = 0; x < width; x++)
-							{
-								assert(x < surface.width);
-								const Color_base<T>& color = image.get_pixel_scaled(x, y, width, height);
-								surface[(y + pos_y) * surface.width + (x + pos_x)] = color;
-							}
-					});
-			}
-
-			for (int i = 0; i < thread_pool.size(); i++)
-				res[i].get();
+						for (int x = 0; x < width; x++)
+						{
+							assert(x < surface.width);
+							const Color_base<T>& color = image.get_pixel_scaled(x, y, width, height);
+							surface[(y + pos_y) * surface.width + (x + pos_x)] = color;
+						}
+					}
+				}
+			);
+			thread_pool.wait();
 		}
 
 
@@ -439,22 +420,15 @@ namespace gui
 			int width = surface.width * fwidth;
 			int height = surface.height * fheight;
 
-			std::future<void> res[MAX_THREADS];
-
-			for (int i = 0; i < thread_pool.size(); i++)
-			{
-				int from_y = y0 + (i)*height / thread_pool.size();
-				int to_y = y0 + (i + 1) * height / thread_pool.size();
-
-				res[i] = thread_pool.add_task_void([x0, height, width, from_y, to_y, &surface, &color]() {
+			thread_pool.parallel_for_void(0, height,
+				[x0, height, width, &surface, &color](int from_y, int to_y)
+				{
 					for (int y = from_y; y < to_y; y++)
 						for (int x = x0; x < width + x0; x++)
 							drawPixel_a(surface, x, y, color);
-					});
-			}
-
-			for (int i = 0; i < thread_pool.size(); i++)
-				res[i].get();
+				}
+			);
+			thread_pool.wait();
 		}
 
 
@@ -497,28 +471,20 @@ namespace gui
 			int width = surface.width * fwidth;
 			int height = surface.height * fheight;
 
-			std::future<void> res[MAX_THREADS];
-
-			for (int i = 0; i < thread_pool.size(); i++)
-			{
-				int from_y = i * height / thread_pool.size();
-				int to_y = (i + 1) * height / thread_pool.size();
-
-				res[i] = thread_pool.add_task_void([from_y, to_y, pos_y, pos_x, height, width, &surface, &image]()
+			thread_pool.parallel_for_void(0, height,
+				[pos_y, pos_x, height, width, &surface, &image](int from_y, int to_y)
+				{
+					for (int y = from_y; y < to_y; y++)
 					{
-						for (int y = from_y; y < to_y; y++)
+						for (int x = 0; x < width; x++)
 						{
-							for (int x = 0; x < width; x++)
-							{
-								const fColor& color = image.get_pixel_scaled(x, y, width, height);
-								drawPixel_a(surface, x + pos_x, y + pos_y, color);
-							}
+							const fColor& color = image.get_pixel_scaled(x, y, width, height);
+							drawPixel_a(surface, x + pos_x, y + pos_y, color);
 						}
-					});
-			}
-
-			for (int i = 0; i < thread_pool.size(); i++)
-				res[i].get();
+					}
+				}
+			);
+			thread_pool.wait();
 		}
 
 
@@ -555,23 +521,24 @@ namespace gui
 			int pos_x = surface.width * fpos_x;
 			int pos_y = surface.height * fpos_y;
 
-
 			int width = surface.width * fwidth;
 			int height = surface.height * fheight;
 
-
-			ASYNC_FOR(0, height)
-				[alpha, from, to, pos_y, pos_x, height, width, &surface, &image]()
-			{
-				for (int y = from; y < to; y++)
-					for (int x = 0; x < width; x++)
+			thread_pool.parallel_for_void(0, height,
+					[alpha, pos_y, pos_x, height, width, &surface, &image](int from, int to)
 					{
-						const fColor& color = image.get_pixel_scaled(x, y, width, height);
-						color.a = alpha;
-						drawPixel_a(surface, x + pos_x, y + pos_y, color);
+						for (int y = from; y < to; y++)
+						{
+							for (int x = 0; x < width; x++)
+							{
+								const fColor& color = image.get_pixel_scaled(x, y, width, height);
+								color.a = alpha;
+								drawPixel_a(surface, x + pos_x, y + pos_y, color);
+							}
+						}
 					}
-			}
-				END_FOR
+				);
+				thread_pool.wait();
 
 		}
 
@@ -621,21 +588,23 @@ namespace gui
 			int center_x = width / 2;
 			int center_y = height / 2;
 
-
-			ASYNC_FOR(0, height)
-				[from, to, pos_y, pos_x, height, width, center_x, center_y, angle, &surface, &image]()
-			{
-				for (int y = from; y < to; y++)
-					for (int x = 0; x < width; x++)
+			thread_pool.parallel_for_void(0, height,
+				[pos_y, pos_x, height, width, center_x, center_y, angle, &surface, &image](int from, int to)
+				{
+					for (int y = from; y < to; y++)
 					{
-						int rotate_x = cosf(angle) * (x - center_x) + sinf(angle) * (y - center_y);
-						int rotate_y = -sinf(angle) * (x - center_x) + cosf(angle) * (y - center_y);
+						for (int x = 0; x < width; x++)
+						{
+							int rotate_x = cosf(angle) * (x - center_x) + sinf(angle) * (y - center_y);
+							int rotate_y = -sinf(angle) * (x - center_x) + cosf(angle) * (y - center_y);
 
-						const fColor& color = image.get_pixel_scaled(x, y, width, height);
-						drawPixel_a(surface, rotate_x + pos_x, rotate_y + pos_y, color);
+							const fColor& color = image.get_pixel_scaled(x, y, width, height);
+							drawPixel_a(surface, rotate_x + pos_x, rotate_y + pos_y, color);
+						}
 					}
-			}
-				END_FOR
+				}
+			);
+			thread_pool.wait();
 		}
 
 	}

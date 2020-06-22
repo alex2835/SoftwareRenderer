@@ -100,7 +100,7 @@ namespace renderer
 
 	bool Model::valid()
 	{
-		return faces.size();//&& diffusemap.valid();
+		return faces.size() && diffusemap.valid();
 	}
 
 
