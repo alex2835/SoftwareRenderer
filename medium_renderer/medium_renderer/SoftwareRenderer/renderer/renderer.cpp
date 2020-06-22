@@ -119,11 +119,11 @@ namespace renderer
 
 		gm::mat4 transorms = Projection * View * Model;
 
-		//gui::thread_pool.parallel_for_void(0, model.faces_size(),
-		//	[&model, &transorms](int from, int to)
-		//	{
-		//		for (int i = from; i < to; i++)
-				for (int i = 0; i < model.faces_size(); i++)
+		gui::thread_pool.parallel_for_void(0, model.faces_size(),
+			[&](int from, int to)
+			{
+				for (int i = from; i < to; i++)
+				//for (int i = 0; i < model.faces_size(); i++)
 				{
 					bool fit = false;
 					Face& face = model.get_face(i);
@@ -158,9 +158,9 @@ namespace renderer
 					if (fit) 
 					renderer::rasterizer::triangle(*context, screen_coords, uv, zbuffer, model);
 				}
-		//	}
-		//);
-		//gui::thread_pool.wait();
+			}
+		);
+		gui::thread_pool.wait();
 
 	}
 

@@ -1,13 +1,5 @@
 
-#include "window/window.h"
-#include "io/log.h"
-#include "libs/thread_pool.h"
-#include "image/draw.h"
-#include "geometry/geometry.h"
-
-
-#include "renderer/renderer.h"
-#include "shader/shader.h"
+#include "pch.h"
 
 // Tests
 //#include "tests/geometry_test.h"
@@ -31,21 +23,19 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 {
 	gui::init(hInstance);
 	gui::console::create_console();
-
 	gui::thread_pool.resize(16);
 
 	// create window
 	gui::Window* window = new gui::Window(L"Widnow", 800, 600);
 	window->canvas.set_max_buffer_size();
 
-
 	// set context
-	renderer::set_rendering_context(window->canvas);
+	sr::set_rendering_context(window->canvas);
 	
 
 	// model
-	renderer::Model model("models/african_head/african_head");
-	//renderer::Model model("models/cube/cube");
+	sr::Model model("models/african_head/african_head");
+	//sr::Model model("models/cube/cube");
 
 	if (!model.valid())
 	{
@@ -54,12 +44,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 	}
 
 
-	//SetCapture(window->hwnd);
 
-	// light dir
-	gm::vec3 light_dir(0, 0, -1);
-
-
+	//  ============= game loop ===============
 	Timer timer;
 	while (gui::Window::is_running(window))
 	{
@@ -67,10 +53,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 		if (gui::Input::was_pressed(VK_ESCAPE))
 			break;
 
-		renderer::flush_screan();
+		sr::flush_screan();
 		
 		MyShader shader;
-		renderer::render_model(model, shader, timer.elapsed);
+		sr::render_model(model, shader, timer.elapsed);
 
 		
 		static float output_delay = 3.0f;
