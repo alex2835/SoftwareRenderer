@@ -38,19 +38,53 @@ namespace gm
 	}
 
 
-	mat4 projection(float angleOfView, float near, float far)
+	// compute screen coordinates first
+	static void gluPerspective(
+		const float& angleOfView,
+		const float& imageAspectRatio,
+		const float& n, const float& f,
+		float& b, float& t, float& l, float& r)
 	{
-		// set the basic projection matrix
-		mat4 M;
-		float scale = 1.0f / tanf(angleOfView * 0.5f * PI / 180.0f);
-		M[0][0] = scale; // scale the x coordinates of the projected point 
-		M[1][1] = scale; // scale the y coordinates of the projected point 
-		M[2][2] = -far / (far - near); // used to remap z to [0,1] 
-		M[3][2] = -far * near / (far - near); // used to remap z [0,1] 
-		M[2][3] = -1; // set w = -z 
-		M[3][3] = 0;
+		float scale = tanf(angleOfView * 0.5f * gm::PI / 180.0f) * n;
+		r = imageAspectRatio * scale, l = -r;
+		t = scale, b = -t;
+	}
 
-		return M;
+	// set the OpenGL perspective projection matrix
+	static void glFrustum(
+		const float& b, const float& t, const float& l, const float& r,
+		const float& n, const float& f,
+		gm::mat4& M)
+	{
+		// set OpenGL perspective projection matrix
+		M[0][0] = 2 * n / (r - l);
+		M[0][1] = 0;
+		M[0][2] = 0;
+		M[0][3] = 0;
+
+		M[1][0] = 0;
+		M[1][1] = 2 * n / (t - b);
+		M[1][2] = 0;
+		M[1][3] = 0;
+
+		M[2][0] = (r + l) / (r - l);
+		M[2][1] = (t + b) / (t - b);
+		M[2][2] = (f + n) / (f - n);
+		M[2][3] = 1;
+
+		M[3][0] = 0;
+		M[3][1] = 0;
+		M[3][2] = 2 * f * n / (f - n);
+		M[3][3] = 0;
+	}
+
+	mat4 projection(float aspect, float fov, float near, float far)
+	{
+		gm::mat4 Projection;
+		float b, t, l, r;
+		gm::gluPerspective(fov, aspect, near, far, b, t, l, r);
+		glFrustum(b, t, l, r, near, far, Projection);
+		return Projection;
 	}
 
 }

@@ -73,13 +73,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 		renderer::render_model(model, shader, timer.elapsed);
 
 		
-		static float output_delay = 10.0f;
+		static float output_delay = 3.0f;
 		if (output_delay -= timer.elapsed; output_delay < 0)
 		{
 			gui::console::printf("frame time: %f\n fps: %d\n", timer.elapsed, timer.FPS);
-			output_delay = 10.0f;
+			output_delay = 3.0f;
 		}
-
 
 		timer.update();
 		window->render_canvas();

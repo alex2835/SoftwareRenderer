@@ -16,45 +16,6 @@ void print_mat(const gm::mat4& mat)
 
 
 
-// compute screen coordinates first
-void gluPerspective(
-	const float& angleOfView,
-	const float& imageAspectRatio,
-	const float& n, const float& f,
-	float& b, float& t, float& l, float& r)
-{
-	float scale = tanf(angleOfView * 0.5f * gm::PI / 180.0f) * n;
-	r = imageAspectRatio * scale, l = -r;
-	t = scale, b = -t;
-}
-
-// set the OpenGL perspective projection matrix
-void glFrustum(
-	const float& b, const float& t, const float& l, const float& r,
-	const float& n, const float& f,
-	gm::mat4& M)
-{
-	// set OpenGL perspective projection matrix
-	M[0][0] = 2 * n / (r - l);
-	M[0][1] = 0;
-	M[0][2] = 0;
-	M[0][3] = 0;
-
-	M[1][0] = 0;
-	M[1][1] = 2 * n / (t - b);
-	M[1][2] = 0;
-	M[1][3] = 0;
-
-	M[2][0] = (r + l) / (r - l);
-	M[2][1] = (t + b) / (t - b);
-	M[2][2] = (f + n) / (f - n);
-	M[2][3] = 1;
-
-	M[3][0] = 0;
-	M[3][1] = 0;
-	M[3][2] = 2 * f * n / (f - n);
-	M[3][3] = 0;
-}
 
 
 namespace renderer
@@ -185,25 +146,22 @@ namespace renderer
 
 		
 		gm::mat4 Model;
-		//eModel[0][0] = 0.1f;
-		//eModel[1][1] = 0.1f;
-		//eModel[2][2] = 0.1f;
-		Model[0][3] = x;
 		Model[1][3] = y;
 		Model[2][3] = z;
+		Model[0][3] = x;
 
 		gm::mat4 View = camera.get_lookat();
 
-		//gm::mat4 Projection = gm::projection(90.0f, 0.1f, 120.0f);
+		gm::mat4 Projection = gm::projection(context->width / (float)context->height, 90.0f, 0.1f, 100.0f);
 
-		gm::mat4 Projection;
-		float angleOfView = 90.0f;
-		float Near = 0.1f;
-		float Far = 100.0f;
-		float imageAspectRatio = context->width / (float)context->height;
-		float b, t, l, r;
-		gluPerspective(angleOfView, imageAspectRatio, Near, Far, b, t, l, r);
-		glFrustum(b, t, l, r, Near, Far, Projection);
+		//gm::mat4 Projection;
+		//float angleOfView = 90.0f;
+		//float Near = 0.1f;
+		//float Far = 100.0f;
+		//float imageAspectRatio = context->width / (float)context->height;
+		//float b, t, l, r;
+		//gm::gluPerspective(angleOfView, imageAspectRatio, Near, Far, b, t, l, r);
+		//glFrustum(b, t, l, r, Near, Far, Projection);
 
 
 		gm::mat4 ViewPort = gm::viewport(context->width / 8,

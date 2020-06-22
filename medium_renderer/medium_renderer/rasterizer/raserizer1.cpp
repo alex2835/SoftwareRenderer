@@ -84,13 +84,6 @@ namespace renderer
 						for (int i = 0; i < 3; i++)
 							z += pts[i][2] * bar[i];
 
-						static int delay_output = 50000000;
-						if (delay_output -= 1; delay_output < 0)
-						{
-							gui::console::printf("z - %0.2f \n", z);
-							delay_output = 50000000;
-						}
-
 						if (zbuffer[int(P.x + P.y * surface.width)] < z)
 						{
 							zbuffer[int(P.x + P.y * surface.width)] = z;
