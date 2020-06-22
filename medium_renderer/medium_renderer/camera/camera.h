@@ -2,6 +2,7 @@
 
 
 #include "../geometry/geometry.h"
+#include "../renderer/context.h"
 
 
 namespace renderer
@@ -19,9 +20,9 @@ namespace renderer
     // Default camera values
     const static float YAW = 0.0f;
     const static float PITCH = 0.0f;
-    const static float SPEED = 3.0f;
-    const static float SENSITIVTY = 2.0f;
-    const static float ZOOM = 45.0f;
+    const static float SPEED = 10.0f;
+    const static float SENSITIVTY = 100.0f;
+    const static float FOV = 90.0f;
 
 
     // An abstract camera class that processes input and calculates the corresponding Eular Angles, Vectors and Matrices for use in OpenGL
@@ -39,7 +40,10 @@ namespace renderer
         // Camera options
         float MovementSpeed;
         float MouseSensitivity;
-        float Zoom;
+        float Fov;
+
+        // Last mouse position
+        float Mouse_x = 0.5f, Mouse_y = 0.5f;
 
 
         // Constructor with vectors
@@ -56,14 +60,16 @@ namespace renderer
         // Returns the view matrix calculated using Eular Angles and the LookAt Matrix
         gm::mat4 get_lookat();
 
+        // Returns the view matrix calculated using Eular Angles and the LookAt Matrix
+        gm::mat4 get_projection();
 
         // Processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
         void ProcessKeyboard(Camera_Movement direction, float deltaTime);
 
 
         // Processes input received from a mouse input system. Expects the offset value in both the x and y direction.
-        void ProcessMouseMovement(float xoffset, float yoffset, bool constrainPitch = true);
-
+        void ProcessMouseMovement(float xMousePos, float yMousePos);
+        void ProcessMouseMovementShift(float xoffset, float yoffset);
 
         // Processes input received from a mouse scroll-wheel event. Only requires input on the vertical wheel-axis
         void ProcessMouseScroll(float yoffset);

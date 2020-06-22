@@ -36,7 +36,7 @@ namespace renderer
         Front(gm::vec3(0.0f, 0.0f, -1.0f)),
         MovementSpeed(SPEED),
         MouseSensitivity(SENSITIVTY),
-        Zoom(ZOOM)
+        Fov(FOV)
     {
         Position = position;
         WorldUp = up;
@@ -52,7 +52,7 @@ namespace renderer
         Front(gm::vec3(0.0f, 0.0f, -1.0f)),
         MovementSpeed(SPEED),
         MouseSensitivity(SENSITIVTY),
-        Zoom(ZOOM)
+        Fov(Fov)
     {
         Position = gm::vec3(posX, posY, posZ);
         WorldUp = gm::vec3(upX, upY, upZ);
@@ -66,6 +66,12 @@ namespace renderer
     gm::mat4 Camera::get_lookat()
     {
         return gm::lookat(Position, Position + Front, Up);
+    }
+
+    gm::mat4 Camera::get_projection()
+    {
+        float aspect = (float)context->width / context->height;
+        return gm::projection(aspect, Fov, 0.1f, 100.0f);
     }
 
 
@@ -85,7 +91,29 @@ namespace renderer
 
 
     // Processes input received from a mouse input system. Expects the offset value in both the x and y direction.
-    void Camera::ProcessMouseMovement(float xoffset, float yoffset, bool constrainPitch)
+    void Camera::ProcessMouseMovement(float xMousePos, float yMousePos)
+    {
+        float xoffset = (Mouse_x - xMousePos) * MouseSensitivity;
+        float yoffset = (Mouse_y - yMousePos) * MouseSensitivity;
+
+        Mouse_x = xMousePos;
+        Mouse_y = yMousePos;
+
+        Yaw -= xoffset;
+        Pitch -= yoffset;
+
+        // Make sure that when pitch is out of bounds, screen doesn't get flipped
+        if (Pitch > 89.0f)
+            Pitch = 89.0f;
+
+        if (Pitch < -89.0f)
+            Pitch = -89.0f;
+
+        // Update Front, Right and Up Vectors using the updated Eular angles
+        updateCameraVectors();
+    }
+
+    void Camera::ProcessMouseMovementShift(float xoffset, float yoffset)
     {
         xoffset *= MouseSensitivity;
         yoffset *= MouseSensitivity;
@@ -94,13 +122,11 @@ namespace renderer
         Pitch -= yoffset;
 
         // Make sure that when pitch is out of bounds, screen doesn't get flipped
-        if (constrainPitch)
-        {
-            if (Pitch > 89.0f)
-                Pitch = 89.0f;
-            if (Pitch < -89.0f)
-                Pitch = -89.0f;
-        }
+        if (Pitch > 89.0f)
+            Pitch = 89.0f;
+        
+        if (Pitch < -89.0f)
+            Pitch = -89.0f;
 
         // Update Front, Right and Up Vectors using the updated Eular angles
         updateCameraVectors();
@@ -110,12 +136,14 @@ namespace renderer
     // Processes input received from a mouse scroll-wheel event. Only requires input on the vertical wheel-axis
     void Camera::ProcessMouseScroll(float yoffset)
     {
-        if (Zoom >= 1.0f && Zoom <= 45.0f)
-            Zoom -= yoffset;
-        if (Zoom <= 1.0f)
-            Zoom = 1.0f;
-        if (Zoom >= 45.0f)
-            Zoom = 45.0f;
+        if (Fov >= 1.0f && Fov <= 90.0f)
+            Fov -= yoffset;
+
+        if (Fov <= 1.0f)
+            Fov = 1.0f;
+
+        if (Fov >= 90.0f)
+            Fov = 90.0f;
     }
 
 

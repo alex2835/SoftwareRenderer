@@ -2,22 +2,6 @@
 #include "renderer.h"
 
 
-
-void print_mat(const gm::mat4& mat)
-{
-	for (int i = 0; i < 4; i++)
-	{
-		for (int j = 0; j < 4; j++)
-			gui::console::printf("%0.2f ", mat[i][j]);
-		gui::console::printf("\n");
-	}
-	gui::console::printf("\n");
-}
-
-
-
-
-
 namespace renderer
 {
 
@@ -43,8 +27,6 @@ namespace renderer
 	void flush_zbuffer()
 	{
 		memset(zbuffer, 0, zbuffer_size * sizeof(float));
-		//for (int i = 0; i < zbuffer_size; i++)
-		//	zbuffer[i] = 1000.0f;
 	}
 
 
@@ -79,29 +61,17 @@ namespace renderer
 
 
 
-
-
-	// temp
-	gm::vec3 light_dir = gm::vec3(1, -1, 1).get_normalized();
-	gm::vec3 eye(1, 1, 1);
-	gm::vec3 center(0, 0, 0);
-
-
 	// render model
 	void render_model(Model& model, Shader& shader, float elapsed)
 	{
 		
-		static renderer::Camera camera(eye);
-
-		camera.MouseSensitivity = 100;
-		camera.MovementSpeed = 10;
+		static renderer::Camera camera(gm::vec3(1, 1, 1));
 
 		static float mouse_x = 0.5f;
 		static float mouse_y = 0.5f;
 
 		float shift_x = gui::Mouse::pos_x - mouse_x;
 		float shift_y = gui::Mouse::pos_y - mouse_y;
-
 
 		if (gui::Input::pressed(VK_LEFT))
 			shift_x -= elapsed;
@@ -117,18 +87,10 @@ namespace renderer
 			shift_y -= elapsed;
 
 
-
 		mouse_x = gui::Mouse::pos_x;
 		mouse_y = gui::Mouse::pos_y;
 
-		camera.ProcessMouseMovement(shift_x, shift_y);
-
-		center.x += shift_x;
-		center.y += shift_y;
-
-		static float x = 0;
-		static float y = 0;
-		static float z = 0;
+		camera.ProcessMouseMovementShift(shift_x, shift_y);
 
 
 		if (gui::Input::pressed(VK_W))
@@ -144,25 +106,10 @@ namespace renderer
 			camera.ProcessKeyboard(RIGHT, elapsed);
 
 
-		
 		gm::mat4 Model;
-		Model[1][3] = y;
-		Model[2][3] = z;
-		Model[0][3] = x;
 
 		gm::mat4 View = camera.get_lookat();
-
-		gm::mat4 Projection = gm::projection(context->width / (float)context->height, 90.0f, 0.1f, 100.0f);
-
-		//gm::mat4 Projection;
-		//float angleOfView = 90.0f;
-		//float Near = 0.1f;
-		//float Far = 100.0f;
-		//float imageAspectRatio = context->width / (float)context->height;
-		//float b, t, l, r;
-		//gm::gluPerspective(angleOfView, imageAspectRatio, Near, Far, b, t, l, r);
-		//glFrustum(b, t, l, r, Near, Far, Projection);
-
+		gm::mat4 Projection = camera.get_projection();
 
 		gm::mat4 ViewPort = gm::viewport(context->width / 8,
 										 context->height / 8,
@@ -172,17 +119,14 @@ namespace renderer
 
 		gm::mat4 transorms = Projection * View * Model;
 
-
 		//gui::thread_pool.parallel_for_void(0, model.faces_size(),
 		//	[&model, &transorms](int from, int to)
 		//	{
 		//		for (int i = from; i < to; i++)
 				for (int i = 0; i < model.faces_size(); i++)
 				{
-					bool skip = true;
+					bool fit = false;
 					Face& face = model.get_face(i);
-
-					// TODO: call here the vertex shader (instead this)
 
 					gm::vec3 screen_coords[3];
 					gm::vec2i uv[3];
@@ -191,21 +135,27 @@ namespace renderer
 					{
 						// get uv
 						uv[j] = gm::vec2i(model.diffusemap.width * face[j].uv.x,
-							model.diffusemap.height * face[j].uv.y);
-
+										  model.diffusemap.height * face[j].uv.y);
+						
 						// get
 						gm::vec3& v = face[j].vert;
+
+						
+						// TODO: call here the vertex shader (instead this)
 
 						// matrix transformations
 						screen_coords[j] = (transorms * gm::mat4(v)).toVec3();
 
+						
+						// clip
 						if (screen_coords[j].z > 5.0f && screen_coords[j].z < 10.0f)
-							skip = false;
+							fit = true;
 
+						// view port
 						screen_coords[j] = (ViewPort * gm::mat4(screen_coords[j])).toVec3();
 					}
 
-					if (!skip)
+					if (fit) 
 					renderer::rasterizer::triangle(*context, screen_coords, uv, zbuffer, model);
 				}
 		//	}

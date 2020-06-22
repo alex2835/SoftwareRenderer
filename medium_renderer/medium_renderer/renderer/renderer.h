@@ -9,6 +9,7 @@
 #include "../medel/model.h"
 #include "../shader/shader.h"
 #include "../camera/camera.h"
+#include "context.h"
 
 #include "libs/time.h"
 #include "io/input.h"
@@ -17,17 +18,8 @@
 
 namespace renderer
 {
-	// rendering context
-	extern gui::Image_base<uint8_t>* context;
-
+	
 	void set_rendering_context(gui::Image_base<uint8_t>& rendering_context);
-
-
-	// zbuffer
-	extern int zbuffer_size;
-	extern float* zbuffer;
-
-
 
 	void flush_screan(const gui::Color& color = gui::Color(0));
 

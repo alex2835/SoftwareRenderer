@@ -94,9 +94,7 @@ namespace renderer
 
 
 							// TODO: Call the fragment shader here
-							
 							gui::Color color = model.get_diffuse(uvP);
-							//gui::Color color(255);
 
 							surface[P.y * surface.width + P.x] = color;
 						}

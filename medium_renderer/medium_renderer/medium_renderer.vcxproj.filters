@@ -42,7 +42,10 @@
     <ClCompile Include="camera\camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="rasterizer\raserizer1.cpp">
+    <ClCompile Include="rasterizer\raserizer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\context.h">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
