@@ -53,14 +53,15 @@ namespace renderer
 
 
 	// render model
-	void render_model(Model& model, Shader& shader, float elapsed)
+	void render_model(Model& model, Shader* shader)
 	{
 		gm::mat4 ViewPort = gm::get_viewport(context->width, context->height);
-
-		gui::thread_pool.parallel_for_void(0, model.faces_size(),
-			[&](int from, int to)
-			{
-				for (int i = from; i < to; i++)
+	
+	//	gui::thread_pool.parallel_for_void(0, model.faces_size(), 64,
+	//		[&, shader](int from, int to)
+	//		{
+	//			for (int i = from; i < to; i++)
+				for (int i = 0; i < model.faces_size(); i++)
 				{
 					bool fit = false;
 					Face& face = model.get_face(i);
@@ -75,7 +76,7 @@ namespace renderer
 										  model.diffusemap.height * face[j].uv.y);
 						
 						// Vertex shader
-						auto[vertex, normal] = shader.vertex(face[j].vert, face[j].norm);
+						auto[vertex, normal] = shader->vertex(face[j].vert, face[j].norm, j);
 						
 						// add vertex to triangle
 						screen_coords[j] = vertex;
@@ -95,9 +96,9 @@ namespace renderer
 					if (fit)
 						rasterizer::triangle(*context, screen_coords, uv, zbuffer, shader);
 				}
-			}
-		);
-		gui::thread_pool.wait();
+	//		}
+	//	);
+	//	gui::thread_pool.wait();
 	}
 
 }

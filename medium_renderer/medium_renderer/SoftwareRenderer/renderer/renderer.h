@@ -27,6 +27,6 @@ namespace renderer
 
 	void zbuffer_resize(int size);
 
-	void render_model(Model& model, Shader& shader, float elapsed);
+	void render_model(Model& model, Shader* shader);
 
 }

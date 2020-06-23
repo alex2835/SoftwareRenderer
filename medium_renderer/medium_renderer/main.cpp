@@ -1,6 +1,9 @@
 
 #include "pch.h"
 
+#include "SoftwareRenderer/include.h"
+#include "shaders/guro_shader.h"
+
 
 #define VK_UP 0x26
 #define VK_DOWN 0x28
@@ -17,7 +20,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 {
 	gui::init(hInstance);
 	gui::console::create_console();
-	gui::thread_pool.resize(16);
 
 	// create window
 	gui::Window* window = new gui::Window(L"Widnow", 800, 600);
@@ -41,14 +43,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 	GuroShader shader;
 
 	// Camera
-	sr::Camera camera(gm::vec3(1, 1, 1));
+	sr::Camera camera(gm::vec3(1.5f, 2, 1));
 	float mouse_x = 0.5f;
 	float mouse_y = 0.5f;
 
 	float shift_x = 0.0f;
 	float shift_y = 0.0f;
 
-
+	gm::vec3 light_dir = gm::vec3(1, 1, 1).get_normalized();
 
 	//  ============= game loop ===============
 	Timer timer;
@@ -108,9 +110,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 		shader.View = camera.get_lookat();
 		shader.Projection = camera.get_projection();
 
+		//shader.CameraPos = camera.Position;
+		shader.LightDir = light_dir;
 
 		// Draw model
-		sr::render_model(model, shader, timer.elapsed);
+		sr::render_model(model, &shader);
 
 		
 		// ================ Info ouput ===================

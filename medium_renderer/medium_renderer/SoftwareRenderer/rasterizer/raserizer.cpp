@@ -36,7 +36,7 @@ namespace renderer
 
 
 
-		void triangle(gui::Image_base<uint8_t>& surface, gm::vec3* pts, gm::vec2i* uv, float* zbuffer, Shader& shader)
+		void triangle(gui::Image_base<uint8_t>& surface, gm::vec3* pts, gm::vec2i* uv, float* zbuffer, Shader* shader)
 		{
 			// sort vertices
 			if (pts[0].y > pts[1].y)
@@ -95,7 +95,7 @@ namespace renderer
 
 							// TODO: Call the fragment shader here
 							//gui::Color color = model.get_diffuse(uvP);
-							gui::Color color = shader.fragment(uvP, bar);
+							gui::Color color = shader->fragment(uvP, bar);
 
 							surface[P.y * surface.width + P.x] = color;
 						}
