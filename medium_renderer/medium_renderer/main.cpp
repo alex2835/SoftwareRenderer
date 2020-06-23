@@ -110,7 +110,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 		shader.View = camera.get_lookat();
 		shader.Projection = camera.get_projection();
 
-		//shader.CameraPos = camera.Position;
+		shader.CameraPos = camera.Position;
 		shader.LightDir = light_dir;
 
 		// Draw model

@@ -76,13 +76,13 @@ namespace renderer
 										  model.diffusemap.height * face[j].uv.y);
 						
 						// Vertex shader
-						auto[vertex, normal] = shader->vertex(face[j].vert, face[j].norm, j);
+						auto[vertex, discard] = shader->vertex(face[j].vert, face[j].norm, j);
 						
 						// add vertex to triangle
 						screen_coords[j] = vertex;
 						
 						// clip
-						if (screen_coords[j].z > 5.0f && screen_coords[j].z < 10.0f)
+						if (!discard && screen_coords[j].z > 5.0f && screen_coords[j].z < 10.0f)
 							fit = true;
 
 						// backface culling

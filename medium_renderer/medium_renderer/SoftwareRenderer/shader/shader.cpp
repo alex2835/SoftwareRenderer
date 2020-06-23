@@ -4,9 +4,9 @@
 namespace renderer
 {
 
-	std::tuple<gm::vec3, gm::vec3> Shader::vertex(const gm::vec3& vert, const gm::vec3& norm, int idx)
+	std::tuple<gm::vec3, bool> Shader::vertex(const gm::vec3& vert, const gm::vec3& norm, int idx)
 	{
-		return { gm::vec3(), gm::vec3() };
+		return { gm::vec3(), false };
 	}
 
 	// output: final color
