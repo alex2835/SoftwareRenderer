@@ -39,23 +39,23 @@ namespace renderer
 		void triangle(gui::Image_base<uint8_t>& surface, gm::vec3* pts, gm::vec2i* uv, float* zbuffer, Shader* shader)
 		{
 			// sort vertices
-			if (pts[0].y > pts[1].y)
-			{
-				std::swap(pts[0], pts[1]);
-				std::swap(uv[0], uv[1]);
-			}
-
-			if (pts[0].y > pts[2].y)
-			{
-				std::swap(pts[0], pts[2]);
-				std::swap(uv[0], uv[2]);
-			}
-
-			if (pts[1].y > pts[2].y)
-			{
-				std::swap(pts[1], pts[2]);
-				std::swap(uv[1], uv[2]);
-			}
+			//if (pts[0].y > pts[1].y)
+			//{
+			//	std::swap(pts[0], pts[1]);
+			//	std::swap(uv[0], uv[1]);
+			//}
+			//
+			//if (pts[0].y > pts[2].y)
+			//{
+			//	std::swap(pts[0], pts[2]);
+			//	std::swap(uv[0], uv[2]);
+			//}
+			//
+			//if (pts[1].y > pts[2].y)
+			//{
+			//	std::swap(pts[1], pts[2]);
+			//	std::swap(uv[1], uv[2]);
+			//}
 
 			gm::vec2 bot_left((std::numeric_limits<float>::max)(), (std::numeric_limits<float>::max)());
 			gm::vec2 top_right((std::numeric_limits<float>::min)(), (std::numeric_limits<float>::min)());
