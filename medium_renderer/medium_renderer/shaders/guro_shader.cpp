@@ -26,3 +26,15 @@ gui::Color GuroShader::fragment(const gm::vec2i& uv, const gm::vec3& bar)
 	float intensity = LightStrengt * bar;
 	return diffuse->get_pixel(uv.x, uv.y) * intensity;
  }
+
+
+GuroShader* GuroShader::clone()
+{
+	return new GuroShader(*this);
+}
+
+
+int GuroShader::size()
+{
+	return sizeof(GuroShader);
+}

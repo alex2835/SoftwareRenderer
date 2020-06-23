@@ -53,15 +53,24 @@ namespace renderer
 
 
 	// render model
-	void render_model(Model& model, Shader* shader)
+	void render_model(Model& model, Shader* in_shader)
 	{
+		// Split while mesh on tasts
+		// and put them on thread pool
+		const int tasks = 128;
+
+		// Get actual viewport
 		gm::mat4 ViewPort = gm::get_viewport(context->width, context->height);
-	
-	//	gui::thread_pool.parallel_for_void(0, model.faces_size(), 64,
-	//		[&, shader](int from, int to)
-	//		{
-	//			for (int i = from; i < to; i++)
-				for (int i = 0; i < model.faces_size(); i++)
+
+		// Call here Vertex shader and then rasterize trianle
+		gui::thread_pool.parallel_for_void(0, model.faces_size(), tasks,
+			[&](int from, int to)
+			{
+				// TODO: make this allocatetion on stack
+				Shader* shader = in_shader->clone();
+
+				for (int i = from; i < to; i++)
+				//for (int i = 0; i < model.faces_size(); i++)
 				{
 					bool fit = false;
 					Face& face = model.get_face(i);
@@ -85,20 +94,21 @@ namespace renderer
 						if (!discard && screen_coords[j].z > 5.0f && screen_coords[j].z < 10.0f)
 							fit = true;
 
-						// backface culling
-						// ...
-
 						// view port
 						screen_coords[j] = (ViewPort * gm::mat4(screen_coords[j])).toVec3();
 					}
 
 					// Rasterize triangle
-					if (fit)
+					if (fit) {
 						rasterizer::triangle(*context, screen_coords, uv, zbuffer, shader);
+					}
 				}
-	//		}
-	//	);
-	//	gui::thread_pool.wait();
+
+				// release copy
+				delete shader;
+			}
+		);
+		gui::thread_pool.wait();
 	}
 
 }
