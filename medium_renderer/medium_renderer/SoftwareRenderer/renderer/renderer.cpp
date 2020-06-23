@@ -121,9 +121,6 @@ namespace renderer
 						rasterizer::triangle(*context, screen_coords, uv, zbuffer, shader);
 					}
 				}
-
-				// release copy
-				delete shader;
 			}
 		);
 		gui::thread_pool.wait();

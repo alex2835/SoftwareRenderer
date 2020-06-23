@@ -6,10 +6,10 @@
 std::tuple<gm::vec3, bool> GuroShader::vertex(const gm::vec3& vert, const gm::vec3& norm, int idx)
 {
 
-	gm::vec3 vert_out = (Projection * View * Model * gm::mat4(vert)).toVec3();
-
+	//gm::vec3 vert_out = (Projection * View * Model * gm::mat4(vert)).toVec3();
 	//gm::vec3 norm_out = (((Projection * View * Model).get_transposed() * gm::mat4(vert))).toVec3();
-	//gm::vec3 vert_out = (Transforms * gm::mat4(vert)).toVec3();
+	
+	gm::vec3 vert_out = (Transforms * gm::mat4(vert)).toVec3();
 	//gm::vec3 norm_out = (Transforms.get_transposed() * gm::mat4(norm)).toVec3();
 
 	// light intensity
@@ -30,7 +30,7 @@ gui::Color GuroShader::fragment(const gm::vec2i& uv, const gm::vec3& bar)
 
 GuroShader* GuroShader::clone(char* memory)
 {
-	return new GuroShader(*this);
+	return new(memory) GuroShader(*this);
 }
 
 

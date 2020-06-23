@@ -13,8 +13,19 @@
 #define VK_A 0x41
 #define VK_D 0x44
 
-
-
+//void* operator new(std::size_t sz) {
+//	gui::console::printf("global op new called, size = %zu\n", sz);
+//	void* ptr = std::malloc(sz);
+//	if (ptr)
+//		return ptr;
+//	else
+//		throw std::bad_alloc{};
+//}
+//void operator delete(void* ptr) noexcept
+//{
+//	gui::console::printf("global op delete called");
+//	std::free(ptr);
+//}
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 {
@@ -106,8 +117,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 		
 		// Set uniforms
 		shader.diffuse = &model.diffusemap;
-		shader.View = camera.get_lookat();
-		shader.Projection = camera.get_projection();
+
+		//shader.View = camera.get_lookat();
+		//shader.Projection = camera.get_projection();
+		shader.Transforms = camera.get_projection() * camera.get_lookat();
 
 		shader.CameraPos = camera.Position;
 		shader.LightDir = light_dir;

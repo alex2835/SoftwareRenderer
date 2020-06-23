@@ -13,16 +13,19 @@ namespace renderer
 		in.open(filename + ".obj", std::ifstream::in);
 		if (in.fail()) return;
 
-
 		// temp stuff
 		std::vector<gm::vec3> verts;
 		std::vector<std::array<gm::vec3i, 3>> faces; // vec3i means vertex/uv/normal
 		std::vector<gm::vec3> norms;
 		std::vector<gm::vec2> uv;
 
+		verts.reserve(100);
+		faces.reserve(100);
+		norms.reserve(100);
+		norms.reserve(100);
+		uv.reserve(100);
 
 		std::string line;
-
 		while (!in.eof())
 		{
 			std::getline(in, line);

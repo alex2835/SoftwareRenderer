@@ -54,9 +54,6 @@
     <ClCompile Include="shaders\guro_shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SoftwareRenderer\shader\shader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="tests\geometry_test.h">
