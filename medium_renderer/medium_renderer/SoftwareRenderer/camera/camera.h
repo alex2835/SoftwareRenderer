@@ -18,8 +18,8 @@ namespace renderer
 
 
     // Default camera values
-    const static float YAW = 0.0f;
-    const static float PITCH = 0.0f;
+    const static float YAW = 45.0f;
+    const static float PITCH = -45.0f;
     const static float SPEED = 10.0f;
     const static float SENSITIVTY = 100.0f;
     const static float FOV = 90.0f;

@@ -134,7 +134,7 @@ struct ThreadPool
 			active_tasks++;
 			{
 				std::unique_lock<std::mutex> lock(event_mutex);
-				tasks.push([&func, from, to]() { func(from, to); });
+				tasks.push([&func, from, to, i]() { func(from, to, i); });
 			}
 			event.notify_one();
 		}

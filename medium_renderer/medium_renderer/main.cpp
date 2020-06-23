@@ -43,7 +43,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 	GuroShader shader;
 
 	// Camera
-	sr::Camera camera(gm::vec3(1.5f, 2, 1));
+	sr::Camera camera(gm::vec3(0, 0, 5));
 	float mouse_x = 0.5f;
 	float mouse_y = 0.5f;
 
@@ -61,7 +61,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 
 		// clear screan and zbuffer
 		sr::flush_screan();
-
 
 
 		// ================ Process input ==================

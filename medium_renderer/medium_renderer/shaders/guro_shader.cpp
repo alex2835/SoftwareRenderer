@@ -28,7 +28,7 @@ gui::Color GuroShader::fragment(const gm::vec2i& uv, const gm::vec3& bar)
  }
 
 
-GuroShader* GuroShader::clone()
+GuroShader* GuroShader::clone(char* memory)
 {
 	return new GuroShader(*this);
 }

@@ -21,7 +21,7 @@ struct GuroShader : renderer::Shader
 
 	gui::Color fragment(const gm::vec2i& uv, const gm::vec3& bar) override;
 
-	GuroShader* clone() override;
+	GuroShader* clone(char* memory) override;
 
 	int size() override;
 

@@ -9,9 +9,12 @@ namespace renderer
 	gui::Image_base<uint8_t>* context = NULL;
 
 	// zbuffer
-	int zbuffer_size = 0;
-	float* zbuffer = NULL;
+	static int zbuffer_size = 0;
+	static float* zbuffer = NULL;
 
+	// shaders memory
+	static int shaders_memory_size = 0;
+	static char* shaders_memory = NULL;
 
 	// set rendering context
 	void set_rendering_context(gui::Image_base<uint8_t>& rendering_context)
@@ -50,6 +53,13 @@ namespace renderer
 		gui::cpu::draw_filled_rect_async(*context, 0.0f, 0.0f, 1.0f, 1.0f, color);
 	}
 
+	// release
+	void release()
+	{
+		delete[] zbuffer;
+		delete[] shaders_memory;
+	}
+
 
 
 	// render model
@@ -62,12 +72,20 @@ namespace renderer
 		// Get actual viewport
 		gm::mat4 ViewPort = gm::get_viewport(context->width, context->height);
 
+		// reallocate memory for shaders for each task
+		if (shaders_memory_size < in_shader->size() * tasks)
+		{
+			delete[] shaders_memory;
+			shaders_memory_size = in_shader->size() * tasks;
+			shaders_memory = new char[shaders_memory_size];
+		} 
+
 		// Call here Vertex shader and then rasterize trianle
 		gui::thread_pool.parallel_for_void(0, model.faces_size(), tasks,
-			[&](int from, int to)
+			[&](int from, int to, int id)
 			{
 				// TODO: make this allocatetion on stack
-				Shader* shader = in_shader->clone();
+				Shader* shader = in_shader->clone(shaders_memory + in_shader->size() * id);
 
 				for (int i = from; i < to; i++)
 				//for (int i = 0; i < model.faces_size(); i++)
@@ -109,6 +127,7 @@ namespace renderer
 			}
 		);
 		gui::thread_pool.wait();
+
 	}
 
 }

@@ -27,6 +27,10 @@ namespace renderer
 
 	void zbuffer_resize(int size);
 
+	// release intire memory
+	void release();
+
+
 	void render_model(Model& model, Shader* shader);
 
 }

@@ -16,7 +16,7 @@ namespace renderer
 		virtual gui::Color fragment(const gm::vec2i& uv, const gm::vec3& bar);
 		
 		// return 
-		virtual Shader* clone() = 0;
+		virtual Shader* clone(char* memory) = 0;
 
 		// must return sizeof(OurShaderClass)
 		virtual int size() = 0;
