@@ -2,8 +2,11 @@
 #include "pch.h"
 
 #include "SoftwareRenderer/include.h"
-#include "shaders/guro_shader.h"
 
+#include "shaders/guro_shader.h"
+#include "shaders/LightSpotShader.h"
+
+#include "scene_objects/lighter.h"
 
 #define VK_UP 0x26
 #define VK_DOWN 0x28
@@ -31,6 +34,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 {
 	gui::init(hInstance);
 	gui::console::create_console();
+	//gui::thread_pool.resize(64);
 
 	// create window
 	gui::Window* window = new gui::Window(L"Widnow", 800, 600);
@@ -41,17 +45,26 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 	
 
 	// model
-	sr::Model model("models/african_head/african_head");
-	//sr::Model model("models/cube/cube");
-
-	if (!model.valid())
+	sr::Model head("models/african_head/african_head");
+	if (!head.valid())
 	{
 		gui::console::printf("Error: Can not load model\n");
 		return 1;
 	}
 
+	sr::Model cube("models/cube/cube");
+	if (!cube.valid())
+	{
+		gui::console::printf("Error: Can not load model\n");
+		return 1;
+	}
+
+	Lighter lighter(cube, gm::vec3(3, 0, 0), 0.05f);
+
+
 	// Shader
-	GuroShader shader;
+	GuroShader guro_shader;
+	LightSpotShader light_shader;
 
 	// Camera
 	sr::Camera camera(gm::vec3(0, 0, 5));
@@ -61,7 +74,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 	float shift_x = 0.0f;
 	float shift_y = 0.0f;
 
-	gm::vec3 light_dir = gm::vec3(1, 1, 1).get_normalized();
 
 	//  ============= game loop ===============
 	Timer timer;
@@ -115,18 +127,32 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 
 		//  ================ Draw =================
 		
-		// Set uniforms
-		shader.diffuse = &model.diffusemap;
+		// Set head uniforms
+		guro_shader.diffuse = &head.diffusemap;
 
-		//shader.View = camera.get_lookat();
-		//shader.Projection = camera.get_projection();
-		shader.Transforms = camera.get_projection() * camera.get_lookat();
+		guro_shader.set_view(camera.get_lookat());
+		guro_shader.set_projection(camera.get_projection());
 
-		shader.CameraPos = camera.Position;
-		shader.LightDir = light_dir;
+		guro_shader.CameraPos = camera.Position;
+		guro_shader.LightPos = lighter.Position;
 
-		// Draw model
-		sr::render_model(model, &shader);
+		// Draw head
+		sr::render_model(head, &guro_shader);
+
+		// Set lighter uniforms
+		float radius = 7.0f;
+		float lightX = sinf(get_time() * 0.5f) * radius;
+		float lightZ = cosf(get_time() * 0.5f) * radius;
+		lighter.Position = gm::vec3(lightX, 0, lightZ);
+
+		gm::mat4 Model;
+		Model.set_col(3, lighter.Position);
+		Model.set_scale(lighter.scale);
+
+		light_shader.Transforms = camera.get_projection() * camera.get_lookat() * Model;
+
+		// Draw cube
+		sr::render_model(lighter, &light_shader);
 
 		
 		// ================ Info ouput ===================

@@ -84,5 +84,55 @@ namespace renderer
 		}
 
 
+		//void triangle_async(gui::Image_base<uint8_t>& surface, gm::vec3* pts, gm::vec2i* uv, float* zbuffer, Shader* shader)
+		//{
+		//	gm::vec2 bot_left((std::numeric_limits<float>::max)(), (std::numeric_limits<float>::max)());
+		//	gm::vec2 top_right((std::numeric_limits<float>::min)(), (std::numeric_limits<float>::min)());
+		//
+		//	for (int i = 0; i < 3; i++)
+		//	{
+		//		for (int j = 0; j < 2; j++)
+		//		{
+		//			bot_left[j] = __max(0.0f, __min(bot_left[j], pts[i][j]));
+		//			if (j == 1)
+		//				top_right[j] = __min(surface.height, __max(top_right[j], pts[i][j]));
+		//			else
+		//				top_right[j] = __min(surface.width, __max(top_right[j], pts[i][j]));
+		//		}
+		//	}
+		//
+		//	gm::vec3i P;
+		//	gm::vec3 bar;
+		//
+		//	for (P.y = bot_left.y; P.y < top_right.y; P.y++)
+		//	{
+		//		for (P.x = bot_left.x; P.x < top_right.x; P.x++)
+		//		{
+		//			if (barycentric(pts[0], pts[1], pts[2], P, &bar))
+		//			{
+		//				float z = 0.0f;
+		//				for (int i = 0; i < 3; i++)
+		//					z += pts[i][2] * bar[i];
+		//
+		//				if (zbuffer[int(P.x + P.y * surface.width)] < z)
+		//				{
+		//					zbuffer[int(P.x + P.y * surface.width)] = z;
+		//
+		//					gm::vec2i uvP;
+		//					uvP.x = uv[0].x * bar[0] + uv[1].x * bar[1] + uv[2].x * bar[2];
+		//					uvP.y = uv[0].y * bar[0] + uv[1].y * bar[1] + uv[2].y * bar[2];
+		//
+		//					// Fragment shader
+		//					gui::Color color = shader->fragment(uvP, bar);
+		//
+		//					surface[P.y * surface.width + P.x] = color;
+		//				}
+		//			}
+		//		}
+		//	}
+		//
+		//}
+
+
 	}
 }

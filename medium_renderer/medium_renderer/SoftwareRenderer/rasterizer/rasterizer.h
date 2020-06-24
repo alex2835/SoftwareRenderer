@@ -25,6 +25,9 @@ namespace renderer
 		// rasterize triangle
 		void triangle(gui::Image_base<uint8_t>& surface, gm::vec3* pts, gm::vec2i* uv, float* zbuffer, Shader* shader);
 
+		//void triangle_async(gui::Image_base<uint8_t>& surface, gm::vec3* pts, gm::vec2i* uv, float* zbuffer, Shader* shader);
+
 	}
+
 
 }

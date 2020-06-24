@@ -67,7 +67,7 @@ namespace renderer
 	{
 		// Split while mesh on tasts
 		// and put them on thread pool
-		const int tasks = 128;
+		const int tasks = __min(8, model.faces_size());
 
 		// Get actual viewport
 		gm::mat4 ViewPort = gm::get_viewport(context->width, context->height);
@@ -78,52 +78,95 @@ namespace renderer
 			delete[] shaders_memory;
 			shaders_memory_size = in_shader->size() * tasks;
 			shaders_memory = new char[shaders_memory_size];
-		} 
+		}
 
-		// Call here Vertex shader and then rasterize trianle
-		gui::thread_pool.parallel_for_void(0, model.faces_size(), tasks,
-			[&](int from, int to, int id)
-			{
-				// TODO: make this allocatetion on stack
-				Shader* shader = in_shader->clone(shaders_memory + in_shader->size() * id);
+		//if (tasks > 64)
+		//{
+			// Call here Vertex shader and then rasterize trianle
+			//auto futures = gui::thread_pool.parallel_for(0, model.faces_size(),
+			//	[&](int from, int to, int id)
+			//	{
+			//		// TODO: make this allocatetion on stack
+		Shader* shader = in_shader;// ->clone(shaders_memory + in_shader->size() * id);
 
-				for (int i = from; i < to; i++)
-				//for (int i = 0; i < model.faces_size(); i++)
-				{
-					bool fit = false;
-					Face& face = model.get_face(i);
-
-					gm::vec3 screen_coords[3];
-					gm::vec2i uv[3];
-
-					for (int j = 0; j < 3; j++)
+					//for (int i = from; i < to; i++)
+					for (int i = 0; i < model.faces_size(); i++)
 					{
-						// get uv
-						uv[j] = gm::vec2i(model.diffusemap.width * face[j].uv.x,
-										  model.diffusemap.height * face[j].uv.y);
-						
-						// Vertex shader
-						auto[vertex, discard] = shader->vertex(face[j].vert, face[j].norm, j);
-						
-						// add vertex to triangle
-						screen_coords[j] = vertex;
-						
-						// clip
-						if (!discard && screen_coords[j].z > 5.0f && screen_coords[j].z < 10.0f)
-							fit = true;
+						bool fit = false;
+						Face& face = model.get_face(i);
 
-						// view port
-						screen_coords[j] = (ViewPort * gm::mat4(screen_coords[j])).toVec3();
-					}
+						gm::vec3 screen_coords[3];
+						gm::vec2i uv[3];
 
-					// Rasterize triangle
-					if (fit) {
-						rasterizer::triangle(*context, screen_coords, uv, zbuffer, shader);
-					}
+						for (int j = 0; j < 3; j++)
+						{
+							// get uv
+							uv[j] = gm::vec2i(model.diffusemap.width * face[j].uv.x,
+								model.diffusemap.height * face[j].uv.y);
+
+							// Vertex shader
+							auto [vertex, discard] = shader->vertex(face[j].vert, face[j].norm, j);
+
+							// add vertex to triangle
+							screen_coords[j] = vertex;
+
+							// clip
+							if (!discard && screen_coords[j].z > 5.0f && screen_coords[j].z < 9.5f)
+								fit = true;
+
+							// view port
+							screen_coords[j] = (ViewPort * gm::mat4(screen_coords[j])).toVec3();
+						}
+
+						// Rasterize triangle
+						if (fit) {
+							rasterizer::triangle(*context, screen_coords, uv, zbuffer, shader);
+						}
+			//		}
+			//
+			//		delete shader;
 				}
-			}
-		);
-		gui::thread_pool.wait();
+			//);
+
+			//for (auto& future : futures)
+			//	future.get();
+
+			//gui::thread_pool.wait();
+
+
+		//	for (int i = 0; i < model.faces_size(); i++)
+		//	{
+		//		bool fit = false;
+		//		Face& face = model.get_face(i);
+		//
+		//		gm::vec3 screen_coords[3];
+		//		gm::vec2i uv[3];
+		//
+		//		for (int j = 0; j < 3; j++)
+		//		{
+		//			// get uv
+		//			uv[j] = gm::vec2i(model.diffusemap.width * face[j].uv.x,
+		//				model.diffusemap.height * face[j].uv.y);
+		//
+		//			// Vertex shader
+		//			auto [vertex, discard] = in_shader->vertex(face[j].vert, face[j].norm, j);
+		//
+		//			// add vertex to triangle
+		//			screen_coords[j] = vertex;
+		//
+		//			// clip
+		//			if (!discard && screen_coords[j].z > 5.0f && screen_coords[j].z < 9.5f)
+		//				fit = true;
+		//
+		//			// view port
+		//			screen_coords[j] = (ViewPort * gm::mat4(screen_coords[j])).toVec3();
+		//		}
+		//
+		//		// Rasterize triangle
+		//		if (fit) {
+		//			rasterizer::triangle(*context, screen_coords, uv, zbuffer, in_shader);
+		//		}
+		//	}
 
 	}
 

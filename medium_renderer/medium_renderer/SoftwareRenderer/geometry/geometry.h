@@ -121,6 +121,7 @@ namespace gm
 		};
 
 		Vec3() : x(0), y(0), z(0) {}
+		Vec3(T x) : x(x), y(x), z(x) {}
 		Vec3(T x, T y, T z) : x(x), y(y), z(z) {}
 
 		Vec3<T>& operator += (const Vec3<T>& other)
@@ -259,6 +260,7 @@ namespace gm
 		};
 
 		Vec4() : x(0), y(0), z(0), w(0) {}
+		Vec4(T x) : x(x), y(x), z(x), w(x) {}
 		Vec4(T x, T y, T z, T w) : x(x), y(y), z(z), w(w) {}
 
 		Vec4<T>& operator += (const Vec4<T>& other)
@@ -790,6 +792,62 @@ namespace gm
 		{
 			return  Vec3<T>(x[0][0] / x[3][0], x[1][0] / x[3][0], x[2][0] / x[3][0]);
 		}
+
+
+		void set_row(int i, const Vec3<T>& vec)
+		{
+			for (int j = 0; j < 3; j++)
+				x[i][j] = vec[j];
+		}
+
+		void set_col(int i, const Vec3<T>& vec)
+		{
+			for (int j = 0; j < 3; j++)
+				x[j][i] = vec[j];
+		}
+
+		void set_row(int i, const Vec4<T>& vec)
+		{
+			for (int j = 0; j < 4; j++)
+				x[i][j] = vec[j];
+		}
+
+		void set_col(int i, const Vec4<T>& vec)
+		{
+			for (int j = 0; j < 4; j++)
+				x[j][i] = vec[j];
+		}
+
+		void set_scale(const vec3& vec)
+		{
+			for (int i = 0; i < 3; i++)
+				x[i][i] = vec[i];
+		}
+
+		void set_scale(float scale)
+		{
+			for (int i = 0; i < 3; i++)
+				x[i][i] = scale;
+		}
+
+
+		Vec3<T> get_row(int i)
+		{
+			Vec3<T> vec;
+			for (int j = 0; j < 3; j++)
+				vec[j] = x[i][j];
+			return vec;
+		}
+
+		Vec3<T> get_col(int i)
+		{
+			Vec3<T> vec;
+			for (int j = 0; j < 3; j++)
+				vec[j] = x[j][i];
+			return vec;
+		}
+
+
 	};
 
 	typedef Matrix4<float> mat4;

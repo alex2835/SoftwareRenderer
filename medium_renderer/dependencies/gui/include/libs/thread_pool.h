@@ -36,10 +36,10 @@ struct ThreadPool
 	{
 		// increment active tasts
 		active_tasks++;
-
+		
 		auto wrapper = std::make_shared<std::packaged_task<decltype(task(args...))()>>(
 			std::bind(std::forward<F>(task), std::forward<Args>(args)...));
-
+		
 		{
 			std::unique_lock<std::mutex> lock(event_mutex);
 			tasks.push([wrapper]() { (*wrapper)(); });
@@ -54,9 +54,9 @@ struct ThreadPool
 		Prototype: type F(int from, int to)
 	*/
 	template <typename F>
-	auto parallel_for(int from_param, int to_param, F&& func) -> std::vector<std::future<decltype(func(1, 1))>>
+	auto parallel_for(int from_param, int to_param, F&& func) -> std::vector<std::future<decltype(func(1, 1, 1))>>
 	{
-		std::vector<std::future<decltype(func(1, 1))>> res;
+		std::vector<std::future<decltype(func(1, 1, 1))>> res;
 		res.reserve(pool.size());
 
 		// split whole task to pieces
@@ -68,7 +68,7 @@ struct ThreadPool
 		{
 			int from = i * width / threads + from_param;
 			int to = (i + 1) * width / threads + from_param;
-			res.push_back(std::move(add_task(func, from, to)));
+			res.push_back(std::move(add_task(func, from, to, i)));
 		}
 		return res;
 	}
@@ -109,7 +109,7 @@ struct ThreadPool
 			active_tasks++;
 			{
 				std::unique_lock<std::mutex> lock(event_mutex);
-				tasks.push([&func, from, to]() { func(from, to); });
+				tasks.push([&func, from, to, i]() { func(from, to, i); });
 			}
 			event.notify_one();
 		}
