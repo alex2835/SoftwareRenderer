@@ -45,9 +45,6 @@
     <ClCompile Include="SoftwareRenderer\renderer\context.h">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SoftwareRenderer\renderer\renderer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="shaders\guro_shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -58,6 +55,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SoftwareRenderer\rasterizer\rasterizer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SoftwareRenderer\renderer\renderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SoftwareRenderer\rasterizer\Source.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

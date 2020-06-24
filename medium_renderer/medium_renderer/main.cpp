@@ -74,6 +74,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 	float shift_x = 0.0f;
 	float shift_y = 0.0f;
 
+	// On backface culling
+	sr::backface_culling(&camera.Position);
 
 	//  ============= game loop ===============
 	Timer timer;
@@ -149,6 +151,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 		Model.set_col(3, lighter.Position);
 		Model.set_scale(lighter.scale);
 
+		light_shader.Model = Model;
+		light_shader.View = camera.get_lookat();
 		light_shader.Transforms = camera.get_projection() * camera.get_lookat() * Model;
 
 		// Draw cube

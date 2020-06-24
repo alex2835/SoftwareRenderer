@@ -50,7 +50,7 @@ namespace gm
 		const float& n, const float& f,
 		float& b, float& t, float& l, float& r)
 	{
-		float scale = tanf(angleOfView * 0.5f * PI / 180.0f) * n;
+		float scale = tanf(angleOfView * PI / 360.0f) * n;
 		r = imageAspectRatio * scale, l = -r;
 		t = scale, b = -t;
 	}
@@ -62,25 +62,25 @@ namespace gm
 		mat4& M)
 	{
 		// set OpenGL perspective projection matrix
-		M[0][0] = 2 * n / (r - l);
-		M[0][1] = 0;
-		M[0][2] = 0;
-		M[0][3] = 0;
+		M[0][0] = 2.0f * n / (r - l);
+		M[0][1] = 0.0f;
+		M[0][2] = 0.0f;
+		M[0][3] = 0.0f;
 
-		M[1][0] = 0;
-		M[1][1] = 2 * n / (t - b);
-		M[1][2] = 0;
-		M[1][3] = 0;
+		M[1][0] = 0.0f;
+		M[1][1] = 2.0f * n / (t - b);
+		M[1][2] = 0.0f;
+		M[1][3] = 0.0f;
 
 		M[2][0] = (r + l) / (r - l);
 		M[2][1] = (t + b) / (t - b);
 		M[2][2] = (f + n) / (f - n);
-		M[2][3] = 1;
+		M[2][3] = 1.0f;
 
-		M[3][0] = 0;
-		M[3][1] = 0;
-		M[3][2] = 2 * f * n / (f - n);
-		M[3][3] = 0;
+		M[3][0] = 0.0f;
+		M[3][1] = 0.0f;
+		M[3][2] = 2.0f * f * n / (f - n);
+		M[3][3] = 0.0f;
 	}
 
 	mat4 projection(float aspect, float fov, float near, float far)

@@ -632,6 +632,7 @@ namespace gm
 		Matrix4 operator * (const Matrix4& other) const
 		{
 			Matrix4 tmp;
+			tmp.clear();
 			for (int i = 0; i < 4; ++i)
 			{
 				for (int j = 0; j < 4; ++j)
@@ -681,6 +682,7 @@ namespace gm
 		Matrix4 get_transposed() const
 		{
 			Matrix4 t;
+			t.clear();
 			for (uint8_t i = 0; i < 4; ++i) {
 				for (uint8_t j = 0; j < 4; ++j) {
 					t[i][j] = x[j][i];
@@ -693,6 +695,7 @@ namespace gm
 		{
 			int i, j, k;
 			Matrix4 s;
+			s.clear();
 			Matrix4 t(*this);
 
 			// Forward elimination

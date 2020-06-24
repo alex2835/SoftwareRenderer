@@ -71,7 +71,7 @@ namespace renderer
     gm::mat4 Camera::get_projection()
     {
         float aspect = (float)context->width / context->height;
-        return gm::projection(aspect, Fov, 0.1f, 100.0f);
+        return gm::projection(aspect, Fov, 0.1f, 120.0f);
     }
 
 

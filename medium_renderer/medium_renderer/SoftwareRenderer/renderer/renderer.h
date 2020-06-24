@@ -27,6 +27,8 @@ namespace renderer
 
 	void zbuffer_resize(int size);
 
+	void backface_culling(gm::vec3* cameraPos);
+
 	// release intire memory
 	void release();
 

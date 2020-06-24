@@ -18,6 +18,10 @@ namespace renderer
 	// results
 	std::future<void>* future = new std::future<void>[256];
 
+	// Backface culling
+	static gm::vec3* CameraPos;
+	static bool backface_culling_active = false;
+
 	// set rendering context
 	void set_rendering_context(gui::Image_base<uint8_t>& rendering_context)
 	{
@@ -55,6 +59,15 @@ namespace renderer
 		gui::cpu::draw_filled_rect_async(*context, 0.0f, 0.0f, 1.0f, 1.0f, color);
 	}
 
+
+	// take a viewer position
+	void backface_culling(gm::vec3* cameraPos)
+	{
+		backface_culling_active = cameraPos;
+		CameraPos = cameraPos;
+	}
+
+
 	// release
 	void release()
 	{
@@ -90,13 +103,14 @@ namespace renderer
 			future[i] = gui::thread_pool.add_task(
 				[&, from, to, id = i, in_shader]()
 				{
-					// TODO: make this allocatetion on stack
+					// Create copy for this thread (No memory allocation)
 					Shader* shader = in_shader->clone(shaders_memory + in_shader->size() * id);
 
 					for (int i = from; i < to; i++)
-					//for (int i = 0; i < model.faces_size(); i++)
 					{
 						bool fit = false;
+						bool cull = true;
+
 						Face& face = model.get_face(i);
 
 						gm::vec3 screen_coords[3];
@@ -109,17 +123,21 @@ namespace renderer
 								model.diffusemap.height * face[j].uv.y);
 
 							// Vertex shader
-							auto [vertex, discard] = shader->vertex(face[j].vert, face[j].norm, j);
+							//gm::vec3 vertex = shader->vertex(face[j].vert, face[j].norm, j);
+							auto [vertex, global, normal] = shader->vertex(face[j].vert, face[j].norm, j);
 
-							// add vertex to triangle
-							screen_coords[j] = vertex;
+							// backface culling
+							global.z -= 5.0f;
+							
+							if (backface_culling_active)
+								cull = (*CameraPos - global).normalize() * normal < 0.0f;
 
 							// clip
-							if (!discard && screen_coords[j].z > 5.0f && screen_coords[j].z < 8.5f)
+							if (!cull && vertex.z > 5.0f && vertex.z < 8.5f)
 								fit = true;
 
 							// view port
-							screen_coords[j] = (ViewPort * gm::mat4(screen_coords[j])).toVec3();
+							screen_coords[j] = (ViewPort * gm::mat4(vertex)).toVec3();
 						}
 
 						// Rasterize triangle
