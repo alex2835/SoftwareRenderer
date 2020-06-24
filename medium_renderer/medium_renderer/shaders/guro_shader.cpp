@@ -53,8 +53,7 @@ void GuroShader::set_projection(const gm::mat4& projection)
 
 GuroShader* GuroShader::clone(char* memory)
 {
-	//return new(memory) GuroShader(*this);
-	return new GuroShader(*this);
+	return new(memory) GuroShader(*this);
 }
 
 

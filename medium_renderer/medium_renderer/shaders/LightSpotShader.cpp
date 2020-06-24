@@ -17,7 +17,7 @@ gui::Color LightSpotShader::fragment(const gm::vec2i& uv, const gm::vec3& bar)
 
 LightSpotShader* LightSpotShader::clone(char* memory)
 {
-	return new LightSpotShader(*this);
+	return new(memory) LightSpotShader(*this);
 }
 
 

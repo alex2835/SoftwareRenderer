@@ -50,7 +50,7 @@ namespace gm
 		const float& n, const float& f,
 		float& b, float& t, float& l, float& r)
 	{
-		float scale = tanf(angleOfView * 0.5f * gm::PI / 180.0f) * n;
+		float scale = tanf(angleOfView * 0.5f * PI / 180.0f) * n;
 		r = imageAspectRatio * scale, l = -r;
 		t = scale, b = -t;
 	}
@@ -59,7 +59,7 @@ namespace gm
 	static void glFrustum(
 		const float& b, const float& t, const float& l, const float& r,
 		const float& n, const float& f,
-		gm::mat4& M)
+		mat4& M)
 	{
 		// set OpenGL perspective projection matrix
 		M[0][0] = 2 * n / (r - l);
@@ -85,9 +85,9 @@ namespace gm
 
 	mat4 projection(float aspect, float fov, float near, float far)
 	{
-		gm::mat4 Projection;
+		mat4 Projection;
 		float b, t, l, r;
-		gm::gluPerspective(fov, aspect, near, far, b, t, l, r);
+		gluPerspective(fov, aspect, near, far, b, t, l, r);
 		glFrustum(b, t, l, r, near, far, Projection);
 		return Projection;
 	}

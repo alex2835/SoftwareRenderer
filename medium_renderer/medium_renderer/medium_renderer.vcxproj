@@ -169,7 +169,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="scene_objects\lighter.cpp" />
+    <ClCompile Include="scene_objects\lighterObj.cpp" />
     <ClCompile Include="shaders\LightSpotShader.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -204,7 +204,7 @@
     <ClCompile Include="SoftwareRenderer\medel\model.cpp" />
     <ClCompile Include="SoftwareRenderer\medel\face.h" />
     <ClCompile Include="SoftwareRenderer\renderer\context.h" />
-    <ClCompile Include="SoftwareRenderer\rasterizer\raserizer.cpp" />
+    <ClCompile Include="SoftwareRenderer\rasterizer\rasterizer.cpp" />
     <ClCompile Include="SoftwareRenderer\rasterizer\rasterizer.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
@@ -214,7 +214,7 @@
     <ClCompile Include="SoftwareRenderer\renderer\renderer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="scene_objects\lighter.h" />
+    <ClInclude Include="scene_objects\lighterObj.h" />
     <ClInclude Include="shaders\LightSpotShader.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="shaders\guro_shader.h" />

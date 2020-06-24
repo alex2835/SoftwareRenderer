@@ -6,7 +6,7 @@
 #include "shaders/guro_shader.h"
 #include "shaders/LightSpotShader.h"
 
-#include "scene_objects/lighter.h"
+#include "scene_objects/lighterObj.h"
 
 #define VK_UP 0x26
 #define VK_DOWN 0x28
@@ -59,7 +59,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 		return 1;
 	}
 
-	Lighter lighter(cube, gm::vec3(3, 0, 0), 0.05f);
+	LighterObj lighter(cube, gm::vec3(3, 0, 0), 0.05f);
 
 
 	// Shader
@@ -83,7 +83,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 		if (gui::Input::was_pressed(VK_ESCAPE)) break;
 
 		// clear screan and zbuffer
-		sr::flush_screan();
+		sr::flush_screan(gui::Color(20));
 
 
 		// ================ Process input ==================
