@@ -108,6 +108,7 @@ namespace renderer
 
 					for (int i = from; i < to; i++)
 					{
+						cull:
 						bool fit = false;
 						bool cull = true;
 
@@ -127,13 +128,13 @@ namespace renderer
 							auto [vertex, global, normal] = shader->vertex(face[j].vert, face[j].norm, j);
 
 							// backface culling
+							global -= *CameraPos;
 							global.z -= 5.0f;
-							
 							if (backface_culling_active)
-								cull = (*CameraPos - global).normalize() * normal < 0.0f;
+								cull &= (*CameraPos - global).normalize() * normal < -0.1f;
 
 							// clip
-							if (!cull && vertex.z > 5.0f && vertex.z < 8.5f)
+							if (vertex.z > 5.0f && vertex.z < 8.5f)
 								fit = true;
 
 							// view port
@@ -141,7 +142,7 @@ namespace renderer
 						}
 
 						// Rasterize triangle
-						if (fit) {
+						if (fit && !cull) {
 							rasterizer::triangle(*context, screen_coords, uv, zbuffer, shader);
 						}
 					}

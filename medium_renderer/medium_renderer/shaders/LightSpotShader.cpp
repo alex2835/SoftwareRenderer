@@ -6,8 +6,8 @@ std::tuple<gm::vec3, gm::vec3, gm::vec3> LightSpotShader::vertex(const gm::vec3&
 {
 	gm::vec3 vert_out = (Transforms * gm::mat4(vert)).toVec3();
 
-	gm::vec3 global_pos = (View * Model * gm::mat4(vert)).toVec3();
-	gm::vec3 normal = (Model.get_inversed() * gm::mat4(norm)).toVec3();
+	gm::vec3 global_pos = (Model * gm::mat4(vert)).toVec3();
+	gm::vec3 normal = (Model.get_transposed() * gm::mat4(norm)).toVec3();
 
 	return { vert_out, global_pos, normal };
 }

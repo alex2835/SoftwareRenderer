@@ -60,9 +60,6 @@
     <ClCompile Include="SoftwareRenderer\renderer\renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SoftwareRenderer\rasterizer\Source.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="tests\geometry_test.h">
