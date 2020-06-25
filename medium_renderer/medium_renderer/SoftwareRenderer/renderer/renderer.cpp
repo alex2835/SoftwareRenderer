@@ -124,14 +124,15 @@ namespace renderer
 								model.diffusemap.height * face[j].uv.y);
 
 							// Vertex shader
-							//gm::vec3 vertex = shader->vertex(face[j].vert, face[j].norm, j);
 							auto [vertex, global, normal] = shader->vertex(face[j].vert, face[j].norm, j);
 
 							// backface culling
-							global -= *CameraPos;
-							global.z -= 5.0f;
 							if (backface_culling_active)
+							{
+								global -= *CameraPos;
+								global.z -= 5.0f;
 								cull &= (*CameraPos - global).normalize() * normal < -0.1f;
+							}
 
 							// clip
 							if (vertex.z > 5.0f && vertex.z < 8.5f)

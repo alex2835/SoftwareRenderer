@@ -135,7 +135,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 		guro_shader.set_view(camera.get_lookat());
 		guro_shader.set_projection(camera.get_projection());
 
-		guro_shader.CameraPos = camera.Position;
 		guro_shader.LightPos = lighter.Position;
 
 		// Draw head

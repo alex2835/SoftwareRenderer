@@ -7,7 +7,7 @@ std::tuple<gm::vec3, gm::vec3, gm::vec3> LightSpotShader::vertex(const gm::vec3&
 	gm::vec3 vert_out = (Transforms * gm::mat4(vert)).toVec3();
 
 	gm::vec3 global_pos = (Model * gm::mat4(vert)).toVec3();
-	gm::vec3 normal = (Model.get_transposed() * gm::mat4(norm)).toVec3();
+	gm::vec3 normal = (ModelT * gm::mat4(norm)).toVec3();
 
 	return { vert_out, global_pos, normal };
 }
@@ -19,7 +19,7 @@ gui::Color LightSpotShader::fragment(const gm::vec2i& uv, const gm::vec3& bar)
 }
 
 
-LightSpotShader* LightSpotShader::clone(char* memory)
+LightSpotShader* LightSpotShader::clone(void* memory)
 {
 	return new(memory) LightSpotShader(*this);
 }
