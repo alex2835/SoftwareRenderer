@@ -16,6 +16,17 @@
 #define VK_A 0x41
 #define VK_D 0x44
 
+void print_mat(const gm::mat4& mat)
+{
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 4; j++)
+			gui::console::printf("%0.2f ", mat[i][j]);
+		gui::console::printf("\n");
+	}
+	gui::console::printf("\n");
+}
+
 //void* operator new(std::size_t sz) {
 //	gui::console::printf("global op new called, size = %zu\n", sz);
 //	void* ptr = std::malloc(sz);
@@ -34,7 +45,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 {
 	gui::init(hInstance);
 	gui::console::create_console();
-	//gui::thread_pool.resize(64);
 
 	// create window
 	gui::Window* window = new gui::Window(L"Widnow", 800, 600);
@@ -59,7 +69,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 		return 1;
 	}
 
-	LighterObj lighter(cube, gm::vec3(3, 0, 0), 0.05f);
+	LighterObj lighter(cube, gm::vec3(3, 0, 0), 0.04f);
+
+
+	sr::Model plane("models/plane/plane");
+	if (!cube.valid())
+	{
+		gui::console::printf("Error: Can not load model\n");
+		return 1;
+	}
+
 
 
 	// Shader
@@ -128,25 +147,52 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 
 
 		//  ================ Draw =================
-		
+
 		// Set head uniforms
 		guro_shader.diffuse = &head.diffusemap;
 
+		gm::mat4 Model_head;
+		Model_head.set_col(3, gm::vec3(-2, 0, 0));
+
+		guro_shader.set_model(Model_head);
 		guro_shader.set_view(camera.get_lookat());
 		guro_shader.set_projection(camera.get_projection());
+
+		//print_mat(guro_shader.Transforms);
 
 		guro_shader.LightPos = lighter.Position;
 
 		// Draw head
 		sr::render_model(head, &guro_shader);
 
+
+		// Set plane uniforms
+		guro_shader.diffuse = &plane.diffusemap;
+
+		gm::mat4 Model_plane;
+		Model_plane.set_col(3, gm::vec3(0, -1, 0));
+		Model_plane.set_scale(0.2f);
+
+		guro_shader.set_model(Model_plane);
+		guro_shader.set_view(camera.get_lookat());
+		guro_shader.set_projection(camera.get_projection());
+
+		//print_mat(guro_shader.Transforms);
+
+		guro_shader.LightPos = lighter.Position;
+
+		// Draw plane
+		sr::render_model(plane, &guro_shader);
+
+
+
 		// Set lighter uniforms
+		gm::mat4 Model;
 		float radius = 7.0f;
 		float lightX = sinf(get_time() * 0.5f) * radius;
 		float lightZ = cosf(get_time() * 0.5f) * radius;
 		lighter.Position = gm::vec3(lightX, 0, lightZ);
 
-		gm::mat4 Model;
 		Model.set_col(3, lighter.Position);
 		Model.set_scale(lighter.scale);
 

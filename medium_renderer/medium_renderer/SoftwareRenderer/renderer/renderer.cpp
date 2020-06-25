@@ -130,12 +130,11 @@ namespace renderer
 							if (backface_culling_active)
 							{
 								global -= *CameraPos;
-								global.z -= 5.0f;
-								cull &= (*CameraPos - global).normalize() * normal < -0.1f;
+								cull = (*CameraPos - global).normalize() * normal < -0.5f;
 							}
 
 							// clip
-							if (vertex.z > 5.0f && vertex.z < 8.5f)
+							if (vertex.z > 5.0f && vertex.z < 6.5f)
 								fit = true;
 
 							// view port
