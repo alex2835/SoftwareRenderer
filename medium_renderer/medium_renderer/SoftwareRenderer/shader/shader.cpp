@@ -4,7 +4,6 @@
 
 namespace renderer
 {
-
 	void Shader::set_model(const gm::mat4& model)
 	{
 		Model = model;
@@ -23,5 +22,4 @@ namespace renderer
 		Projection = projection;
 		Transforms = Projection * View * Model;
 	}
-
 }

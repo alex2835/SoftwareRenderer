@@ -2,7 +2,7 @@
 
 #include "camera/camera.h"
 #include "geometry/geometry.h"
-#include "medel/model.h"
+#include "model/model.h"
 #include "renderer/renderer.h"
 #include "shader/shader.h"
 

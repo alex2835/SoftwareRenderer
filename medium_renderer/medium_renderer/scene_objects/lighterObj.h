@@ -1,18 +1,19 @@
 #pragma once
 
 #include "../SoftwareRenderer/geometry/geometry.h"
-#include "../SoftwareRenderer/medel/model.h"
+#include "../SoftwareRenderer/model/mesh.h"
 
 
-struct LighterObj : renderer::Model
+struct LighterObj
 {
 	gm::vec3 Position;
 	float scale = 1.0f;
 	float intensity = 1.0f;
+	renderer::Mesh* mesh;
 
 	LighterObj() = default;
 
-	LighterObj(renderer::Model model,
+	LighterObj(renderer::Mesh* mesh,
 		    const gm::vec3& position = gm::vec3(),
 		    float scale = 1.0f,
 		    float intensity = 1.0f);

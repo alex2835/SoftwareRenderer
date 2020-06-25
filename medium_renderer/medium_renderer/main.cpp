@@ -41,6 +41,7 @@ void print_mat(const gm::mat4& mat)
 //	std::free(ptr);
 //}
 
+
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 {
 	gui::init(hInstance);
@@ -54,28 +55,29 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 	sr::set_rendering_context(window->canvas);
 	
 
-	// model
-	sr::Model head("models/african_head/african_head");
+	// mesh
+	sr::Mesh head("models/african_head/african_head");
 	if (!head.valid())
 	{
-		gui::console::printf("Error: Can not load model\n");
+		gui::console::printf("Error: Can not load mesh\n");
 		return 1;
 	}
 
-	sr::Model cube("models/cube/cube");
+	sr::Mesh cube("models/cube/cube");
+
 	if (!cube.valid())
 	{
-		gui::console::printf("Error: Can not load model\n");
+		gui::console::printf("Error: Can not load mesh\n");
 		return 1;
 	}
 
-	LighterObj lighter(cube, gm::vec3(3, 0, 0), 0.2f);
+	LighterObj lighter(&cube, gm::vec3(3, 0, 0), 0.2f);
 
 
-	sr::Model plane("models/plane/plane");
+	sr::Mesh plane("models/plane/plane");
 	if (!cube.valid())
 	{
-		gui::console::printf("Error: Can not load model\n");
+		gui::console::printf("Error: Can not load mesh\n");
 		return 1;
 	}
 
@@ -149,12 +151,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 		//  ================ Draw =================
 
 		// Set head uniforms
-		guro_shader.diffuse = &head.diffusemap;
+		guro_shader.diffusemap = &head.diffusemap;
 
-		gm::mat4 Model_head;
-		Model_head.set_col(3, gm::vec3(-2, 0, 0));
+		gm::mat4 mesh_head;
+		mesh_head.set_col(3, gm::vec3(-2, 0, 0));
 
-		guro_shader.set_model(Model_head);
+		guro_shader.set_model(mesh_head);
 		guro_shader.set_view(camera.get_lookat());
 		guro_shader.set_projection(camera.get_projection());
 
@@ -163,17 +165,17 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 		guro_shader.LightPos = lighter.Position;
 
 		// Draw head
-		sr::render_model(head, &guro_shader);
+		sr::render_mesh(head, &guro_shader);
 
 
 		// Set plane uniforms
-		guro_shader.diffuse = &plane.diffusemap;
+		guro_shader.diffusemap = &plane.diffusemap;
 
-		gm::mat4 Model_plane;
-		Model_plane.set_col(3, gm::vec3(0, -1, 0));
-		Model_plane.set_scale(0.4f);
+		gm::mat4 mesh_plane;
+		mesh_plane.set_col(3, gm::vec3(0, -1, 0));
+		mesh_plane.set_scale(1.0f);
 
-		guro_shader.set_model(Model_plane);
+		guro_shader.set_model(mesh_plane);
 		guro_shader.set_view(camera.get_lookat());
 		guro_shader.set_projection(camera.get_projection());
 
@@ -182,16 +184,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 		guro_shader.LightPos = lighter.Position;
 
 		// Draw plane
-		sr::render_model(plane, &guro_shader);
+		sr::render_mesh(plane, &guro_shader);
 
 
 		// Set cube uniforms
-		guro_shader.diffuse = &plane.diffusemap;
+		guro_shader.diffusemap = &plane.diffusemap;
 
-		Model_plane.set_col(3, gm::vec3(2, -0.5, 0));
-		Model_plane.set_scale(0.2f);
+		mesh_plane.set_col(3, gm::vec3(2, -0.5, 0));
+		mesh_plane.set_scale(0.2f);
 
-		guro_shader.set_model(Model_plane);
+		guro_shader.set_model(mesh_plane);
 		guro_shader.set_view(camera.get_lookat());
 		guro_shader.set_projection(camera.get_projection());
 
@@ -200,26 +202,26 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 		guro_shader.LightPos = lighter.Position;
 
 		// Draw plane
-		sr::render_model(cube, &guro_shader);
+		sr::render_mesh(cube, &guro_shader);
 
 
 
 		// Set lighter uniforms
-		gm::mat4 Model;
+		gm::mat4 model;
 		float radius = 7.0f;
 		float lightX = sinf(get_time() * 0.5f) * radius;
 		float lightZ = cosf(get_time() * 0.5f) * radius;
 		lighter.Position = gm::vec3(lightX, 3.0f, lightZ);
 
-		Model.set_col(3, lighter.Position);
-		Model.set_scale(lighter.scale);
+		model.set_col(3, lighter.Position);
+		model.set_scale(lighter.scale);
 
-		light_shader.Model = Model;
+		light_shader.Model = model;
 		light_shader.View = camera.get_lookat();
-		light_shader.Transforms = camera.get_projection() * camera.get_lookat() * Model;
+		light_shader.Transforms = camera.get_projection() * camera.get_lookat() * model;
 
 		// Draw lighter
-		sr::render_model(lighter, &light_shader);
+		sr::render_mesh(*lighter.mesh, &light_shader);
 
 		
 		// ================ Info ouput ===================

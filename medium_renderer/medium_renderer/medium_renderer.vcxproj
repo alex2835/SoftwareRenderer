@@ -201,8 +201,12 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="SoftwareRenderer\medel\model.cpp" />
-    <ClCompile Include="SoftwareRenderer\medel\face.h" />
+    <ClCompile Include="SoftwareRenderer\model\mesh.cpp" />
+    <ClCompile Include="SoftwareRenderer\model\model.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="SoftwareRenderer\model\face.h" />
     <ClCompile Include="SoftwareRenderer\renderer\context.h" />
     <ClCompile Include="SoftwareRenderer\rasterizer\rasterizer.cpp" />
     <ClCompile Include="SoftwareRenderer\rasterizer\rasterizer.h">
@@ -221,7 +225,11 @@
     <ClInclude Include="shaders\guro_shader.h" />
     <ClInclude Include="SoftwareRenderer\camera\camera.h" />
     <ClInclude Include="SoftwareRenderer\include.h" />
-    <ClInclude Include="SoftwareRenderer\medel\model.h" />
+    <ClInclude Include="SoftwareRenderer\model\mesh.h" />
+    <ClInclude Include="SoftwareRenderer\model\model.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="SoftwareRenderer\renderer\renderer.h" />
     <ClInclude Include="SoftwareRenderer\shader\shader.h" />
     <ClInclude Include="tests\geometry_test.h">

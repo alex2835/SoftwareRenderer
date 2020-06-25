@@ -33,12 +33,6 @@
     <ClCompile Include="SoftwareRenderer\geometry\matrix_genration.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SoftwareRenderer\medel\face.h">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SoftwareRenderer\medel\model.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="SoftwareRenderer\rasterizer\rasterizer.h">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -63,6 +57,15 @@
     <ClCompile Include="SoftwareRenderer\shader\shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SoftwareRenderer\model\face.h">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SoftwareRenderer\model\model.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SoftwareRenderer\model\mesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="tests\geometry_test.h">
@@ -72,9 +75,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SoftwareRenderer\camera\camera.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SoftwareRenderer\medel\model.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SoftwareRenderer\renderer\renderer.h">
@@ -93,6 +93,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="scene_objects\lighterObj.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SoftwareRenderer\model\model.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SoftwareRenderer\model\mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

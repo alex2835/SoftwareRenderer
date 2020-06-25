@@ -6,7 +6,7 @@
 #include "image/draw.h"
 
 #include "../rasterizer/rasterizer.h"
-#include "../medel/model.h"
+#include "../model/model.h"
 #include "../shader/shader.h"
 #include "../camera/camera.h"
 #include "context.h"
@@ -33,6 +33,6 @@ namespace renderer
 	void release();
 
 
-	void render_model(Model& model, Shader* shader);
+	void render_mesh(Mesh& mesh, Shader* shader);
 
 }

@@ -4,10 +4,9 @@
 
 namespace renderer
 {
-
 	namespace rasterizer
 	{
-
+		
 		bool barycentric(const gm::vec3& A, const gm::vec3& B, const gm::vec3& C,
 			const gm::vec3i& P, gm::vec3* out)
 		{

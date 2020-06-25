@@ -4,7 +4,7 @@
 
 namespace renderer
 {
-	// context
+	// rendering context
 	gui::Image_base<uint8_t>* context = NULL;
 
 	// zbuffer
@@ -15,8 +15,8 @@ namespace renderer
 	static int shaders_memory_size = 0;
 	static char* shaders_memory = NULL;
 
-	// results
-	std::future<void>* future = new std::future<void>[256];
+	// futures for thread pool
+	std::future<void>* future = new std::future<void>[128];
 
 	// Backface culling
 	static gm::vec3* CameraPos;
@@ -77,17 +77,17 @@ namespace renderer
 	}
 
 
-	// render model
-	void render_model(Model& model, Shader* in_shader)
+	// render mesh
+	void render_mesh(Mesh& mesh, Shader* in_shader)
 	{
-		// Split while mesh on tasts
+		// Split whole mesh on tasts
 		// and put them on thread pool
-		const int tasks = __min(128, model.faces_size());
+		const int tasks = __min(128, mesh.faces_size());
 
 		// Get actual viewport
 		gm::mat4 ViewPort = gm::get_viewport(context->width, context->height);
 
-		// reallocate memory for shaders for each task
+		// reallocate memory for shaders
 		if (shaders_memory_size < in_shader->size() * tasks)
 		{
 			delete[] shaders_memory;
@@ -97,8 +97,8 @@ namespace renderer
 
 		for (int i = 0; i < tasks; i++)
 		{
-			int from = i * model.faces_size() / tasks;
-			int to = (i + 1) * model.faces_size() / tasks;
+			int from = i * mesh.faces_size() / tasks;
+			int to = (i + 1) * mesh.faces_size() / tasks;
 
 			future[i] = gui::thread_pool.add_task(
 				[&, from, to, id = i, in_shader]()
@@ -108,11 +108,10 @@ namespace renderer
 
 					for (int i = from; i < to; i++)
 					{
-						cull:
 						bool fit = false;
-						bool cull = true;
+						bool cull = backface_culling_active;
 
-						Face& face = model.get_face(i);
+						Face& face = mesh.get_face(i);
 
 						gm::vec3 screen_coords[3];
 						gm::vec2i uv[3];
@@ -120,8 +119,8 @@ namespace renderer
 						for (int j = 0; j < 3; j++)
 						{
 							// get uv
-							uv[j] = gm::vec2i(model.diffusemap.width * face[j].uv.x,
-								model.diffusemap.height * face[j].uv.y);
+							uv[j] = gm::vec2i(mesh.diffusemap.width * face[j].uv.x,
+								mesh.diffusemap.height * face[j].uv.y);
 
 							// Vertex shader
 							auto [vertex, global, normal] = shader->vertex(face[j].vert, face[j].norm, j);
@@ -130,7 +129,7 @@ namespace renderer
 							if (backface_culling_active)
 							{
 								global -= *CameraPos;
-								cull = (*CameraPos - global).normalize() * normal < -0.5f;
+								cull &= (*CameraPos - global).normalize() * normal < 0.0f;
 							}
 
 							// clip

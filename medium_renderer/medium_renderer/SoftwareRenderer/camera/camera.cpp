@@ -5,31 +5,6 @@
 namespace renderer
 {
 
-    gm::mat4 lookAt(const gm::vec3& from, const gm::vec3& to, const gm::vec3& tmp = gm::vec3(0, 1, 0))
-    {
-        gm::vec3 forward = (from - to).get_normalized();
-        gm::vec3 right = tmp.get_normalized() ^ forward;
-        gm::vec3 up = forward ^ right;
-
-        gm::mat4 camToWorld;
-
-        camToWorld[0][0] = right.x;
-        camToWorld[0][1] = right.y;
-        camToWorld[0][2] = right.z;
-        camToWorld[1][0] = up.x;
-        camToWorld[1][1] = up.y;
-        camToWorld[1][2] = up.z;
-        camToWorld[2][0] = forward.x;
-        camToWorld[2][1] = forward.y;
-        camToWorld[2][2] = forward.z;
-
-        camToWorld[0][3] = from.x;
-        camToWorld[1][3] = from.y;
-        camToWorld[2][3] = from.z;
-
-        return camToWorld;
-    }
-
     // Constructor with vectors
     Camera::Camera(const gm::vec3& position, float yaw, float pitch, const gm::vec3& up)
         :

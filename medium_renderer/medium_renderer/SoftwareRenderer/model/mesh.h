@@ -14,20 +14,31 @@
 namespace renderer
 {
 
-	struct Model
+	struct Mesh
 	{
-		int verts_size   = 0;
-		int uvs_size     = 0;
+		int verts_size = 0;
+		int uvs_size = 0;
 		int normals_size = 0;
 
 		// faces
 		std::vector<Face> faces;
 
 		// maps
-		gui::Image diffusemap;
+		union {
+			struct
+			{
+				gui::Image diffusemap;
+				gui::Image normalmap;
+				gui::Image heightmap;
+			};
+			gui::Image maps[3];
+		};
 
 
-		Model(const std::string& filename);
+		Mesh(const std::string& filename);
+		//Mesh(const Mesh& mesh) = default;
+		//Mesh(Mesh&& mesh) noexcept = default;
+		~Mesh();
 
 		bool valid();
 
