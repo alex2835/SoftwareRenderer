@@ -794,6 +794,11 @@ namespace gm
 			return  Vec3<T>(x[0][0] / x[3][0], x[1][0] / x[3][0], x[2][0] / x[3][0]);
 		}
 
+		Vec3<T> toVec3_direct()
+		{
+			return  Vec3<T>(x[0][0], x[1][0], x[2][0]);
+		}
+
 
 		void set_row(int i, const Vec3<T>& vec)
 		{
