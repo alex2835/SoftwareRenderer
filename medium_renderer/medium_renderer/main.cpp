@@ -69,7 +69,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 		return 1;
 	}
 
-	LighterObj lighter(cube, gm::vec3(3, 0, 0), 0.04f);
+	LighterObj lighter(cube, gm::vec3(3, 0, 0), 0.2f);
 
 
 	sr::Model plane("models/plane/plane");
@@ -86,7 +86,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 	LightSpotShader light_shader;
 
 	// Camera
-	sr::Camera camera(gm::vec3(0, 0, 5));
+	sr::Camera camera(gm::vec3(0, 5, 15), 40, -30);
 	float mouse_x = 0.5f;
 	float mouse_y = 0.5f;
 
@@ -185,13 +185,31 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 		sr::render_model(plane, &guro_shader);
 
 
+		// Set cube uniforms
+		guro_shader.diffuse = &plane.diffusemap;
+
+		Model_plane.set_col(3, gm::vec3(2, -0.5, 0));
+		Model_plane.set_scale(0.2f);
+
+		guro_shader.set_model(Model_plane);
+		guro_shader.set_view(camera.get_lookat());
+		guro_shader.set_projection(camera.get_projection());
+
+		//print_mat(guro_shader.Transforms);
+
+		guro_shader.LightPos = lighter.Position;
+
+		// Draw plane
+		sr::render_model(cube, &guro_shader);
+
+
 
 		// Set lighter uniforms
 		gm::mat4 Model;
 		float radius = 7.0f;
 		float lightX = sinf(get_time() * 0.5f) * radius;
 		float lightZ = cosf(get_time() * 0.5f) * radius;
-		lighter.Position = gm::vec3(lightX, 0, lightZ);
+		lighter.Position = gm::vec3(lightX, 1.0f, lightZ);
 
 		Model.set_col(3, lighter.Position);
 		Model.set_scale(lighter.scale);
@@ -200,7 +218,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 		light_shader.View = camera.get_lookat();
 		light_shader.Transforms = camera.get_projection() * camera.get_lookat() * Model;
 
-		// Draw cube
+		// Draw lighter
 		sr::render_model(lighter, &light_shader);
 
 		

@@ -31,7 +31,7 @@ namespace renderer
     }
 
     // Constructor with vectors
-    Camera::Camera(const gm::vec3& position, const gm::vec3& up, float yaw, float pitch)
+    Camera::Camera(const gm::vec3& position, float yaw, float pitch, const gm::vec3& up)
         :
         Front(gm::vec3(0.0f, 0.0f, -1.0f)),
         MovementSpeed(SPEED),

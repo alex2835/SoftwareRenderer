@@ -48,9 +48,10 @@ namespace renderer
 
         // Constructor with vectors
         Camera(const gm::vec3& position = gm::vec3(0.0f, 0.0f, 0.0f),
-               const gm::vec3& up = gm::vec3(0.0f, 1.0f, 0.0f),
                float yaw = YAW,
-               float pitch = PITCH);
+               float pitch = PITCH,
+               const gm::vec3 & up = gm::vec3(0.0f, 1.0f, 0.0f)
+        );
 
 
         // Constructor with scalar values
