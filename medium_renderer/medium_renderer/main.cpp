@@ -171,7 +171,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 
 		gm::mat4 Model_plane;
 		Model_plane.set_col(3, gm::vec3(0, -1, 0));
-		Model_plane.set_scale(0.2f);
+		Model_plane.set_scale(0.4f);
 
 		guro_shader.set_model(Model_plane);
 		guro_shader.set_view(camera.get_lookat());
@@ -209,7 +209,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 		float radius = 7.0f;
 		float lightX = sinf(get_time() * 0.5f) * radius;
 		float lightZ = cosf(get_time() * 0.5f) * radius;
-		lighter.Position = gm::vec3(lightX, 1.0f, lightZ);
+		lighter.Position = gm::vec3(lightX, 3.0f, lightZ);
 
 		Model.set_col(3, lighter.Position);
 		Model.set_scale(lighter.scale);

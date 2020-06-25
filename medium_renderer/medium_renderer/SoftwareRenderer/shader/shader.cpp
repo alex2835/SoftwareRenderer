@@ -8,7 +8,7 @@ namespace renderer
 	void Shader::set_model(const gm::mat4& model)
 	{
 		Model = model;
-		ModelT = model.get_transposed();
+		ModelIT = model.get_inversed().get_transposed();
 		Transforms = Projection * View * Model;
 	}
 

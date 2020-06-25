@@ -18,7 +18,7 @@ namespace renderer
 		gm::mat4 Projection;
 		gm::mat4 Transforms;
 
-		gm::mat4 ModelT;
+		gm::mat4 ModelIT;
 
 		// output: { vec3 on plane vertex, vec3 in_global_space, vec3 normal_in_global_space}
 		virtual std::tuple<gm::vec3, gm::vec3, gm::vec3> vertex(const gm::vec3& vert, const gm::vec3& norm, int idx) = 0;

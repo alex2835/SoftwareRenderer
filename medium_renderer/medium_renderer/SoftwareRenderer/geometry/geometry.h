@@ -645,7 +645,7 @@ namespace gm
 		}
 
 
-		// point-matrix multiplication
+		// point-matrix multiplication (row major)
 		template<typename S>
 		Vec3<S> operator* (const Vec3<S>& src) const
 		{
@@ -665,7 +665,7 @@ namespace gm
 		}
 
 
-		// vector-matrix multiplication
+		// vector-matrix multiplication (row major)
 		template<typename S>
 		Vec3<S> multDirMatrix(const Vec3<S>& src) const
 		{
@@ -690,7 +690,7 @@ namespace gm
 			return t;
 		}
 
-		Matrix4 get_inversed()
+		Matrix4 get_inversed() const
 		{
 			int i, j, k;
 			Matrix4 s;
@@ -837,7 +837,7 @@ namespace gm
 		}
 
 
-		Vec3<T> get_row(int i)
+		Vec3<T> get_row(int i) const
 		{
 			Vec3<T> vec;
 			for (int j = 0; j < 3; j++)
@@ -845,7 +845,7 @@ namespace gm
 			return vec;
 		}
 
-		Vec3<T> get_col(int i)
+		Vec3<T> get_col(int i) const
 		{
 			Vec3<T> vec;
 			for (int j = 0; j < 3; j++)
