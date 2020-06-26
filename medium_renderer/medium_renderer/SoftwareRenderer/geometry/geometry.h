@@ -194,6 +194,12 @@ namespace gm
 				x * other.y - y * other.x);
 		}
 
+		Vec3<T>& operator- ()
+		{
+			for (int i = 0; i < 3; i++)
+				raw[i] = -raw[i];
+			return *this;
+		}
 
 		T& operator [] (int inx)
 		{
@@ -864,7 +870,7 @@ namespace gm
 
 
 
-	// ======================= Matrix generation ===============================
+	// ======================= Matrix generation ============================
 
 	mat4 lookat(const vec3& eye, const vec3& center, const vec3& up = vec3(0, 1, 0));
 
@@ -882,6 +888,33 @@ namespace gm
 	inline float degrees(float radians)
 	{
 		return radians * 57.2957795131f;
+	}
+
+
+
+
+	// ======================= Shader geometry ===========================
+
+	vec3 reflect(const vec3& incidentVec, const vec3& normal);
+
+	vec3 refract(const vec3& incidentVec, const vec3& normal, float eta);
+
+	template <typename T>
+	float dot(const T& vecA, const T& vecB)
+	{
+		return vecA * vecB;
+	}
+
+	template <typename T>
+	T cross(const T& vecA, const T& vecB)
+	{
+		return vecA ^ vecB;
+	}
+
+	template <typename T>
+	T normalize(const T& vec)
+	{
+		return vec.get_normalized();
 	}
 
 }

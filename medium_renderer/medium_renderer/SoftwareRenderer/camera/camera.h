@@ -22,7 +22,7 @@ namespace renderer
     const static float PITCH = -45.0f;
     const static float SPEED = 10.0f;
     const static float SENSITIVTY = 100.0f;
-    const static float FOV = 90.0f;
+    const static float FOV = 45.0f;
 
 
     // An abstract camera class that processes input and calculates the corresponding Eular Angles, Vectors and Matrices for use in OpenGL

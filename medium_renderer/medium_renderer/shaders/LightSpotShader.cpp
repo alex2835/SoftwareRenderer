@@ -2,17 +2,17 @@
 #include "LightSpotShader.h"
 
 
-std::tuple<gm::vec3, gm::vec3, gm::vec3> LightSpotShader::vertex(const gm::vec3& vert, const gm::vec3& norm, int idx)
+std::tuple<vec3, vec3, vec3> LightSpotShader::vertex(const vec3& vert, const vec3& norm, int idx)
 {
-	gm::vec3 vert_out = (Transforms * gm::mat4(vert)).toVec3();
-	gm::vec3 global_pos = (Model * gm::mat4(vert)).toVec3();
-	gm::vec3 normal = (ModelIT * gm::mat4(norm)).toVec3_direct().normalize();
+	vec3 vert_out = (Transforms * mat4(vert)).toVec3();
+	vec3 global_pos = (Model * mat4(vert)).toVec3();
+	vec3 normal = (ModelIT * mat4(norm)).toVec3_direct().normalize();
 
 	return { vert_out, global_pos, normal };
 }
 
 
-gui::Color LightSpotShader::fragment(const gm::vec2i& uv, const gm::vec3& bar)
+gui::Color LightSpotShader::fragment(const vec2i& uv, const vec3& bar)
 {
 	return gui::Color(255 * Intensity);
 }

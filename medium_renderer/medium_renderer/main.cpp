@@ -82,23 +82,25 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 	}
 
 
-
 	// Shader
 	GuroShader guro_shader;
 	LightSpotShader light_shader;
 
 	// Camera
-	sr::Camera camera(gm::vec3(0, 5, 15), 40, -30);
-	float mouse_x = 0.5f;
-	float mouse_y = 0.5f;
+	sr::Camera camera(gm::vec3(0, 5, 15), 90, 20);
+	static float mouse_x = gui::Mouse::pos_x;
+	static float mouse_y = gui::Mouse::pos_y;
 
 	float shift_x = 0.0f;
 	float shift_y = 0.0f;
 
+	
 	// On backface culling
 	sr::backface_culling(&camera.Position);
 
-	//  ============= game loop ===============
+
+
+	//  ====================== game loop ===========================
 	Timer timer;
 	while (gui::Window::is_running(window))
 	{
@@ -149,8 +151,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 
 
 		//  ================ Draw =================
+		guro_shader.CameraPos = camera.Position;
+		guro_shader.LightPos = lighter.Position;
 
-		// Set head uniforms
+
+		// Set head uniforms ===============
 		guro_shader.diffusemap = &head.diffusemap;
 
 		gm::mat4 mesh_head;
@@ -160,34 +165,26 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 		guro_shader.set_view(camera.get_lookat());
 		guro_shader.set_projection(camera.get_projection());
 
-		//print_mat(guro_shader.Transforms);
-
-		guro_shader.LightPos = lighter.Position;
-
 		// Draw head
 		sr::render_mesh(head, &guro_shader);
 
 
-		// Set plane uniforms
+		// Set plane uniforms ================
 		guro_shader.diffusemap = &plane.diffusemap;
 
 		gm::mat4 mesh_plane;
-		mesh_plane.set_col(3, gm::vec3(0, -1, 0));
-		mesh_plane.set_scale(1.0f);
+		mesh_plane.set_col(3, gm::vec3(0, -1, -2));
+		mesh_plane.set_scale(gm::vec3(0.5f, 1.0f, 0.5f));
 
 		guro_shader.set_model(mesh_plane);
 		guro_shader.set_view(camera.get_lookat());
 		guro_shader.set_projection(camera.get_projection());
 
-		//print_mat(guro_shader.Transforms);
-
-		guro_shader.LightPos = lighter.Position;
-
 		// Draw plane
 		sr::render_mesh(plane, &guro_shader);
 
 
-		// Set cube uniforms
+		// Set cube uniforms ================
 		guro_shader.diffusemap = &plane.diffusemap;
 
 		mesh_plane.set_col(3, gm::vec3(2, -0.5, 0));
@@ -197,16 +194,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 		guro_shader.set_view(camera.get_lookat());
 		guro_shader.set_projection(camera.get_projection());
 
-		//print_mat(guro_shader.Transforms);
-
-		guro_shader.LightPos = lighter.Position;
-
 		// Draw plane
 		sr::render_mesh(cube, &guro_shader);
 
-
-
-		// Set lighter uniforms
+		
+		// Set lighter uniforms ==============
 		gm::mat4 model;
 		float radius = 7.0f;
 		float lightX = sinf(get_time() * 0.5f) * radius;
@@ -224,6 +216,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 		sr::render_mesh(*lighter.mesh, &light_shader);
 
 		
+
 		// ================ Info ouput ===================
 		static float output_delay = 2.0f;
 		if (output_delay -= timer.elapsed; output_delay < 0)

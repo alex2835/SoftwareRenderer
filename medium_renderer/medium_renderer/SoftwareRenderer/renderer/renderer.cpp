@@ -133,7 +133,7 @@ namespace renderer
 							}
 
 							// clip
-							if (vertex.z > 5.0f && vertex.z < 6.5f)
+							if (vertex.z > 5.0f && vertex.z < 6.0f)
 								fit = true;
 
 							// view port

@@ -5,6 +5,9 @@
 #include "../geometry/geometry.h"
 #include "image/image.h"
 
+// like opengl shader lang
+using namespace gm;
+
 namespace renderer
 {
 	/*
@@ -23,23 +26,23 @@ namespace renderer
 			gui::Image* maps[3];
 		};
 
-		gm::mat4 Transforms;
-		gm::mat4 ModelIT;
+		mat4 Transforms;
+		mat4 ModelIT;
 
-		gm::mat4 Model;
-		gm::mat4 View;
-		gm::mat4 Projection;
+		mat4 Model;
+		mat4 View;
+		mat4 Projection;
 		
-		// output: { vec3 on plane vertex, vec3 in_global_space, vec3 normal_in_global_space}
-		virtual std::tuple<gm::vec3, gm::vec3, gm::vec3> vertex(const gm::vec3& vert, const gm::vec3& norm, int idx) = 0;
+		// output: { vec3 vertex on plane, vec3 vertex in global space, vec3 normal in global space}
+		virtual std::tuple<vec3, vec3, vec3> vertex(const vec3& vert, const vec3& norm, int idx) = 0;
 		
 		// output: final color
-		virtual gui::Color fragment(const gm::vec2i& uv, const gm::vec3& bar) = 0;
+		virtual gui::Color fragment(const vec2i& uv, const vec3& bar) = 0;
 
 		// set matrix
-		void set_model(const gm::mat4& model);
-		void set_view(const gm::mat4& view);
-		void set_projection(const gm::mat4& projection);
+		void set_model(const mat4& model);
+		void set_view(const mat4& view);
+		void set_projection(const mat4& projection);
 		
 		// return new(memory) OurShader(*this);
 		virtual Shader* clone(void* memory) = 0;
