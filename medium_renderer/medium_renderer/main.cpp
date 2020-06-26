@@ -17,30 +17,6 @@
 #define VK_A 0x41
 #define VK_D 0x44
 
-void print_mat(const gm::mat4& mat)
-{
-	for (int i = 0; i < 4; i++)
-	{
-		for (int j = 0; j < 4; j++)
-			gui::console::printf("%0.2f ", mat[i][j]);
-		gui::console::printf("\n");
-	}
-	gui::console::printf("\n");
-}
-
-//void* operator new(std::size_t sz) {
-//	gui::console::printf("global op new called, size = %zu\n", sz);
-//	void* ptr = std::malloc(sz);
-//	if (ptr)
-//		return ptr;
-//	else
-//		throw std::bad_alloc{};
-//}
-//void operator delete(void* ptr) noexcept
-//{
-//	gui::console::printf("global op delete called");
-//	std::free(ptr);
-//}
 
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
@@ -169,11 +145,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 
 		// Set plane uniforms ================
 		guro_shader.set_diffusemap(&plane.diffusemap);
-		guro_shader.set_specularmap(&plane.specularmap);
+		guro_shader.set_specular(0.05f);
 
 		gm::mat4 model_plane;
-		model_plane.set_col(3, gm::vec3(0, -1, -5));
-		model_plane.set_scale(gm::vec3(0.5f, 1.0f, 0.8f));
+		model_plane.set_col(3, gm::vec3(0, -1, -3.0f));
+		model_plane.set_scale(gm::vec3(0.5f, 1.0f, 0.6f));
 
 		guro_shader.set_model(model_plane);
 		guro_shader.set_view(camera.get_lookat());
@@ -194,7 +170,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 		guro_shader.set_view(camera.get_lookat());
 		guro_shader.set_projection(camera.get_projection());
 
-		// Draw plane
+		// Draw cube
 		sr::render_mesh(cube, &guro_shader);
 
 
@@ -210,7 +186,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 		guro_shader.set_view(camera.get_lookat());
 		guro_shader.set_projection(camera.get_projection());
 
-		// Draw plane
+		// Draw diablo
 		sr::render_mesh(diablo, &guro_shader);
 
 		

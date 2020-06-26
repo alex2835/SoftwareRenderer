@@ -72,7 +72,6 @@ namespace gui
 		}
 
 
-
 		bool valid() const
 		{
 			return width != 0 && height != 0 && data != NULL;
@@ -89,8 +88,10 @@ namespace gui
 
 		Color_base<T>& get_pixel(int x, int y)
 		{
-			assert(((uint32_t)y < height) | ((uint32_t)x < width));
-			return data[y * width + x];
+			if (((uint32_t)y < height) && ((uint32_t)x < width))
+				return data[y * width + x];
+			else
+				return data[whole_size - 1];
 		}
 
 		Color_base<T>& operator[] (int idx)
@@ -126,8 +127,6 @@ namespace gui
 
 	};
 
-
 	extern template struct Image_base<uint8_t>;
 	extern template struct Image_base<float>;
-
 }
