@@ -4,7 +4,10 @@
 
 struct Material
 {
-	float ambient = 0.1f;
+	float ambient;
+	float shanest;
+	float specular;
+
 
 	union
 	{
@@ -12,12 +15,7 @@ struct Material
 		gui::Color diffuse;
 	};
 
-	union
-	{
-		gui::Image* specularmap;
-		float specular;
-	};
-
+	gui::Image* specularmap;
 	gui::fImage* normalmap;
 	gui::fImage* heightmap;
 
@@ -32,6 +30,8 @@ struct Material
 		// flush unions
 		memset(this, 0, sizeof(Material));
 		ambient = 0.1f;
+		specular = 0.5f;
+		shanest = 32.0f;
 		diffuse = gui::Color(255);
 	}
 

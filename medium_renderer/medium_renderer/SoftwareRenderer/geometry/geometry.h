@@ -123,6 +123,20 @@ namespace gm
 		Vec3() : x(0), y(0), z(0) {}
 		Vec3(T x) : x(x), y(x), z(x) {}
 		Vec3(T x, T y, T z) : x(x), y(y), z(z) {}
+		Vec3(const Vec3<T>& other)
+		{
+			x = other.x;
+			y = other.y;
+			z = other.z;
+		}
+
+		Vec3<T>& operator = (const Vec3<T>& other)
+		{
+			x = other.x;
+			y = other.y;
+			z = other.z;
+			return *this;
+		}
 
 		Vec3<T>& operator += (const Vec3<T>& other)
 		{
@@ -268,6 +282,22 @@ namespace gm
 		Vec4() : x(0), y(0), z(0), w(0) {}
 		Vec4(T x) : x(x), y(x), z(x), w(x) {}
 		Vec4(T x, T y, T z, T w) : x(x), y(y), z(z), w(w) {}
+		Vec4(const Vec4<T>& other)
+		{
+			x = other.x;
+			y = other.y;
+			z = other.z;
+			w = other.w;
+		}
+
+		Vec4<T>& operator = (const Vec4<T>& other)
+		{
+			x = other.x;
+			y = other.y;
+			z = other.z;
+			w = other.w;
+			return *this;
+		}
 
 		Vec4<T>& operator += (const Vec4<T>& other)
 		{

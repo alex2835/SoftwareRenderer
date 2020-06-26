@@ -153,7 +153,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 		//  ================ Draw =================
 		guro_shader.CameraPos = camera.Position;
 		guro_shader.LightPos = lighter.Position;
-		guro_shader.specular = 0.4f;
+		guro_shader.specular = 0.3f;
 
 
 		// Set head uniforms ===============

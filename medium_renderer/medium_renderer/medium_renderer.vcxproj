@@ -182,6 +182,7 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="shaders\guro_shader.cpp" />
+    <ClCompile Include="shaders\phong_shader.cpp" />
     <ClCompile Include="SoftwareRenderer\camera\camera.cpp" />
     <ClCompile Include="SoftwareRenderer\geometry\geometry.cpp" />
     <ClCompile Include="SoftwareRenderer\geometry\geometry.h">
@@ -208,6 +209,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="SoftwareRenderer\model\face.h" />
+    <ClCompile Include="SoftwareRenderer\rasterizer\Source.cpp" />
     <ClCompile Include="SoftwareRenderer\renderer\context.h" />
     <ClCompile Include="SoftwareRenderer\rasterizer\rasterizer.cpp" />
     <ClCompile Include="SoftwareRenderer\rasterizer\rasterizer.h">
@@ -224,6 +226,7 @@
     <ClInclude Include="shaders\LightSpotShader.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="shaders\guro_shader.h" />
+    <ClInclude Include="shaders\phong_shader.h" />
     <ClInclude Include="SoftwareRenderer\camera\camera.h" />
     <ClInclude Include="SoftwareRenderer\include.h" />
     <ClInclude Include="SoftwareRenderer\model\mesh.h" />
