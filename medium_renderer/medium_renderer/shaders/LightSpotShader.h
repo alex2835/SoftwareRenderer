@@ -5,7 +5,7 @@
 
 struct LightSpotShader : renderer::Shader
 {
-	float Intensity = 1.0f;
+	gui::Color color = gui::Color(255);
 
 	std::tuple<vec3, vec3, vec3> vertex(const Face& face, int idx) override;
 

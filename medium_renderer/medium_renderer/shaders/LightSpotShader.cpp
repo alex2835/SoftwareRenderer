@@ -17,7 +17,7 @@ std::tuple<vec3, vec3, vec3> LightSpotShader::vertex(const Face& face, int idx)
 
 gui::Color LightSpotShader::fragment(const vec2i& uv, const vec3& bar)
 {
-	return gui::Color(255 * Intensity);
+	return color;
 }
 
 

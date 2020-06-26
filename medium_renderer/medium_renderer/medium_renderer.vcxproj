@@ -209,7 +209,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="SoftwareRenderer\model\face.h" />
-    <ClCompile Include="SoftwareRenderer\rasterizer\Source.cpp" />
     <ClCompile Include="SoftwareRenderer\renderer\context.h" />
     <ClCompile Include="SoftwareRenderer\rasterizer\rasterizer.cpp" />
     <ClCompile Include="SoftwareRenderer\rasterizer\rasterizer.h">

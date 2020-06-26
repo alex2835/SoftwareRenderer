@@ -8,14 +8,13 @@ struct Material
 	float shanest;
 	float specular;
 
-
 	union
 	{
 		gui::Image* diffusemap;
 		gui::Color diffuse;
 	};
 
-	gui::Image* specularmap;
+	gui::fImage* specularmap;
 	gui::fImage* normalmap;
 	gui::fImage* heightmap;
 
@@ -38,25 +37,25 @@ struct Material
 	inline void set_diffusemap(gui::Image* diffmap)
 	{
 		diffusemap = diffmap;
-		diffuse_flag = true;
+		diffuse_flag = diffmap->data;
 	}
 
-	inline void set_specularmap(gui::Image* specmap)
+	inline void set_specularmap(gui::fImage* specmap)
 	{
 		specularmap = specmap;
-		specular_flag = true;
+		specular_flag = specmap ? specmap->data : false;
 	}
 
 	inline void set_normalmap(gui::fImage* normmap)
 	{
 		normalmap = normmap;
-		normal_flag = true;
+		normal_flag = normalmap ? normmap->data : false;
 	}
 
-	inline void set_heightmap(gui::fImage* heightmap)
+	inline void set_heightmap(gui::fImage* hmap)
 	{
-		heightmap = heightmap;
-		height_flag = true;
+		heightmap = hmap;
+		height_flag = hmap ? hmap->data : false;
 	}
 
 
@@ -69,11 +68,13 @@ struct Material
 	inline void set_diffuse(const gui::Color& diffuse_color)
 	{
 		diffuse = diffuse_color;
+		diffuse_flag = false;
 	}
 
 	inline void set_specular(float specular_strenght)
 	{
 		specular = specular_strenght;
+		specular_flag = false;
 	}
 
 };

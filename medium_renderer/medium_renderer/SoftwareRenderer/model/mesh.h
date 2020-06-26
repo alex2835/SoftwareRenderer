@@ -24,18 +24,12 @@ namespace renderer
 		std::vector<Face> faces;
 
 		// maps
-		union {
-			struct
-			{
-				gui::Image diffusemap;
-				gui::Image normalmap;
-				gui::Image heightmap;
-			};
-			gui::Image maps[3];
-		};
+		gui::Image diffusemap;
+		gui::fImage specularmap;
+		gui::fImage normalmap;
+		gui::fImage heightmap;
 
 		Mesh(const std::string& filename);
-		~Mesh();
 
 		bool valid();
 

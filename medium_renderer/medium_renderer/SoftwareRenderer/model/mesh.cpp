@@ -6,9 +6,6 @@ namespace renderer
 {
 	Mesh::Mesh(const std::string& filename)
 	{
-		// flush union
-		memset(maps, 0, sizeof(gui::Image) * 3);
-		
 		std::ifstream in;
 
 		// file input stream
@@ -99,6 +96,9 @@ namespace renderer
 		
 		// load maps
 		diffusemap.open((filename + "_diffuse.jpg").c_str());
+		specularmap.open((filename + "_spec.jpg").c_str());
+		normalmap.open((filename + "_nm.jpg").c_str());
+		heightmap.open((filename + "_h.jpg").c_str());
 	}
 
 
@@ -107,24 +107,19 @@ namespace renderer
 		return faces.size() && diffusemap.valid();
 	}
 
-
 	int Mesh::faces_size()
 	{
 		return faces.size();
 	}
-
 
 	Face& Mesh::get_face(int i)
 	{
 		return faces[i];
 	}
 
-
 	gui::Color& Mesh::get_diffuse(const gm::vec2i& uv)
 	{
 		return diffusemap[uv.y * diffusemap.width + uv.x];
 	}
 
-
-	Mesh::~Mesh(){}
 }

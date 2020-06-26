@@ -4,6 +4,7 @@
 #include "SoftwareRenderer/include.h"
 
 #include "shaders/guro_shader.h"
+#include "shaders/phong_shader.h"
 #include "shaders/LightSpotShader.h"
 
 #include "scene_objects/lighterObj.h"
@@ -54,36 +55,30 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 	// set context
 	sr::set_rendering_context(window->canvas);
 	
-
+	
 	// mesh
 	sr::Mesh head("models/african_head/african_head");
 	if (!head.valid())
-	{
-		gui::console::printf("Error: Can not load mesh\n");
 		return 1;
-	}
 
 	sr::Mesh cube("models/cube/cube");
 
 	if (!cube.valid())
-	{
-		gui::console::printf("Error: Can not load mesh\n");
 		return 1;
-	}
 
 	LighterObj lighter(&cube, gm::vec3(3, 0, 0), 0.2f);
 
 
 	sr::Mesh plane("models/plane/plane");
-	if (!cube.valid())
-	{
-		gui::console::printf("Error: Can not load mesh\n");
+	if (!plane.valid())
 		return 1;
-	}
 
+	sr::Mesh diablo("models/diablo3_pose/diablo3_pose");
+	if (!diablo.valid())
+		return 1;
 
 	// Shader
-	GuroShader guro_shader;
+	PhongShader guro_shader;
 	LightSpotShader light_shader;
 
 	// Camera
@@ -158,6 +153,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 
 		// Set head uniforms ===============
 		guro_shader.set_diffusemap(&head.diffusemap);
+		//guro_shader.set_specularmap(&head.specularmap);
+		guro_shader.set_specularmap(NULL);
 
 		gm::mat4 mesh_head;
 		mesh_head.set_col(3, gm::vec3(-2, 0, 0));
@@ -172,12 +169,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 
 		// Set plane uniforms ================
 		guro_shader.set_diffusemap(&plane.diffusemap);
+		guro_shader.set_specularmap(&plane.specularmap);
 
-		gm::mat4 mesh_plane;
-		mesh_plane.set_col(3, gm::vec3(0, -1, -2));
-		mesh_plane.set_scale(gm::vec3(0.5f, 1.0f, 0.5f));
+		gm::mat4 model_plane;
+		model_plane.set_col(3, gm::vec3(0, -1, -5));
+		model_plane.set_scale(gm::vec3(0.5f, 1.0f, 0.8f));
 
-		guro_shader.set_model(mesh_plane);
+		guro_shader.set_model(model_plane);
 		guro_shader.set_view(camera.get_lookat());
 		guro_shader.set_projection(camera.get_projection());
 
@@ -187,16 +185,33 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 
 		// Set cube uniforms ================
 		guro_shader.set_diffusemap(&cube.diffusemap);
+		guro_shader.set_specularmap(&cube.specularmap);
 
-		mesh_plane.set_col(3, gm::vec3(2, -0.5, 0));
-		mesh_plane.set_scale(0.2f);
+		model_plane.set_col(3, gm::vec3(2.0f, -0.5f, 0.0f));
+		model_plane.set_scale(0.2f);
 
-		guro_shader.set_model(mesh_plane);
+		guro_shader.set_model(model_plane);
 		guro_shader.set_view(camera.get_lookat());
 		guro_shader.set_projection(camera.get_projection());
 
 		// Draw plane
 		sr::render_mesh(cube, &guro_shader);
+
+
+		// Set diablo uniforms ================
+		guro_shader.set_diffusemap(&diablo.diffusemap);
+		//guro_shader.set_specularmap(&diablo.specularmap);
+		guro_shader.set_specularmap(NULL);
+
+		model_plane.set_col(3, gm::vec3(2.0f, 1.0f, -4.0f));
+		model_plane.set_scale(2.0f);
+
+		guro_shader.set_model(model_plane);
+		guro_shader.set_view(camera.get_lookat());
+		guro_shader.set_projection(camera.get_projection());
+
+		// Draw plane
+		sr::render_mesh(diablo, &guro_shader);
 
 		
 		// Set lighter uniforms ==============
