@@ -153,10 +153,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 		//  ================ Draw =================
 		guro_shader.CameraPos = camera.Position;
 		guro_shader.LightPos = lighter.Position;
+		guro_shader.specular = 0.4f;
 
 
 		// Set head uniforms ===============
-		guro_shader.diffusemap = &head.diffusemap;
+		guro_shader.set_diffusemap(&head.diffusemap);
 
 		gm::mat4 mesh_head;
 		mesh_head.set_col(3, gm::vec3(-2, 0, 0));
@@ -170,7 +171,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 
 
 		// Set plane uniforms ================
-		guro_shader.diffusemap = &plane.diffusemap;
+		guro_shader.set_diffusemap(&plane.diffusemap);
 
 		gm::mat4 mesh_plane;
 		mesh_plane.set_col(3, gm::vec3(0, -1, -2));
@@ -185,7 +186,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 
 
 		// Set cube uniforms ================
-		guro_shader.diffusemap = &plane.diffusemap;
+		guro_shader.set_diffusemap(&cube.diffusemap);
 
 		mesh_plane.set_col(3, gm::vec3(2, -0.5, 0));
 		mesh_plane.set_scale(0.2f);

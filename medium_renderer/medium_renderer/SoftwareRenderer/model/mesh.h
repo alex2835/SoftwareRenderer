@@ -34,10 +34,7 @@ namespace renderer
 			gui::Image maps[3];
 		};
 
-
 		Mesh(const std::string& filename);
-		//Mesh(const Mesh& mesh) = default;
-		//Mesh(Mesh&& mesh) noexcept = default;
 		~Mesh();
 
 		bool valid();
@@ -47,7 +44,6 @@ namespace renderer
 		Face& get_face(int i);
 
 		gui::Color& get_diffuse(const gm::vec2i& uv);
-
 	};
 
 }

@@ -104,5 +104,8 @@
     <ClInclude Include="SoftwareRenderer\model\mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SoftwareRenderer\shader\material.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

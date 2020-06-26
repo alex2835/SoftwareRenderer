@@ -96,7 +96,7 @@ namespace renderer
 			}
 			this->faces.push_back(res);
 		}
-
+		
 		// load maps
 		diffusemap.open((filename + "_diffuse.jpg").c_str());
 	}
@@ -126,10 +126,5 @@ namespace renderer
 	}
 
 
-	Mesh::~Mesh()
-	{
-		//for (int i = 0; i < 3; i++)
-		//	maps[i].~Image_type();
-	}
-
+	Mesh::~Mesh(){}
 }

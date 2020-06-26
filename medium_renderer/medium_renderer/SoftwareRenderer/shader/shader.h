@@ -4,6 +4,8 @@
 
 #include "../geometry/geometry.h"
 #include "image/image.h"
+#include "material.h"
+#include "../model/face.h"
 
 // like opengl shader lang
 using namespace gm;
@@ -14,18 +16,8 @@ namespace renderer
 		Don't dynamic allocate in shader such a std::vector<Lighters>
 		distryctor will not be called, and memory leak.
 	*/
-	struct Shader
+	struct Shader : Material
 	{
-		union
-		{
-			struct {
-				gui::Image* diffusemap;
-				gui::Image* normalmap;
-				gui::Image* heightmap;
-			};
-			gui::Image* maps[3];
-		};
-
 		mat4 Transforms;
 		mat4 ModelIT;
 
@@ -34,7 +26,7 @@ namespace renderer
 		mat4 Projection;
 		
 		// output: { vec3 vertex on plane, vec3 vertex in global space, vec3 normal in global space}
-		virtual std::tuple<vec3, vec3, vec3> vertex(const vec3& vert, const vec3& norm, int idx) = 0;
+		virtual std::tuple<vec3, vec3, vec3> vertex(const Face& face, int idx) = 0;
 		
 		// output: final color
 		virtual gui::Color fragment(const vec2i& uv, const vec3& bar) = 0;

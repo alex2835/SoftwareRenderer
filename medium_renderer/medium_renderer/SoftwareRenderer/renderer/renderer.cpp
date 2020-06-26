@@ -123,13 +123,13 @@ namespace renderer
 								mesh.diffusemap.height * face[j].uv.y);
 
 							// Vertex shader
-							auto [vertex, global, normal] = shader->vertex(face[j].vert, face[j].norm, j);
+							auto [vertex, global, normal] = shader->vertex(face, j);
 
 							// backface culling
 							if (backface_culling_active)
 							{
 								global -= *CameraPos;
-								cull &= (*CameraPos - global).normalize() * normal < 0.0f;
+								cull &= (*CameraPos - global).normalize() * normal < -0.1f;
 							}
 
 							// clip

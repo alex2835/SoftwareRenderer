@@ -18,7 +18,6 @@
 
 namespace renderer
 {
-	
 	void set_rendering_context(gui::Image_base<uint8_t>& rendering_context);
 
 	void flush_screan(const gui::Color& color = gui::Color(0));
@@ -32,7 +31,6 @@ namespace renderer
 	// release intire memory
 	void release();
 
-
+	// render mesh
 	void render_mesh(Mesh& mesh, Shader* shader);
-
 }

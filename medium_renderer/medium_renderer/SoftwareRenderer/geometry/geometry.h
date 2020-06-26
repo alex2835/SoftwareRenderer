@@ -895,6 +895,7 @@ namespace gm
 
 	// ======================= Shader geometry ===========================
 
+	// vec
 	vec3 reflect(const vec3& incidentVec, const vec3& normal);
 
 	vec3 refract(const vec3& incidentVec, const vec3& normal, float eta);
@@ -916,5 +917,26 @@ namespace gm
 	{
 		return vec.get_normalized();
 	}
+
+	template <typename T>
+	float length(const T& vec)
+	{
+		return vec.norm();
+	}
+
+
+	// mat
+	template <typename T>
+	T inverse(const T& mat)
+	{
+		return mat.get_inversed();
+	}
+
+	template <typename T>
+	T transpose(const T& mat)
+	{
+		return mat.get_transposed();
+	}
+
 
 }

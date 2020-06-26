@@ -8,7 +8,6 @@ namespace renderer
     // Constructor with vectors
     Camera::Camera(const gm::vec3& position, float yaw, float pitch, const gm::vec3& up)
         :
-        Front(gm::vec3(0.0f, 0.0f, -1.0f)),
         MovementSpeed(SPEED),
         MouseSensitivity(SENSITIVTY),
         Fov(FOV)
@@ -24,7 +23,6 @@ namespace renderer
     // Constructor with scalar values
     Camera::Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch)
         :
-        Front(gm::vec3(0.0f, 0.0f, -1.0f)),
         MovementSpeed(SPEED),
         MouseSensitivity(SENSITIVTY),
         Fov(Fov)
