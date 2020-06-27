@@ -14,6 +14,8 @@ namespace shaders
 
 		vec3 verts[3];
 		vec3 norms[3];
+		vec3 global_poss[3];
+		vec3 norms_out[3];
 
 		std::tuple<vec3, vec3, vec3>
 			vertex(const Face& face, int idx) override;

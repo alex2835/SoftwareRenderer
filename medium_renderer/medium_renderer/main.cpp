@@ -9,6 +9,7 @@
 
 #include "scene_objects/lighterObj.h"
 
+
 #define VK_UP 0x26
 #define VK_DOWN 0x28
 
@@ -38,7 +39,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 		return 1;
 
 	sr::Mesh cube("models/cube/cube");
-
 	if (!cube.valid())
 		return 1;
 
@@ -53,8 +53,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 	if (!diablo.valid())
 		return 1;
 
+
+	sr::Model model("models/african_head");
+
+
 	// Shader
-	shaders::GuroShader guro_shader;
+	shaders::PhongShader guro_shader;
 	shaders::LightSpotShader light_shader;
 
 	// Camera
@@ -119,6 +123,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 			camera.ProcessKeyboard(sr::RIGHT, timer.elapsed);
 
 
+
+
 		//  ================ Draw =================
 		guro_shader.CameraPos = camera.Position;
 		guro_shader.lighters[0] = sr::create_spot_lighter(lighter.Position);
@@ -126,68 +132,68 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 		guro_shader.nLighters = 2;
 		guro_shader.material.specular = 0.3f;
 
+		guro_shader.set_view(camera.get_lookat());
+		guro_shader.set_projection(camera.get_projection());
+
+		model.draw(&guro_shader);
+
 
 		// Set head uniforms ===============
-		guro_shader.material.set_diffusemap(&head.diffusemap);
-		//guro_shader.set_specularmap(&head.specularmap);
-		guro_shader.material.set_specularmap(NULL);
-
-		gm::mat4 mesh_head;
-		mesh_head.set_col(3, gm::vec3(-2, 0, 0));
-
-		guro_shader.set_model(mesh_head);
-		guro_shader.set_view(camera.get_lookat());
-		guro_shader.set_projection(camera.get_projection());
-
-		// Draw head
-		sr::render_mesh(head, &guro_shader);
-
-
-		// Set plane uniforms ================
-		guro_shader.material.set_diffusemap(&plane.diffusemap);
-		guro_shader.material.set_specular(0.05f);
-
-		gm::mat4 model_plane;
-		model_plane.set_col(3, gm::vec3(0, -1, -3.0f));
-		model_plane.set_scale(gm::vec3(0.5f, 1.0f, 0.6f));
-
-		guro_shader.set_model(model_plane);
-		guro_shader.set_view(camera.get_lookat());
-		guro_shader.set_projection(camera.get_projection());
-
-		// Draw plane
-		sr::render_mesh(plane, &guro_shader);
-
-
-		// Set cube uniforms ================
-		guro_shader.material.set_diffusemap(&cube.diffusemap);
-		guro_shader.material.set_specularmap(&cube.specularmap);
-
-		model_plane.set_col(3, gm::vec3(2.0f, -0.5f, 0.0f));
-		model_plane.set_scale(0.2f);
-
-		guro_shader.set_model(model_plane);
-		guro_shader.set_view(camera.get_lookat());
-		guro_shader.set_projection(camera.get_projection());
-
-		// Draw cube
-		sr::render_mesh(cube, &guro_shader);
-
-
-		// Set diablo uniforms ================
-		guro_shader.material.set_diffusemap(&diablo.diffusemap);
-		//guro_shader.set_specularmap(&diablo.specularmap);
-		guro_shader.material.set_specularmap(NULL);
-
-		model_plane.set_col(3, gm::vec3(2.0f, 1.0f, -4.0f));
-		model_plane.set_scale(2.0f);
-
-		guro_shader.set_model(model_plane);
-		guro_shader.set_view(camera.get_lookat());
-		guro_shader.set_projection(camera.get_projection());
-
-		// Draw diablo
-		sr::render_mesh(diablo, &guro_shader);
+		//guro_shader.material.set_diffusemap(&head.diffusemap);
+		////guro_shader.set_specularmap(&head.specularmap);
+		//guro_shader.material.set_specularmap(NULL);
+		//
+		//gm::mat4 mesh_head;
+		//mesh_head.set_col(3, gm::vec3(-2, 0, 0));
+		//
+		//guro_shader.set_model(mesh_head);
+		//
+		//// Draw head
+		//sr::render_mesh(head, &guro_shader);
+		//
+		//
+		//// Set plane uniforms ================
+		//guro_shader.material.set_diffusemap(&plane.diffusemap);
+		//guro_shader.material.set_specular(0.05f);
+		//
+		//gm::mat4 model_plane;
+		//model_plane.set_col(3, gm::vec3(0, -1, -3.0f));
+		//model_plane.set_scale(gm::vec3(0.5f, 1.0f, 0.6f));
+		//
+		//guro_shader.set_model(model_plane);
+		//guro_shader.set_view(camera.get_lookat());
+		//guro_shader.set_projection(camera.get_projection());
+		//
+		//
+		//// Draw plane
+		//sr::render_mesh(plane, &guro_shader);
+		//
+		//
+		//// Set cube uniforms ================
+		//guro_shader.material.set_diffusemap(&cube.diffusemap);
+		//guro_shader.material.set_specularmap(&cube.specularmap);
+		//
+		//model_plane.set_col(3, gm::vec3(2.0f, -0.5f, 0.0f));
+		//model_plane.set_scale(0.2f);
+		//
+		//guro_shader.set_model(model_plane);
+		//
+		//// Draw cube
+		//sr::render_mesh(cube, &guro_shader);
+		//
+		//
+		//// Set diablo uniforms ================
+		//guro_shader.material.set_diffusemap(&diablo.diffusemap);
+		////guro_shader.set_specularmap(&diablo.specularmap);
+		//guro_shader.material.set_specularmap(NULL);
+		//
+		//model_plane.set_col(3, gm::vec3(2.0f, 1.0f, -4.0f));
+		//model_plane.set_scale(2.0f);
+		//
+		//guro_shader.set_model(model_plane);
+		//
+		//// Draw diablo
+		//sr::render_mesh(diablo, &guro_shader);
 
 		
 		// Set lighter uniforms ==============

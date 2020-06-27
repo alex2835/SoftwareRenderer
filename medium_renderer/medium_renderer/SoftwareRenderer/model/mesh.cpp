@@ -98,7 +98,6 @@ namespace renderer
 		diffusemap.open((filename + "_diffuse.jpg").c_str());
 		specularmap.open((filename + "_spec.jpg").c_str());
 		normalmap.open((filename + "_nm.jpg").c_str());
-		heightmap.open((filename + "_h.jpg").c_str());
 	}
 
 

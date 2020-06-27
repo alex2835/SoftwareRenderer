@@ -9,21 +9,15 @@ namespace renderer
 		float ambient;
 		float shininess;
 		float specular;
+		gui::Color diffuse;
 
-		union
-		{
-			gui::Image* diffusemap;
-			gui::Color diffuse;
-		};
-
+		gui::Image* diffusemap;
 		gui::fImage* specularmap;
 		gui::fImage* normalmap;
-		gui::fImage* heightmap;
 
 		bool diffuse_flag = false;
 		bool specular_flag = false;
 		bool normal_flag = false;
-		bool height_flag = false;
 
 
 		inline Material()
@@ -51,12 +45,6 @@ namespace renderer
 		{
 			normalmap = normmap;
 			normal_flag = normalmap ? normmap->data : false;
-		}
-
-		inline void set_heightmap(gui::fImage* hmap)
-		{
-			heightmap = hmap;
-			height_flag = hmap ? hmap->data : false;
 		}
 
 

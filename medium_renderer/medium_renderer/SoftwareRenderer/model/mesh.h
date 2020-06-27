@@ -27,7 +27,6 @@ namespace renderer
 		gui::Image diffusemap;
 		gui::fImage specularmap;
 		gui::fImage normalmap;
-		gui::fImage heightmap;
 
 		Mesh(const std::string& filename);
 
