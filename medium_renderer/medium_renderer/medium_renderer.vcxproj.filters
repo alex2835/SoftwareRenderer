@@ -113,5 +113,8 @@
     <ClInclude Include="shaders\phong_shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SoftwareRenderer\shader\light.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

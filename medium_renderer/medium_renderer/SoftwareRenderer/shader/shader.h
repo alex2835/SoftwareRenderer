@@ -6,17 +6,18 @@
 #include "image/image.h"
 #include "material.h"
 #include "../model/face.h"
+#include "light.h"
 
-// like opengl shader lang
-using namespace gm;
 
 namespace renderer
 {
+	using namespace gm;
+
 	/*
 		Don't dynamic allocate in shader such a std::vector<Lighters>
 		distryctor will not be called, and memory leak.
 	*/
-	struct Shader : Material
+	struct Shader
 	{
 		mat4 Transforms;
 		mat4 ModelIT;
@@ -24,6 +25,11 @@ namespace renderer
 		mat4 Model;
 		mat4 View;
 		mat4 Projection;
+
+		Material material;
+
+		int nLighters = 0;
+		Light lighters[3];
 		
 		// output: { vec3 vertex on plane, vec3 vertex in global space, vec3 normal in global space}
 		virtual std::tuple<vec3, vec3, vec3> vertex(const Face& face, int idx) = 0;
@@ -44,5 +50,4 @@ namespace renderer
 
 		virtual ~Shader() = default;
 	};
-
 }

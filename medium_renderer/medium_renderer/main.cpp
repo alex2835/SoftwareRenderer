@@ -54,7 +54,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 		return 1;
 
 	// Shader
-	PhongShader guro_shader;
+	GuroShader guro_shader;
 	LightSpotShader light_shader;
 
 	// Camera
@@ -65,7 +65,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 	float shift_x = 0.0f;
 	float shift_y = 0.0f;
 
-	
 	// On backface culling
 	sr::backface_culling(&camera.Position);
 
@@ -90,7 +89,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 
 		mouse_x = gui::Mouse::pos_x;
 		mouse_y = gui::Mouse::pos_y;
-
 
 		// Camera controll by keys
 		if (gui::Input::pressed(VK_LEFT))
@@ -123,14 +121,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 
 		//  ================ Draw =================
 		guro_shader.CameraPos = camera.Position;
-		guro_shader.LightPos = lighter.Position;
-		guro_shader.specular = 0.3f;
+		guro_shader.lighters[0] = create_spot_lighter(lighter.Position);
+		guro_shader.nLighters = 1;
+		guro_shader.material.specular = 0.3f;
 
 
 		// Set head uniforms ===============
-		guro_shader.set_diffusemap(&head.diffusemap);
+		guro_shader.material.set_diffusemap(&head.diffusemap);
 		//guro_shader.set_specularmap(&head.specularmap);
-		guro_shader.set_specularmap(NULL);
+		guro_shader.material.set_specularmap(NULL);
 
 		gm::mat4 mesh_head;
 		mesh_head.set_col(3, gm::vec3(-2, 0, 0));
@@ -144,8 +143,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 
 
 		// Set plane uniforms ================
-		guro_shader.set_diffusemap(&plane.diffusemap);
-		guro_shader.set_specular(0.05f);
+		guro_shader.material.set_diffusemap(&plane.diffusemap);
+		guro_shader.material.set_specular(0.05f);
 
 		gm::mat4 model_plane;
 		model_plane.set_col(3, gm::vec3(0, -1, -3.0f));
@@ -160,8 +159,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 
 
 		// Set cube uniforms ================
-		guro_shader.set_diffusemap(&cube.diffusemap);
-		guro_shader.set_specularmap(&cube.specularmap);
+		guro_shader.material.set_diffusemap(&cube.diffusemap);
+		guro_shader.material.set_specularmap(&cube.specularmap);
 
 		model_plane.set_col(3, gm::vec3(2.0f, -0.5f, 0.0f));
 		model_plane.set_scale(0.2f);
@@ -175,9 +174,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 
 
 		// Set diablo uniforms ================
-		guro_shader.set_diffusemap(&diablo.diffusemap);
+		guro_shader.material.set_diffusemap(&diablo.diffusemap);
 		//guro_shader.set_specularmap(&diablo.specularmap);
-		guro_shader.set_specularmap(NULL);
+		guro_shader.material.set_specularmap(NULL);
 
 		model_plane.set_col(3, gm::vec3(2.0f, 1.0f, -4.0f));
 		model_plane.set_scale(2.0f);

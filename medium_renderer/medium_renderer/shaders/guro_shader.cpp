@@ -2,35 +2,60 @@
 #include "guro_shader.h"
 
 
+static float calculate_pointLight(const Light& lighter,
+								  const Material& material,
+								  const vec3& vert,
+								  const vec3& global_pos,
+								  const vec3& norm,
+								  const vec3& norm_out,
+								  const vec3& CameraPos)
+{
+	float diffuse = 0.0f;
+
+	// attenuation
+	float distance = length(lighter.position - vert);
+	float attenuation = 1.0f / (1.0f + lighter.linear * distance + lighter.quadratic * (distance * distance));
+
+	// diffuse and ambient light intensity
+	diffuse = __max(normalize(lighter.position - global_pos) * norm_out, material.ambient) * attenuation;
+
+	// specular intensity
+	vec3 viewDir = normalize(CameraPos - vert);
+	vec3 lightDir = normalize(lighter.position - vert);
+	vec3 reflectDir = reflect(-lightDir, norm);
+
+	// specular only coef
+	float spec = pow(__max(dot(viewDir, reflectDir), 0.0f), material.shanest) * material.specular;
+
+	return __min(spec + diffuse, 1.0f);
+}
+
+
+
 std::tuple<vec3, vec3, vec3>
 	GuroShader::vertex(const Face& face, int idx)
 	{
 		const vec3& vert = face[idx].vert;
 		const vec3& norm = face[idx].norm;
-		const vec2& uv = face[idx].uv;
 
 		vec3 vert_out = (Transforms * mat4(vert)).toVec3();
 		vec3 global_pos = (Model * mat4(vert)).toVec3();
 		vec3 norm_out = normalize((ModelIT * mat4(norm)).toVec3_direct());
-	
-		// attenuation
-		float distance = length(LightPos - vert);
-		float attenuation = 1.0f / (1.0f + 0.07f * distance + 0.017f * (distance * distance));
-	
-		// diffuse and ambient light intensity
-		LightStrengt[idx] = __max(normalize(LightPos - global_pos) * norm_out, ambient) * attenuation;
 
-		// specular intensity
-		vec3 viewDir = normalize(CameraPos - vert);
-		vec3 lightDir = normalize(LightPos - vert);
-		vec3 reflectDir = reflect(-lightDir, norm);
+		LightStrengt[idx] = 0.0f;
+		for (int i = 0; i < nLighters; i++)
+		{
+			switch (lighters[i].type)
+			{
+				case LightType::DirLight:
+				break;
+				case LightType::PointLight:
+					LightStrengt[idx] += calculate_pointLight(lighters[i], material, vert, global_pos, norm, norm_out, CameraPos);
+				break;
+			}
+		}
 
-		// specular only coef
-		float spec = pow(__max(dot(viewDir, reflectDir), 0.0f), shanest) * specular;
-		
-		// combine diffuse specular and ambient
-		LightStrengt[idx] = __min(spec + LightStrengt[idx], 1.0f);
-
+		LightStrengt[idx] = __min(LightStrengt[idx], 1.0f);
 		return { vert_out , global_pos, norm_out };
 	}
 
@@ -38,10 +63,10 @@ gui::Color GuroShader::fragment(const vec2i& uv, const vec3& bar)
 {
 	// diffuse map or coef
 	gui::Color diffuse_color;
-	if (diffuse_flag)
-		diffuse_color = diffusemap->get_pixel(uv.x, uv.y);
+	if (material.diffuse_flag)
+		diffuse_color = material.diffusemap->get_pixel(uv.x, uv.y);
 	else
-		diffuse_color = diffuse;
+		diffuse_color = material.diffuse;
 
 	float intensity = __min(LightStrengt * bar, 1.0f);
 	return diffuse_color * intensity;

@@ -14,11 +14,11 @@ PhongShader::vertex(const Face& face, int idx)
 	vec3 norm_out = normalize((ModelIT * mat4(norm)).toVec3_direct());
 
 	// attenuation
-	float distance = length(LightPos - vert);
-	float attenuation = 1.0f / (1.0f + 0.07f * distance + 0.017f * (distance * distance));
+	float distance = length(lighters[0].position - vert);
+	float attenuation = 1.0f / (1.0f + lighters[0].linear * distance + lighters[0].quadratic * (distance * distance));
 
 	// diffuse and ambient light intensity
-	LightStrengt[idx] = __max(normalize(LightPos - global_pos) * norm_out, ambient) * attenuation;
+	LightStrengt[idx] = __max(normalize(lighters[0].position - global_pos) * norm_out, material.ambient) * attenuation;
 
 
 	verts[idx] = vert_out;
@@ -37,23 +37,23 @@ gui::Color PhongShader::fragment(const vec2i& uv, const vec3& bar)
 
 	// diffuse map or coef
 	gui::Color diffuse_color;
-	if (diffuse_flag)
-		diffuse_color = diffusemap->get_pixel(uv.x, uv.y);
+	if (material.diffuse_flag)
+		diffuse_color = material.diffusemap->get_pixel(uv.x, uv.y);
 	else
-		diffuse_color = diffuse;
+		diffuse_color = material.diffuse;
 
 	vec3 viewDir = normalize(CameraPos - vert);
-	vec3 lightDir = normalize(LightPos - vert);
+	vec3 lightDir = normalize(lighters[0].position - vert);
 	vec3 reflectDir = reflect(-lightDir, norm);
 	
 	// specular map or coef
 	float specular_coef;
-	if (specular_flag)
-		specular_coef = specularmap->get_pixel(uv.x, uv.y).r;
+	if (material.specular_flag)
+		specular_coef = material.specularmap->get_pixel(uv.x, uv.y).r;
 	else
-		specular_coef = specular;
+		specular_coef = material.specular;
 	
-	float spec = pow(__max(dot(viewDir, reflectDir), 0.0f), shanest) * specular_coef;
+	float spec = pow(__max(dot(viewDir, reflectDir), 0.0f), material.shanest) * specular_coef;
 
 	float intensity = __min(LightStrengt * bar + spec, 1.0f);
 	return diffuse_color * intensity;

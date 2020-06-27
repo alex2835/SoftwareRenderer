@@ -5,7 +5,6 @@
 struct PhongShader : renderer::Shader
 {
 	vec3 CameraPos;
-	vec3 LightPos;
 	vec3 LightStrengt;
 
 	vec3 verts[3];
