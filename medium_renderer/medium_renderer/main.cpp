@@ -19,7 +19,6 @@
 #define VK_D 0x44
 
 
-
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 {
 	gui::init(hInstance);
@@ -33,33 +32,41 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 	sr::set_rendering_context(window->canvas);
 	
 	
-	// mesh
-	sr::Mesh head("models/african_head/african_head");
-	if (!head.valid())
+	// lighter cube mesh
+	sr::Mesh cubeMesh("models/cube/cube");
+	if (!cubeMesh.valid())
 		return 1;
+	
+	LighterObj lighter(&cubeMesh, gm::vec3(3, 0, 3), 0.2f);
+	LighterObj lighter2(&cubeMesh, gm::vec3(-4, 4, -13), 0.2f);
 
-	sr::Mesh cube("models/cube/cube");
+
+	// Models
+	sr::Model cube("models/cube", gm::vec3(2, -0.5f, 0), 0.2f);
 	if (!cube.valid())
 		return 1;
 
-	LighterObj lighter(&cube, gm::vec3(3, 0, 0), 0.2f);
+	sr::Model head("models/african_head", gm::vec3(-3, 0 , 0));
+	if (!head.valid())
+		return 1;
 
+	sr::Model diablo("models/diablo3_pose", gm::vec3(2, 1, -16), 2);
+	if (!head.valid())
+		return 1;
 
-	sr::Mesh plane("models/plane/plane");
+	sr::Model plane("models/plane", gm::vec3(0, -1, -8), gm::vec3(0.5f, 1.0f, 1.0f));
 	if (!plane.valid())
 		return 1;
 
-	sr::Mesh diablo("models/diablo3_pose/diablo3_pose");
-	if (!diablo.valid())
+	sr::Model boggie("models/boggie", gm::vec3(-2, 1, -16), 2);
+	if (!boggie.valid())
 		return 1;
 
 
-	sr::Model model("models/african_head");
-
-
 	// Shader
-	shaders::PhongShader guro_shader;
+	shaders::GuroShader shader;
 	shaders::LightSpotShader light_shader;
+
 
 	// Camera
 	sr::Camera camera(gm::vec3(0, 5, 15), 90, 20);
@@ -126,79 +133,28 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 
 
 		//  ================ Draw =================
-		guro_shader.CameraPos = camera.Position;
-		guro_shader.lighters[0] = sr::create_spot_lighter(lighter.Position);
-		guro_shader.lighters[1] = sr::create_dir_lighter(gm::vec3(1, 3, 0), 0.3f);
-		guro_shader.nLighters = 2;
-		guro_shader.material.specular = 0.3f;
+		shader.CameraPos = camera.Position;
+		shader.lighters[0] = sr::create_spot_lighter(lighter.Position);
+		shader.lighters[1] = sr::create_dir_lighter(lighter2.Position);
+		shader.nLighters = 2;
+		shader.material.specular = 0.3f;
 
-		guro_shader.set_view(camera.get_lookat());
-		guro_shader.set_projection(camera.get_projection());
-
-		model.draw(&guro_shader);
+		shader.set_view(camera.get_lookat());
+		shader.set_projection(camera.get_projection());
 
 
-		// Set head uniforms ===============
-		//guro_shader.material.set_diffusemap(&head.diffusemap);
-		////guro_shader.set_specularmap(&head.specularmap);
-		//guro_shader.material.set_specularmap(NULL);
-		//
-		//gm::mat4 mesh_head;
-		//mesh_head.set_col(3, gm::vec3(-2, 0, 0));
-		//
-		//guro_shader.set_model(mesh_head);
-		//
-		//// Draw head
-		//sr::render_mesh(head, &guro_shader);
-		//
-		//
-		//// Set plane uniforms ================
-		//guro_shader.material.set_diffusemap(&plane.diffusemap);
-		//guro_shader.material.set_specular(0.05f);
-		//
-		//gm::mat4 model_plane;
-		//model_plane.set_col(3, gm::vec3(0, -1, -3.0f));
-		//model_plane.set_scale(gm::vec3(0.5f, 1.0f, 0.6f));
-		//
-		//guro_shader.set_model(model_plane);
-		//guro_shader.set_view(camera.get_lookat());
-		//guro_shader.set_projection(camera.get_projection());
-		//
-		//
-		//// Draw plane
-		//sr::render_mesh(plane, &guro_shader);
-		//
-		//
-		//// Set cube uniforms ================
-		//guro_shader.material.set_diffusemap(&cube.diffusemap);
-		//guro_shader.material.set_specularmap(&cube.specularmap);
-		//
-		//model_plane.set_col(3, gm::vec3(2.0f, -0.5f, 0.0f));
-		//model_plane.set_scale(0.2f);
-		//
-		//guro_shader.set_model(model_plane);
-		//
-		//// Draw cube
-		//sr::render_mesh(cube, &guro_shader);
-		//
-		//
-		//// Set diablo uniforms ================
-		//guro_shader.material.set_diffusemap(&diablo.diffusemap);
-		////guro_shader.set_specularmap(&diablo.specularmap);
-		//guro_shader.material.set_specularmap(NULL);
-		//
-		//model_plane.set_col(3, gm::vec3(2.0f, 1.0f, -4.0f));
-		//model_plane.set_scale(2.0f);
-		//
-		//guro_shader.set_model(model_plane);
-		//
-		//// Draw diablo
-		//sr::render_mesh(diablo, &guro_shader);
+		// Draw models
+		head.draw(&shader);
+		shader.material.specular = 0.0f;
+		plane.draw(&shader);
+		diablo.draw(&shader);
+		cube.draw(&shader);
+		boggie.draw(&shader);
 
 		
 		// Set lighter uniforms ==============
 		gm::mat4 model;
-		float radius = 7.0f;
+		float radius = 5.0f;
 		float lightX = sinf(get_time() * 0.5f) * radius;
 		float lightZ = cosf(get_time() * 0.5f) * radius;
 		lighter.Position = gm::vec3(lightX, 3.0f, lightZ);
@@ -213,8 +169,19 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 		// Draw lighter
 		sr::render_mesh(*lighter.mesh, &light_shader);
 
-		
 
+		// second lighter
+		model.set_col(3, lighter2.Position);
+		model.set_scale(lighter2.scale);
+
+		light_shader.Model = model;
+		light_shader.View = camera.get_lookat();
+		light_shader.Transforms = camera.get_projection() * camera.get_lookat() * model;
+
+		// Draw lighter
+		sr::render_mesh(*lighter2.mesh, &light_shader);
+
+		
 		// ================ Info ouput ===================
 		static float output_delay = 2.0f;
 		if (output_delay -= timer.elapsed; output_delay < 0)

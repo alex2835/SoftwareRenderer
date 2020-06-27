@@ -12,24 +12,25 @@ namespace shaders
 		const vec3& global_pos,
 		const vec3& norm,
 		const vec3& norm_out,
-		const vec3& CameraPos)
+		const vec3& CameraPos,
+		const vec2i& uv)
 	{
-		// attenuation
-		float distance = length(lighter.position - vert);
-		float attenuation = 1.0f / (1.0f + lighter.linear * distance + lighter.quadratic * (distance * distance));
 
-		// diffuse and ambient light intensity
-		float diffuse = __max(normalize(lighter.position - global_pos) * norm_out, material.ambient) * attenuation;
-
-		// specular intensity
+		vec3 lightDir = normalize(lighter.direction);
 		vec3 viewDir = normalize(CameraPos - vert);
-		vec3 lightDir = normalize(lighter.position - vert);
 		vec3 reflectDir = reflect(-lightDir, norm);
 
-		// specular only coef
-		float spec = pow(__max(dot(viewDir, reflectDir), 0.0f), material.shininess) * material.specular;
+		// specular map or coef
+		float specular_coef;
+		if (material.specular_flag)
+			specular_coef = material.specularmap->get_pixel(uv.x, uv.y).r;
+		else
+			specular_coef = material.specular;
 
-		return __min((spec + diffuse) * lighter.intensity, 1.0f);
+		// specular only coef
+		float spec = 0;// pow(__max(dot(viewDir, reflectDir), 0.0f), material.shininess)* specular_coef;
+
+		return __min(spec * lighter.intensity, 1.0f);
 	}
 
 
@@ -135,7 +136,7 @@ namespace shaders
 			}
 			case LightType::PointLight:
 			{
-				spec += calculate_pointLight(lighters[i], material, vert, global_pos, norm, norm_out, CameraPos);
+				spec += calculate_pointLight(lighters[i], material, vert, global_pos, norm, norm_out, CameraPos, uv);
 				break;
 			}
 			}

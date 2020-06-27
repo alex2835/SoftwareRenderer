@@ -103,7 +103,7 @@ namespace renderer
 
 	bool Mesh::valid()
 	{
-		return faces.size() && diffusemap.valid();
+		return faces.size();
 	}
 
 	int Mesh::faces_size()

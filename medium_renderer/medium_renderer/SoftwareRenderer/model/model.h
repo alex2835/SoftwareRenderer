@@ -21,7 +21,9 @@ namespace renderer
 		gm::vec3 CameraPos;
 
 		// name of directory with model and maps
-		Model(const char* dirname);
+		Model(const char* dirname, const gm::vec3& pos = gm::vec3(), const gm::vec3& scale = gm::vec3(1.0f));
+
+		bool valid();
 
 		void draw(Shader* shader);
 	};

@@ -873,6 +873,21 @@ namespace gm
 				x[i][i] = scale;
 		}
 
+		void set_rotateX(float angle)
+		{
+
+		}
+
+		void set_rotateY(float angle)
+		{
+
+		}
+
+		void set_rotateZ(float angle)
+		{
+
+		}
+
 
 		Vec3<T> get_row(int i) const
 		{

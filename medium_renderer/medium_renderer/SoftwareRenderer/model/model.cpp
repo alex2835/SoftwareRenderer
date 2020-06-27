@@ -5,7 +5,10 @@
 namespace renderer
 {
 	 
-	Model::Model(const char* dirname)
+	Model::Model(const char* dirname, const gm::vec3& pos, const gm::vec3& scale)
+		:
+		position(pos),
+		scale(scale)
 	{
 		namespace fs = std::filesystem;
 		
@@ -29,8 +32,28 @@ namespace renderer
 
 	}
 
+	bool Model::valid()
+	{
+		bool valid = true;
+		for (Mesh& mesh : meshes)
+			valid &= mesh.valid();
+
+		return valid && meshes.size();
+	}
+
 	void Model::draw(Shader* shader)
 	{
+		gm::mat4 Scale;
+		gm::mat4 Rotation;
+		gm::mat4 Translation;
+
+		Scale.set_scale(scale);
+		//Rtotaion.set
+		Translation.set_col(3, position);
+		
+		gm::mat4 Model = Translation * Rotation * Scale;
+		shader->set_model(Model);
+
 		for (Mesh& mesh : meshes)
 		{
 			shader->material.set_diffusemap(&mesh.diffusemap);
