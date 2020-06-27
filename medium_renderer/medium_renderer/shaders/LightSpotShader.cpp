@@ -1,33 +1,37 @@
 
 #include "LightSpotShader.h"
 
-
-std::tuple<vec3, vec3, vec3> LightSpotShader::vertex(const Face& face, int idx)
+namespace shaders
 {
-	const vec3& vert = face[idx].vert;
-	const vec3& norm = face[idx].norm;
+	using namespace renderer;
 
-	vec3 vert_out = (Transforms * mat4(vert)).toVec3();
-	vec3 global_pos = (Model * mat4(vert)).toVec3();
-	vec3 normal = normalize((ModelIT * mat4(norm)).toVec3_direct());
+	std::tuple<vec3, vec3, vec3> LightSpotShader::vertex(const Face& face, int idx)
+	{
+		const vec3& vert = face[idx].vert;
+		const vec3& norm = face[idx].norm;
 
-	return { vert_out, global_pos, normal };
-}
+		vec3 vert_out = (Transforms * mat4(vert)).toVec3();
+		vec3 global_pos = (Model * mat4(vert)).toVec3();
+		vec3 normal = normalize((ModelIT * mat4(norm)).toVec3_direct());
 
-
-gui::Color LightSpotShader::fragment(const vec2i& uv, const vec3& bar)
-{
-	return color;
-}
+		return { vert_out, global_pos, normal };
+	}
 
 
-LightSpotShader* LightSpotShader::clone(void* memory)
-{
-	return new(memory) LightSpotShader(*this);
-}
+	gui::Color LightSpotShader::fragment(const vec2i& uv, const vec3& bar)
+	{
+		return color;
+	}
 
 
-int LightSpotShader::size()
-{
-	return sizeof(LightSpotShader);
+	LightSpotShader* LightSpotShader::clone(void* memory)
+	{
+		return new(memory) LightSpotShader(*this);
+	}
+
+
+	int LightSpotShader::size()
+	{
+		return sizeof(LightSpotShader);
+	}
 }

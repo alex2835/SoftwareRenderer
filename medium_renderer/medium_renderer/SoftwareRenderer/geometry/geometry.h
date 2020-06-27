@@ -208,11 +208,12 @@ namespace gm
 				x * other.y - y * other.x);
 		}
 
-		Vec3<T>& operator- ()
+		Vec3<T> operator- () const
 		{
+			Vec3<T> out;
 			for (int i = 0; i < 3; i++)
-				raw[i] = -raw[i];
-			return *this;
+				out[i] = -raw[i];
+			return out;
 		}
 
 		T& operator [] (int inx)

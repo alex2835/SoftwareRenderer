@@ -54,8 +54,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 		return 1;
 
 	// Shader
-	GuroShader guro_shader;
-	LightSpotShader light_shader;
+	shaders::GuroShader guro_shader;
+	shaders::LightSpotShader light_shader;
 
 	// Camera
 	sr::Camera camera(gm::vec3(0, 5, 15), 90, 20);
@@ -121,8 +121,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 
 		//  ================ Draw =================
 		guro_shader.CameraPos = camera.Position;
-		guro_shader.lighters[0] = create_spot_lighter(lighter.Position);
-		guro_shader.nLighters = 1;
+		guro_shader.lighters[0] = sr::create_spot_lighter(lighter.Position);
+		guro_shader.lighters[1] = sr::create_dir_lighter(gm::vec3(1, 3, 0), 0.3f);
+		guro_shader.nLighters = 2;
 		guro_shader.material.specular = 0.3f;
 
 

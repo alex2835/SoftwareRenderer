@@ -3,15 +3,21 @@
 #include "../SoftwareRenderer/shader/shader.h"
 #include "../SoftwareRenderer/geometry/geometry.h"
 
-struct LightSpotShader : renderer::Shader
+
+namespace shaders
 {
-	gui::Color color = gui::Color(255);
+	using namespace renderer;
 
-	std::tuple<vec3, vec3, vec3> vertex(const Face& face, int idx) override;
+	struct LightSpotShader : Shader
+	{
+		gui::Color color = gui::Color(255);
 
-	gui::Color fragment(const vec2i& uv, const vec3& bar) override;
+		std::tuple<vec3, vec3, vec3> vertex(const Face& face, int idx) override;
 
-	LightSpotShader* clone(void* memory);
+		gui::Color fragment(const vec2i& uv, const vec3& bar) override;
 
-	int size();
-};
+		LightSpotShader* clone(void* memory);
+
+		int size();
+	};
+}

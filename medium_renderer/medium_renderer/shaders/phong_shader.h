@@ -2,20 +2,26 @@
 
 #include "../SoftwareRenderer/shader/shader.h"
 
-struct PhongShader : renderer::Shader
+
+namespace shaders
 {
-	vec3 CameraPos;
-	vec3 LightStrengt;
+	using namespace renderer;
 
-	vec3 verts[3];
-	vec3 norms[3];
+	struct PhongShader : Shader
+	{
+		vec3 CameraPos;
+		vec3 LightStrengt;
 
-	std::tuple<vec3, vec3, vec3>
-		vertex(const Face& face, int idx) override;
+		vec3 verts[3];
+		vec3 norms[3];
 
-	gui::Color
-		fragment(const vec2i& uv, const vec3& bar) override;
+		std::tuple<vec3, vec3, vec3>
+			vertex(const Face& face, int idx) override;
 
-	PhongShader* clone(void* memory) override;
-	int size() override;
-};
+		gui::Color
+			fragment(const vec2i& uv, const vec3& bar) override;
+
+		PhongShader* clone(void* memory) override;
+		int size() override;
+	};
+}

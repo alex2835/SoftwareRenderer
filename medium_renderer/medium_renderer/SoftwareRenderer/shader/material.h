@@ -2,12 +2,12 @@
 
 #include "image/image.h"
 
-//namespace renderer
-//{
+namespace renderer
+{
 	struct Material
 	{
 		float ambient;
-		float shanest;
+		float shininess;
 		float specular;
 
 		union
@@ -31,7 +31,7 @@
 			// flush unions
 			ambient = 0.1f;
 			specular = 0.5f;
-			shanest = 32.0f;
+			shininess = 32.0f;
 			diffuse = gui::Color(255);
 		}
 
@@ -78,5 +78,4 @@
 			specular_flag = false;
 		}
 	};
-
-//}
+}

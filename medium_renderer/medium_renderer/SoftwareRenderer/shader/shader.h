@@ -8,7 +8,6 @@
 #include "../model/face.h"
 #include "light.h"
 
-
 namespace renderer
 {
 	using namespace gm;
@@ -30,10 +29,10 @@ namespace renderer
 
 		int nLighters = 0;
 		Light lighters[3];
-		
+
 		// output: { vec3 vertex on plane, vec3 vertex in global space, vec3 normal in global space}
 		virtual std::tuple<vec3, vec3, vec3> vertex(const Face& face, int idx) = 0;
-		
+
 		// output: final color
 		virtual gui::Color fragment(const vec2i& uv, const vec3& bar) = 0;
 
@@ -41,7 +40,7 @@ namespace renderer
 		void set_model(const mat4& model);
 		void set_view(const mat4& view);
 		void set_projection(const mat4& projection);
-		
+
 		// return new(memory) OurShader(*this);
 		virtual Shader* clone(void* memory) = 0;
 
