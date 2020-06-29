@@ -11,6 +11,9 @@ namespace renderer
 		scale(scale)
 	{
 		namespace fs = std::filesystem;
+
+		std::vector<std::future<Mesh>> futures;
+		float start = get_time();
 		
 		for (auto& p : fs::directory_iterator(dirname))
 		{
@@ -18,18 +21,25 @@ namespace renderer
 			std::string filename;
 			filename.resize(str_size);
 
+			// convert to ascii 
 			gui::convert_wchar_to_utf8(filename.data(), str_size, p.path().c_str());
 			
 			if (filename.find(".obj") != std::string::npos)
 			{
-				// push mesh
-				meshes.emplace_back(filename.substr(0, filename.size() - 5));
-
+				// async laod
+				futures.push_back(gui::thread_pool.add_task([=]()
+					{
+						return Mesh(filename.substr(0, filename.size() - 5)); 
+					}
+				));
 				gui::console::printf("%s\n", filename.c_str());
 			}
-
 		}
+		// get futures
+		for (auto& future : futures)
+			meshes.push_back(std::move(future.get()));
 
+		gui::console::printf("end %0.2f\n", get_time() - start);
 	}
 
 	bool Model::valid()

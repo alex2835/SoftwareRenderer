@@ -145,7 +145,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 
 		// Draw models
 		head.draw(&shader);
-		shader.material.specular = 0.0f;
 		plane.draw(&shader);
 		diablo.draw(&shader);
 		cube.draw(&shader);
@@ -174,7 +173,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 		model.set_col(3, lighter2.Position);
 		model.set_scale(lighter2.scale);
 
-		light_shader.Model = model;
+		light_shader.Model = model; 
 		light_shader.View = camera.get_lookat();
 		light_shader.Transforms = camera.get_projection() * camera.get_lookat() * model;
 

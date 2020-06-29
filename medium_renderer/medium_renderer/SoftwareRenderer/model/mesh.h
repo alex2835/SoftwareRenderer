@@ -28,6 +28,7 @@ namespace renderer
 		gui::fImage specularmap;
 		gui::fImage normalmap;
 
+		Mesh() = default;
 		Mesh(const std::string& filename);
 
 		bool valid();
