@@ -15,11 +15,6 @@ namespace shaders
 		const vec3& CameraPos,
 		const vec2i& uv)
 	{
-
-		vec3 lightDir = normalize(lighter.direction);
-		vec3 viewDir = normalize(CameraPos - vert);
-		vec3 reflectDir = reflect(-lightDir, norm);
-
 		// specular map or coef
 		float specular_coef;
 		if (material.specular_flag)
@@ -27,14 +22,19 @@ namespace shaders
 		else
 			specular_coef = material.specular;
 
+		// specular intensity
+		vec3 viewDir = normalize(CameraPos - vert);
+		vec3 lightDir = normalize(lighter.position - vert);
+		vec3 reflectDir = reflect(-lightDir, norm);
+
 		// specular only coef
-		float spec = 0;// pow(__max(dot(viewDir, reflectDir), 0.0f), material.shininess)* specular_coef;
+		float spec = pow(__max(dot(viewDir, reflectDir), 0.0f), material.shininess) * material.specular;
 
 		return __min(spec * lighter.intensity, 1.0f);
 	}
 
 
-	static float caclulate_DirLight(const Light& lighter,
+	static float caclulate_dirLight(const Light& lighter,
 		const Material& material,
 		const vec3& vert,
 		const vec3& global_pos,
@@ -77,26 +77,25 @@ namespace shaders
 		{
 			switch (lighters[i].type)
 			{
-			case LightType::DirLight:
+			case LightType::PointLight:
 			{
+				// attenuation
 				float distance = length(lighters[i].position - vert);
 				float attenuation = 1.0f / (1.0f + lighters[i].linear * distance + lighters[i].quadratic * (distance * distance));
 
 				// diffuse and ambient light intensity
 				float diffuse = __max(normalize(lighters[i].position - global_pos) * norm_out, material.ambient) * attenuation;
-
 				LightStrengt[idx] += diffuse;
-				//LightStrengt[idx] += caclulate_DirLight(lighters[i], material, vert, global_pos, norm, norm_out, CameraPos);
 			}break;
-			case LightType::PointLight:
+			case LightType::DirLight:
 			{
-				//LightStrengt[idx] += calculate_pointLight(lighters[i], material, vert, global_pos, norm, norm_out, CameraPos);
 				vec3 lightDir = normalize(lighters[i].direction);
 				float diffuse = __max(dot(norm, lightDir), material.ambient);
 				LightStrengt[idx] += diffuse;
 			}break;
 			}
 		}
+
 		LightStrengt[idx] = __min(LightStrengt[idx], 1.0f);
 
 		verts[idx] = vert_out;
@@ -104,6 +103,7 @@ namespace shaders
 
 		return { vert_out , global_pos, norm_out };
 	}
+
 
 	gui::Color PhongShader::fragment(const vec2i& uv, const vec3& bar)
 	{
@@ -117,30 +117,30 @@ namespace shaders
 		vec3 norm_out = normalize(norms_out[0] * bar[0] + norms_out[1] * bar[1] + norms_out[2] * bar[2]);
 
 
-		//// diffuse map or coef
+		// diffuse map or coef
 		gui::Color diffuse_color;
-		//if (material.diffuse_flag)
+		if (material.diffuse_flag)
 			diffuse_color = material.diffusemap->get_pixel(uv.x, uv.y);
-		//else
-		//	diffuse_color = material.diffuse;
+		else
+			diffuse_color = material.diffuse;
 		
 		float spec = 0.0f;
-		//for (int i = 0; i < nLighters; i++)
-		//{
-		//	switch (lighters[i].type)
-		//	{
-		//	case LightType::DirLight:
-		//	{
-		//		spec += caclulate_DirLight(lighters[i], material, vert, global_pos, norm, norm_out, CameraPos, uv);
-		//		break;
-		//	}
-		//	case LightType::PointLight:
-		//	{
-		//		spec += calculate_pointLight(lighters[i], material, vert, global_pos, norm, norm_out, CameraPos, uv);
-		//		break;
-		//	}
-		//	}
-		//}
+		for (int i = 0; i < nLighters; i++)
+		{
+			switch (lighters[i].type)
+			{
+				case LightType::DirLight:
+				{
+					spec += caclulate_dirLight(lighters[i], material, vert, global_pos, norm, norm_out, CameraPos, uv);
+					break;
+				}
+				case LightType::PointLight:
+				{
+					spec += calculate_pointLight(lighters[i], material, vert, global_pos, norm, norm_out, CameraPos, uv);
+					break;
+				}
+			}
+		}
 
 		float intensity = __min(dot(LightStrengt, bar) + spec, 1.0f);
 		return diffuse_color * intensity;
