@@ -4,7 +4,6 @@
 */*/.vs/*
 .vs/
 */venv/*
-*.lib
 */GPUCache/*
 *.xml
 */VTune Profiler Results/medium_renderer/*

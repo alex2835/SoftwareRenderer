@@ -64,7 +64,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 
 
 	// Shader
-	shaders::PhongShader shader;
+	shaders::GuroShader shader;
 	shaders::LightSpotShader light_shader;
 
 
