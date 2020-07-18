@@ -1,7 +1,10 @@
 
-#include "pch.h"
-
 #include "SoftwareRenderer/include.h"
+
+#include "window/window.h"
+#include "io/log.h"
+#include "libs/thread_pool.h"
+#include "image/draw.h"
 
 #include "shaders/guro_shader.h"
 #include "shaders/phong_shader.h"

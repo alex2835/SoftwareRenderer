@@ -171,16 +171,6 @@
   <ItemGroup>
     <ClCompile Include="scene_objects\lighterObj.cpp" />
     <ClCompile Include="shaders\LightSpotShader.cpp" />
-    <ClCompile Include="pch.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch.h</PrecompiledHeaderFile>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">pch.h</PrecompiledHeaderFile>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h</PrecompiledHeaderFile>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h</PrecompiledHeaderFile>
-    </ClCompile>
     <ClCompile Include="shaders\guro_shader.cpp" />
     <ClCompile Include="shaders\phong_shader.cpp" />
     <ClCompile Include="SoftwareRenderer\camera\camera.cpp" />
@@ -197,10 +187,10 @@
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Users\lol\Desktop\medium_renderer\medium_renderer\dependencies\gui\inlcude;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\lol\Desktop\medium_renderer\medium_renderer\dependencies\gui\inlcude;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\lol\Desktop\medium_renderer\medium_renderer\dependencies\gui\inlcude;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="SoftwareRenderer\geometry\shader_geometry.cpp" />
     <ClCompile Include="SoftwareRenderer\model\mesh.cpp" />
@@ -211,6 +201,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="SoftwareRenderer\model\face.h" />
+    <ClCompile Include="SoftwareRenderer\rasterizer\Source.cpp" />
     <ClCompile Include="SoftwareRenderer\renderer\context.h" />
     <ClCompile Include="SoftwareRenderer\rasterizer\rasterizer.cpp" />
     <ClCompile Include="SoftwareRenderer\rasterizer\rasterizer.h">
@@ -225,7 +216,6 @@
   <ItemGroup>
     <ClInclude Include="scene_objects\lighterObj.h" />
     <ClInclude Include="shaders\LightSpotShader.h" />
-    <ClInclude Include="pch.h" />
     <ClInclude Include="shaders\guro_shader.h" />
     <ClInclude Include="shaders\phong_shader.h" />
     <ClInclude Include="SoftwareRenderer\camera\camera.h" />
