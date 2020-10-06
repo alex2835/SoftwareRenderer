@@ -97,14 +97,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE no, LPSTR args, int cmdShow)
 
 		// ================ Process input ==================
 
-		// Camera controll by mouse
+		// Camera control by mouse
 		shift_x = gui::Mouse::pos_x - mouse_x;
 		shift_y = gui::Mouse::pos_y - mouse_y;
 
 		mouse_x = gui::Mouse::pos_x;
 		mouse_y = gui::Mouse::pos_y;
 
-		// Camera controll by keys
+		// Camera control by keys
 		if (gui::Input::pressed(VK_LEFT))
 			shift_x -= timer.elapsed;
 
