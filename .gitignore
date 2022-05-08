@@ -1,6 +1,7 @@
 *.xcodepr
 /dataBase/venv/*
 */.vs*/*
+*/.x64/*
 */*/.vs/*
 .vs/
 */venv/*

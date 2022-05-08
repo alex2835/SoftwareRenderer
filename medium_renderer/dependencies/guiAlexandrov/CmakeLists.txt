@@ -1,0 +1,26 @@
+cmake_minimum_required(VERSION 3.16)
+
+project(guiAl VERSION 0.0.0)
+
+file(GLOB_RECURSE SRCS *.cpp)
+file(GLOB_RECURSE HDRS *.h)
+
+add_library(guiAl STATIC ${SRCS} ${HDRS})
+
+set_target_properties(
+   guiAl PROPERTIES
+   CXX_STANDARD 20
+   CXX_STANDARD_REQUIRED ON
+)
+
+add_definitions(-D"UNICODE")
+
+set_target_properties(guiAl PROPERTIES UNITY_BUILD ON)
+set_target_properties(guiAl PROPERTIES UNITY_BUILD_BATCH_SIZE 40)
+
+# Include directories
+target_include_directories(
+   guiAl PUBLIC
+   ${CMAKE_CURRENT_SOURCE_DIR}/software_renderer
+   ${CMAKE_SOURCE_DIR}/dependencies/guiAlexandrov/include
+)

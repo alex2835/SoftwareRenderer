@@ -1,0 +1,36 @@
+cmake_minimum_required(VERSION 3.16)
+
+project(medium_renderer VERSION 0.0.0)
+
+file(GLOB_RECURSE SRCS *.cpp)
+file(GLOB_RECURSE HDRS *.h)
+
+add_executable(medium_renderer WIN32 ${SRCS} ${HDRS} )
+
+set_target_properties(
+    medium_renderer PROPERTIES
+    CXX_STANDARD 20
+    CXX_STANDARD_REQUIRED ON
+)
+
+set_target_properties(medium_renderer PROPERTIES UNITY_BUILD ON)
+set_target_properties(medium_renderer PROPERTIES UNITY_BUILD_BATCH_SIZE 40)
+
+# Include directories
+target_include_directories(
+    medium_renderer PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/software_renderer
+    ${CMAKE_SOURCE_DIR}/dependencies/guiAlexandrov/include
+)
+
+if (WIN32)
+    target_link_libraries(medium_renderer guiAl)
+else()
+    message(FATAL, "Platfrom not supported")
+endif()
+
+add_custom_command(
+    TARGET medium_renderer POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_SOURCE_DIR}/medium_renderer/models
+    $<TARGET_FILE_DIR:medium_renderer>/models)
