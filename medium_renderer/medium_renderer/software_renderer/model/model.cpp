@@ -5,8 +5,12 @@ namespace renderer
 {
 	using namespace std::string_literals;
 	 
-	Model::Model(const char* dirname, const gm::vec3& pos, const gm::vec3& scale)
+	Model::Model(const char* dirname,
+					 Shader& shader,
+					 const gm::vec3& pos,
+					 const gm::vec3& scale)
 		:
+		shader(shader),
 		position(pos),
 		scale(scale)
 	{
@@ -18,10 +22,10 @@ namespace renderer
 		for (auto& p : fs::directory_iterator(dirname))
 		{
 			int str_size = wcslen(p.path().c_str()) + 1;
-			std::string filename;
-			filename.resize(str_size);
 
 			// convert to ascii 
+			std::string filename;
+			filename.resize(str_size);
 			gui::convert_wchar_to_utf8(filename.data(), str_size, p.path().c_str());
 			
 			if (filename.find(".obj") != std::string::npos)
@@ -53,7 +57,6 @@ namespace renderer
 		bool valid = true;
 		for (Mesh& mesh : meshes)
 			valid &= mesh.valid();
-
 		return valid && meshes.size();
 	}
 

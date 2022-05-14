@@ -8,7 +8,6 @@ namespace shaders
 
 	struct GuroShader : Shader
 	{
-		vec3 CameraPos;
 		vec3 LightStrengt;
 
 		std::tuple<vec3, vec3, vec3>

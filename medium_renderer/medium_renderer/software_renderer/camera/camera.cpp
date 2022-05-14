@@ -1,15 +1,13 @@
 
 #include "camera.h"
 
-
 namespace renderer
 {
-
     // Constructor with vectors
     Camera::Camera(const gm::vec3& position, float yaw, float pitch, const gm::vec3& up)
         :
         MovementSpeed(SPEED),
-        MouseSensitivity(SENSITIVTY),
+        MouseSensitivity(SENSITIVITY),
         Fov(FOV)
     {
         Position = position;
@@ -24,7 +22,7 @@ namespace renderer
     Camera::Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch)
         :
         MovementSpeed(SPEED),
-        MouseSensitivity(SENSITIVTY),
+        MouseSensitivity(SENSITIVITY),
         Fov(Fov)
     {
         Position = gm::vec3(posX, posY, posZ);

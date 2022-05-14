@@ -102,17 +102,17 @@ namespace renderer
 	}
 
 
-	bool Mesh::valid()
+	bool Mesh::valid() const
 	{
 		return faces.size();
 	}
 
-	int Mesh::faces_size()
+	int Mesh::faces_size() const 
 	{
 		return faces.size();
 	}
 
-	Face& Mesh::get_face(int i)
+	const Face& Mesh::get_face(int i) const
 	{
 		return faces[i];
 	}

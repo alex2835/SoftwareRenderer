@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.16)
 project(SR VERSION 0.0.0)
 
 
-add_compile_options(/Zi /w /O2)
+add_compile_options(/Bt /Zi /w /O2 /MP)
 
 add_subdirectory(medium_renderer)
 add_subdirectory(dependencies/guiAlexandrov)

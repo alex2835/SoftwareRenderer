@@ -9,6 +9,7 @@
 #include "../model/model.h"
 #include "../shader/shader.h"
 #include "../camera/camera.h"
+#include "../light/lighter.h"
 
 #include "libs/time.h"
 #include "io/input.h"
@@ -18,23 +19,27 @@
 namespace renderer
 {
 
-class Renerer
+class Renderer
 {
 public:
-	Renerer(gui::Image_base<uint8_t>& ctx, gm::vec3& camera);
-	void RenderModel(Model& model, Shader& in_shader);
-	void RenderMesh(Mesh& mesh, Shader& shader);
+	Renderer(gui::Image_base<uint8_t>& ctx);
 	void UpdateRenderer();
 
-private:
-	gui::Image_base<uint8_t>& mContext;
+	auto& GetCamera() { return mCamera; }
+	auto& GetLighters() { return mLighters; }
+	auto& GetModels() { return mModels; }
 
-	// zbuffer
+private:
+	void RenderModel(Model& model);
+	void RenderMesh(const Mesh& mesh, Shader& shader);
+	
+	gui::Image_base<uint8_t>& mContext;
 	std::vector<float> mZbuffer;
-	// shaders memory
 	std::vector<char> mShadersBuffer;
-	// Backface culling
-	gm::vec3& mCamera;
+	Camera mCamera;
+	std::vector<Model> mModels;
+	std::vector<Light> mLighters;
+	
 };
 
 }

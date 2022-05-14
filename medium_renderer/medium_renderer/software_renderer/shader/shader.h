@@ -18,6 +18,8 @@ namespace renderer
 	*/
 	struct Shader
 	{
+		vec3 CameraPos;
+
 		mat4 Transforms;
 		mat4 ModelIT;
 

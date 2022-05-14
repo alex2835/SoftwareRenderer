@@ -93,6 +93,12 @@ namespace gui
 			return data[y * width + x];
 		}
 
+		const Color_base<T>& get_pixel(int x, int y) const
+		{
+			assert(((uint32_t)y < height) | ((uint32_t)x < width));
+			return data[y * width + x];
+		}
+
 		Color_base<T>& operator[] (int idx)
 		{
 			assert((uint32_t)idx < whole_size);

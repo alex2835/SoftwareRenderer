@@ -7,8 +7,7 @@ namespace renderer
 	namespace rasterizer
 	{
 		
-		bool barycentric(const gm::vec3& A, const gm::vec3& B, const gm::vec3& C,
-			const gm::vec3i& P, gm::vec3* out)
+		bool barycentric(const gm::vec3& A, const gm::vec3& B, const gm::vec3& C, const gm::vec3i& P, gm::vec3* out)
 		{
 			gm::vec3 s[2];
 			for (int i = 0; i < 2; i++)
@@ -26,7 +25,9 @@ namespace renderer
 				out->x = 1.0f - (u.x + u.y) / u.z;
 				out->y = u.y / u.z;
 				out->z = u.x / u.z;
-				if (out->x >= 0.0f && out->y >= 0.0f && out->z >= 0.0f)
+				if (out->x >= 0.0f && 
+				    out->y >= 0.0f &&
+					 out->z >= 0.0f)
 					return true;
 			}
 			return false;

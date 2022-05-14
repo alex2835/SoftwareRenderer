@@ -5,37 +5,47 @@
 namespace renderer
 {
 
-Renerer::Renerer(gui::Image_base<uint8_t>& ctx, gm::vec3& camera)
+Renderer::Renderer(gui::Image_base<uint8_t>& ctx)
 	: mContext( ctx ),
-	  mCamera( camera )
+	  mCamera( gm::vec3(0, 5, 15), 90, 20 )
 {
 	UpdateRenderer();
 }
 
-void Renerer::RenderModel(Model& model, Shader& shader)
+void Renderer::RenderModel(Model& model)
 {
-		gm::mat4 scale_mat;
-		gm::mat4 rotation_mat;
-		gm::mat4 translation_mat;
+	Shader& shader = model.shader;
 
-		scale_mat.set_scale(model.scale);
-		translation_mat.set_col(3, model.position);
+	gm::mat4 scale_mat;
+	gm::mat4 rotation_mat;
+	gm::mat4 translation_mat;
 
-		gm::mat4 model_mat = translation_mat * rotation_mat * scale_mat;
-		shader.set_model(model_mat);
+	scale_mat.set_scale(model.scale);
+	translation_mat.set_col(3, model.position);
 
-		for (Mesh& mesh : model.meshes)
-		{
-			shader.material.set_diffusemap(&mesh.diffusemap);
-			shader.material.set_specularmap(&mesh.specularmap);
-			shader.material.set_normalmap(&mesh.normalmap);
-			shader.material.set_ambient(0.1f);
+	gm::mat4 model_mat = translation_mat * rotation_mat * scale_mat;
+	shader.set_model(model_mat);
 
-			RenderMesh(mesh, shader);
-		}
+	shader.CameraPos = mCamera.Position;
+	shader.set_view(mCamera.get_lookat());
+	shader.set_projection(mCamera.get_projection(mContext.width, mContext.height));
+
+	shader.nLighters = mLighters.size();
+	for (int i = 0; i < mLighters.size(); i++)
+		shader.lighters[i] = mLighters[i];
+
+	for (const Mesh &mesh : model.meshes)
+	{
+		shader.material.set_diffusemap(&mesh.diffusemap);
+		shader.material.set_specularmap(&mesh.specularmap);
+		shader.material.set_normalmap(&mesh.normalmap);
+		shader.material.set_ambient(0.1f);
+
+		RenderMesh(mesh, shader);
+	}
 }
 
-void Renerer::RenderMesh(Mesh& mesh, Shader& in_shader)
+void Renderer::RenderMesh(const Mesh& mesh, Shader& in_shader)
 {
 	// Split whole mesh on tasks
 	// and put them on thread pool
@@ -67,7 +77,7 @@ void Renerer::RenderMesh(Mesh& mesh, Shader& in_shader)
 
 					gm::vec2i uv[3];
 					gm::vec3 screen_coords[3];
-					Face& face = mesh.get_face(i);
+					const Face& face = mesh.get_face(i);
 
 					for (int j = 0; j < 3; j++)
 					{
@@ -79,8 +89,8 @@ void Renerer::RenderMesh(Mesh& mesh, Shader& in_shader)
 						auto [vertex, global, normal] = shader->vertex(face, j);
 
 						// backface culling
-						global -= mCamera;
-						cull = (mCamera - global).normalize() * normal < -0.1f;
+						global -= mCamera.Position;
+						cull = (mCamera.Position - global).normalize() * normal < -0.1f;
 
 						// clip
 						if (vertex.z > 5.0f && vertex.z < 6.0f)
@@ -102,13 +112,16 @@ void Renerer::RenderMesh(Mesh& mesh, Shader& in_shader)
 		futures[i].get();
 }
 
-void Renerer::UpdateRenderer()
+void Renderer::UpdateRenderer()
 {
 	if (mZbuffer.size() < mContext.whole_size)
 		mZbuffer.resize(mContext.whole_size);
 
 	memset(mZbuffer.data(), 0, mZbuffer.size() * sizeof(float));
 	gui::cpu::draw_filled_rect_async(mContext, 0.0f, 0.0f, 1.0f, 1.0f, gui::Color{0, 0, 0});
+
+	for( auto& model : mModels )
+		RenderModel( model );
 }
 
 }

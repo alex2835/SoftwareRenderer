@@ -31,11 +31,11 @@ namespace renderer
 		Mesh() = default;
 		Mesh(const std::string& filename);
 
-		bool valid();
+		bool valid() const;
 
-		int faces_size();
+		int faces_size() const;
 
-		Face& get_face(int i);
+		const Face& get_face(int i) const;
 
 		gui::Color& get_diffuse(const gm::vec2i& uv);
 	};

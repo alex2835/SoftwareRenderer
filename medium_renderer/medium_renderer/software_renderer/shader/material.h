@@ -11,9 +11,9 @@ namespace renderer
 		float specular;
 		gui::Color diffuse;
 
-		gui::Image* diffusemap;
-		gui::fImage* specularmap;
-		gui::fImage* normalmap;
+		const gui::Image* diffusemap;
+		const gui::fImage* specularmap;
+		const gui::fImage* normalmap;
 
 		bool diffuse_flag = false;
 		bool specular_flag = false;
@@ -29,19 +29,19 @@ namespace renderer
 			diffuse = gui::Color(255);
 		}
 
-		inline void set_diffusemap(gui::Image* diffmap)
+		inline void set_diffusemap(const gui::Image* diffmap)
 		{
 			diffusemap = diffmap;
 			diffuse_flag = diffmap->data;
 		}
 
-		inline void set_specularmap(gui::fImage* specmap)
+		inline void set_specularmap(const gui::fImage* specmap)
 		{
 			specularmap = specmap;
 			specular_flag = specmap ? specmap->data : false;
 		}
 
-		inline void set_normalmap(gui::fImage* normmap)
+		inline void set_normalmap(const gui::fImage* normmap)
 		{
 			normalmap = normmap;
 			normal_flag = normalmap ? normmap->data : false;

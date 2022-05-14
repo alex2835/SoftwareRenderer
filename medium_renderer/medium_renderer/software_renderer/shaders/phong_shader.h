@@ -9,7 +9,6 @@ namespace shaders
 
 	struct PhongShader : Shader
 	{
-		vec3 CameraPos;
 		vec3 LightStrengt;
 
 		vec3 verts[3];
