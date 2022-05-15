@@ -93,11 +93,11 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE no, PWSTR args, int cmdShow)
 	shaders::GuroShader shader;
 	shaders::lightSpot_shader light_shader;
 	renderer.GetModels() = std::vector<sr::Model>{sr::Model("models/cube", shader, gm::vec3(2, -0.5f, 0), 0.2f),
-																 sr::Model("models/african_head", shader, gm::vec3(-3, 0, 0)),
-																 sr::Model("models/diablo3_pose", shader, gm::vec3(2, 1, -16), 2),
-																 sr::Model("models/plane", shader, gm::vec3(0, -1, -8), gm::vec3(0.5f, 1.0f, 1.0f)),
-																 sr::Model("models/boggie", shader, gm::vec3(-2, 1, -16), 2),
-																 sr::Model("models/cube", light_shader, lighter_pos, 0.2f)};
+						      sr::Model("models/african_head", shader, gm::vec3(-3, 0, 0)),
+						      sr::Model("models/diablo3_pose", shader, gm::vec3(2, 1, -16), 2),
+						      sr::Model("models/plane", shader, gm::vec3(0, -1, -8), gm::vec3(0.5f, 1.0f, 1.0f)),
+						      sr::Model("models/boggie", shader, gm::vec3(-2, 1, -16), 2),
+						      sr::Model("models/cube", light_shader, lighter_pos, 0.2f)};
 
 	// Game loop
 	while( gui::Window::is_running( window ) )
