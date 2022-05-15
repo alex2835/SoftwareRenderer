@@ -19,7 +19,7 @@
 #define VK_D 0x44
 
 
-// Camera's inertia
+// Camera mouse controll
 static float mouse_x = gui::Mouse::pos_x;
 static float mouse_y = gui::Mouse::pos_y;
 float shift_x = 0.0f;
@@ -30,8 +30,6 @@ bool process_input(Timer &timer, sr::Camera &camera)
 	// Exit by Esc
 	if (gui::Input::was_pressed(VK_ESCAPE))
 		return false;
-
-	// ================ Process input ==================
 
 	// Camera control by mouse
 	shift_x = gui::Mouse::pos_x - mouse_x;
@@ -92,7 +90,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE no, PWSTR args, int cmdShow)
 	gui::Window* window = new gui::Window(L"Window", 800, 600);
 	window->canvas.set_max_buffer_size();
 
-
+	// Renderer
 	Timer timer;
 	renderer::Renderer renderer(window->canvas);
 
@@ -108,7 +106,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE no, PWSTR args, int cmdShow)
 																 sr::Model("models/boggie", shader, gm::vec3(-2, 1, -16), 2),
 																 sr::Model("models/cube", light_shader, lighter_pos, 0.2f)};
 
-	//  ====================== game loop ===========================
+	// Game loop
 	while( gui::Window::is_running( window ) )
 	{
 		print_system_info( timer );

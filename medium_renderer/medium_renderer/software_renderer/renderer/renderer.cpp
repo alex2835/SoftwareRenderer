@@ -47,8 +47,8 @@ void Renderer::RenderModel(Model& model)
 
 void Renderer::RenderMesh(const Mesh& mesh, Shader& in_shader)
 {
-	// Split whole mesh on tasks
-	// and put them on thread pool
+	// Split whole mesh by tasks
+	// and put them into thread pool
 	const int tasks = (std::min)(128, mesh.faces_size());
 
 	// reallocate memory for shaders
@@ -64,8 +64,7 @@ void Renderer::RenderMesh(const Mesh& mesh, Shader& in_shader)
 		int from = i * mesh.faces_size() / tasks;
 		int to = (i + 1) * mesh.faces_size() / tasks;
 
-		futures[i] = gui::thread_pool.add_task(
-			[&, from, to, id = i]()
+		futures[i] = gui::thread_pool.add_task( [&, from, to, id = i]()
 			{
 				// Create copy for this thread (No memory allocation)
 				Shader* shader = in_shader.clone(mShadersBuffer.data() + in_shader.size() * id);
@@ -101,13 +100,14 @@ void Renderer::RenderMesh(const Mesh& mesh, Shader& in_shader)
 					}
 
 					// Draw triangle
-					if (fit && !cull) {
+					if (fit && !cull)
 						rasterizer::triangle(mContext, screen_coords, uv, mZbuffer.data(), shader);
-					}
+
 				}
 			}
 		);
 	}
+	
 	for (int i = 0; i < tasks; i++)
 		futures[i].get();
 }
@@ -118,7 +118,7 @@ void Renderer::UpdateRenderer()
 		mZbuffer.resize(mContext.whole_size);
 
 	memset(mZbuffer.data(), 0, mZbuffer.size() * sizeof(float));
-	gui::cpu::draw_filled_rect_async(mContext, 0.0f, 0.0f, 1.0f, 1.0f, gui::Color{0, 0, 0});
+	gui::cpu::draw_filled_rect_async(mContext, 0.0f, 0.0f, 1.0f, 1.0f, gui::Color(0, 0, 0));
 
 	for( auto& model : mModels )
 		RenderModel( model );

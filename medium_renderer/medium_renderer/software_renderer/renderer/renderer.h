@@ -9,7 +9,6 @@
 #include "../model/model.h"
 #include "../shader/shader.h"
 #include "../camera/camera.h"
-#include "../light/lighter.h"
 
 #include "libs/time.h"
 #include "io/input.h"
