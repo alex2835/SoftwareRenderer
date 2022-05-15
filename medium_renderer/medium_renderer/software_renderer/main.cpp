@@ -2,9 +2,9 @@
 #include "include.h"
 
 #include "window/window.h"
-#include "io/log.h"
 #include "libs/thread_pool.h"
 #include "image/draw.h"
+#include "io/log.h"
 
 #include "shaders/guro_shader.h"
 #include "shaders/phong_shader.h"
@@ -25,12 +25,8 @@ static float mouse_y = gui::Mouse::pos_y;
 float shift_x = 0.0f;
 float shift_y = 0.0f;
 
-bool process_input(Timer &timer, sr::Camera &camera)
+void process_input(Timer &timer, sr::Camera &camera)
 {
-	// Exit by Esc
-	if (gui::Input::was_pressed(VK_ESCAPE))
-		return false;
-
 	// Camera control by mouse
 	shift_x = gui::Mouse::pos_x - mouse_x;
 	shift_y = gui::Mouse::pos_y - mouse_y;
@@ -65,8 +61,6 @@ bool process_input(Timer &timer, sr::Camera &camera)
 
 	if (gui::Input::pressed(VK_D))
 		camera.ProcessKeyboard(sr::RIGHT, timer.elapsed);
-
-	return true;
 }
 
 void print_system_info( Timer& timer )
@@ -91,7 +85,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE no, PWSTR args, int cmdShow)
 	window->canvas.set_max_buffer_size();
 
 	// Renderer
-	Timer timer;
 	renderer::Renderer renderer(window->canvas);
 
 	auto lighter_pos = gm::vec3(3, 0, 3);
@@ -109,14 +102,16 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE no, PWSTR args, int cmdShow)
 	// Game loop
 	while( gui::Window::is_running( window ) )
 	{
-		print_system_info( timer );
-		if( !process_input( timer, renderer.GetCamera() ) )
+		// Exit by Esc
+		if (gui::Input::was_pressed(VK_ESCAPE))
 			break;
 
-		timer.update();
+		process_input(renderer.GetTimer(), renderer.GetCamera());
+		
 		window->render_canvas();
 		gui::Window::default_msg_proc();
 		renderer.UpdateRenderer();
+		print_system_info( renderer.GetTimer() );
 	}
 
 	return 0;

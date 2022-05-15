@@ -107,7 +107,7 @@ void Renderer::RenderMesh(const Mesh& mesh, Shader& in_shader)
 			}
 		);
 	}
-	
+
 	for (int i = 0; i < tasks; i++)
 		futures[i].get();
 }
@@ -120,6 +120,7 @@ void Renderer::UpdateRenderer()
 	memset(mZbuffer.data(), 0, mZbuffer.size() * sizeof(float));
 	gui::cpu::draw_filled_rect_async(mContext, 0.0f, 0.0f, 1.0f, 1.0f, gui::Color(0, 0, 0));
 
+	mTimer.update();
 	for( auto& model : mModels )
 		RenderModel( model );
 }

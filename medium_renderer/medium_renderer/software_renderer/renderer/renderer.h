@@ -25,6 +25,7 @@ public:
 	void UpdateRenderer();
 
 	auto& GetCamera() { return mCamera; }
+	auto& GetTimer() { return mTimer; }
 	auto& GetLighters() { return mLighters; }
 	auto& GetModels() { return mModels; }
 
@@ -35,10 +36,10 @@ private:
 	gui::Image_base<uint8_t>& mContext;
 	std::vector<float> mZbuffer;
 	std::vector<char> mShadersBuffer;
+	Timer mTimer;
 	Camera mCamera;
 	std::vector<Model> mModels;
 	std::vector<Light> mLighters;
-	
 };
 
 }
